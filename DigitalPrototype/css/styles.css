@@ -4,15 +4,16 @@
 }
 .am-primary
 {
-    background-color: #6051c5;
+    background-color: #05386B;
 }
 .am-secondary
 {
-    background-color: #CCF381;
+    background-color: #85DCBA;
 }
 .am-text-secondary, .am-text-secondary:hover
 {
-    color: #CCF381;
+    /* color: #5CDB95; */
+    color: #edf5e1;
     text-decoration: none;
 }
 .am-transparent
@@ -22,7 +23,7 @@
 
 body 
 {
-    padding-top: 10px;
+    padding-top: 70px;
 }
 
 body, html {
@@ -34,14 +35,15 @@ body, html {
     width: 100%;
 }
 
-.sign-in-btn
+.sign-in-btn, .search-btn
 {
     transition: all 0.5s ease 0s;
 }
 
-.sign-in-btn:hover
+
+.sign-in-btn:hover, .search-btn:hover
 {
-    color: rgb(202, 148, 148);
+    color: #edf5e173;
 }
 
 .dropdown-item:hover
