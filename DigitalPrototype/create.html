@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top am-primary">
+        <a class="navbar-brand am-text-secondary mr-0" href="index.html">Algo-Market
+            <img src="assets/img/logo.svg" width="44">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <img src="assets/img/menu.svg" height="25" width="25">
+        </button>
+        <div class="collapse navbar-collapse mr-2" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-5">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#"> <span class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="card" style="width: 45rem;">
+        <h1 class="card-title">Personal Info</h1>
+        <h5 class="card-subtitle mb-2 text-muted">Tell us a bit about yourself. This information will appear on your public profile, so that potential buyers can get to know you better.</h5>
+        <form class="was-validated">
+            <h2><span>Full Name</span></h2>
+            <div class="form-group row">
+              <label for="staticEmail" class="col-sm-2 col-form-label">First Name</label>
+              <div class="col-sm-10">
+                <input type="password" class="form-control" id="inputPassword" placeholder="Ex. John" required>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputPassword" class="col-sm-2 col-form-label">Last Name</label>
+              <div class="col-sm-10">
+                <input type="password" class="form-control" id="inputPassword" placeholder="Ex. Smith" required>
+              </div>
+            </div>
+          </form>
+        <h2><span>Profile Picture</span></h2>
+        <form class="was-validated">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="validatedCustomFile" required>
+                <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
+                <div class="invalid-feedback">Please choose a profile picture</div>
+            </div>
+        </form>
+        <h2><span>Description</span></h2>
+        <form class="was-validated">
+            <label for="validationTextarea">What do you offer?</label>
+            <textarea class="form-control is-invalid" id="validationTextarea" placeholder="Share your work experience, projects, or area of expertise" rows="6" required></textarea>
+        </form>
+        <form class="was-validated">
+            <h2><span>Occupation</span></h2>
+            <div class="form row">
+              <div class="col">
+                <input type="occu" class="form-control" id="occu" placeholder="Ex. Basket Weaving" required>
+              </div>
+              <div class="col">
+                <div class="form-group">
+                    <select class="custom-select" required>
+                      <option value="">Years of Experience</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10+</option>
+                    </select>
+                  </div>
+              </div>
+            </div>
+          </form>
+        
+        <form class="was-validated">
+            <h2><span>Skills</span></h2>
+            <div class="form row">
+              <div class="col">
+                <input type="skill1" class="form-control" id="occu" placeholder="Ex. Algorithms" required>
+              </div>
+              <div class="col">
+                <div class="form-group">
+                    <select class="custom-select" required>
+                      <option value="">Skill Level</option>
+                      <option value="b">Beginner</option>
+                      <option value="i">Intermediate</option>
+                      <option value="e">Expert</option>
+                    </select>
+                  </div>
+              </div>
+            </div>
+            <div class="form row">
+                <div class="col">
+                  <input type="skill1" class="form-control" id="occu" placeholder="Ex. Data Structures" required>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                      <select class="custom-select" required>
+                        <option value="">Skill Level</option>
+                        <option value="b">Beginner</option>
+                        <option value="i">Intermediate</option>
+                        <option value="e">Expert</option>
+                      </select>
+                    </div>
+                </div>
+              </div>
+              <div class="form row">
+                <div class="col">
+                  <input type="skill1" class="form-control" id="occu" placeholder="Ex. Programming" required>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                      <select class="custom-select" required>
+                        <option value="">Skill Level</option>
+                        <option value="b">Beginner</option>
+                        <option value="i">Intermediate</option>
+                        <option value="e">Expert</option>
+                      </select>
+                    </div>
+                </div>
+              </div>
+          </form>
+        
+        <form class="was-validated">
+            <h2><span>Education</span></h2>
+            <div class="form row">
+              <div class="col">
+                <label>College</label>
+                <input type="college" class="form-control" id="college" placeholder="Ex. Stony Brook University" required>
+              </div>
+              <div class="col">
+                <div class="form-group">
+                    <label>Degree</label>
+                    <select class="custom-select" required>
+                      <option value="">Title</option>
+                      <option value="ba">B.A.</option>
+                      <option value="bs">B.S.</option>
+                      <option value="ma">M.A.</option>
+                      <option value="mba">M.B.A.</option>
+                      <option value="ms">M.S.</option>
+                      <option value="jd">J.D.</option>
+                      <option value="md">M.D.</option>
+                      <option value="phd">Ph.D.</option>
+                      <option value="bfa">BFA</option>
+                      <option value="mfa">MFA</option>
+                    </select>
+                  </div>
+              </div>
+            </div>
+
+            <div class="form row">
+                <div class="col">
+                    <label for="major">Major</label>
+                    <input type="major" class="form-control" id="major" placeholder="Ex. Computer Science" required>
+                </div>
+                <div class="col">
+                    <label for="grad">Graduation Year</label>
+                    <input type="grad" class="form-control" id="grad" placeholder="Ex. 2022" required>
+                </div>
+            </div>
+          </form>
+        
+        <form class="was-validated">
+            <h2><span>Personal Website</span></h2>
+            <label for="weblink">Provide a link to your website</label>
+            <input class="form-control" id="weblink" placeholder="Ex. rickysux.com" required></input>
+        </form>
+    </div>      
+
+</body>
+
+</html>
