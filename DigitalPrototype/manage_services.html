@@ -85,28 +85,139 @@
                         <td class="align-middle">I will help you study for your CSE 101 exams!</td>
                         <td class="align-middle">50 ALGO</td>
                         <td class="align-middle">java.png</td>
-                        <td class="align-middle"><button type="button" class="btn btn-primary">Edit Service</button></td>
+                        <td class="align-middle"><button type="button" class="btn btn-primary" data-toggle="modal"
+                                data-target="#editServiceModal" data-backdrop="static" data-keyboard="false">Edit
+                                Service</button>
+                        </td>
                     </tr>
                     <tr>
                         <td class="align-middle">CSE Homework</td>
                         <td class="align-middle">I will do any of your homework in the CSE department.</td>
                         <td class="align-middle">75 ALGO</td>
                         <td class="align-middle">sbu.jpg</td>
-                        <td class="align-middle"><button type="button" class="btn btn-primary">Edit Service</button></td>
+                        <td class="align-middle"><button type="button" class="btn btn-primary">Edit Service</button>
+                        </td>
                     </tr>
                     <tr>
                         <td class="align-middle">Professional Googler</td>
                         <td class="align-middle">I'm a professional googler and I will google for you.</td>
                         <td class="align-middle">10 ALGO</td>
                         <td class="align-middle">google.jpg</td>
-                        <td class="align-middle"><button type="button" class="btn btn-primary">Edit Service</button></td>
+                        <td class="align-middle"><button type="button" class="btn btn-primary">Edit Service</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
-            <button type="button" class="btn btn-success">Create New Service +</button>
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#newServiceModal"
+                data-backdrop="static" data-keyboard="false">Create New Service +</button>
             <a class="btn btn-primary" href="creator_settings.html">Return to Account Settings</a>
         </div>
         <div class="col-sm-1"></div>
+    </div>
+    <div class="modal fade" id="newServiceModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newServiceModalLabel">Create New Service</h5>
+                </div>
+                <form>
+                    <div class="modal-body">
+                        <div class="row mb-3">
+                            <div class="col-md-4 d-flex align-items-center">
+                                <label class="m-0" for="inputName">Name:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input class="form-control" id="inputName" type="text" />
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4 d-flex align-items-center">
+                                <label class="m-0" for="inputDescription">Description:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <textarea class="form-control" id="inputDescription" rows="5"></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4 d-flex align-items-center">
+                                <label class="m-0" for="inputCost">Cost:</label>
+                            </div>
+                            <div class="col-md-5">
+                                <input class="form-control" id="inputCost" type="text" />
+                            </div>
+                            <div class="col-md-3 d-flex align-items-center p-0">
+                                <label class="m-0" for="inputCost">ALGO</label>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4 d-flex align-items-center">
+                                <label class="m-0" for="inputImage">Image:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input class="form-control-file" id="inputImage" type="file">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-success">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editServiceModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editServiceModalLabel">Edit Service</h5>
+                </div>
+                <form>
+                    <div class="modal-body">
+                        <div class="row mb-3">
+                            <div class="col-md-4 d-flex align-items-center">
+                                <label class="m-0" for="inputName">Name:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input class="form-control" id="inputName" type="text" value="CSE 101 Tutor" />
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4 d-flex align-items-center">
+                                <label class="m-0" for="inputDescription">Description:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <textarea class="form-control" id="inputDescription"
+                                    rows="5">I will help you study for your CSE 101 exams!</textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4 d-flex align-items-center">
+                                <label class="m-0" for="inputCost">Cost:</label>
+                            </div>
+                            <div class="col-md-5">
+                                <input class="form-control" id="inputCost" type="text" value="50" />
+                            </div>
+                            <div class="col-md-3 d-flex align-items-center p-0">
+                                <label class="m-0" for="inputCost">ALGO</label>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4 d-flex align-items-center">
+                                <label class="m-0" for="inputImage">Image:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input class="form-control-file" id="inputImage" type="file">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </body>
 
