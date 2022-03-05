@@ -111,39 +111,86 @@
                     <tbody>
                         <tr>
                             <th class="align-middle" scope="row">Homework Questions</th>
-                            <td class="align-middle"><input class="form-control" id="inputPerk1FreeAmount" type="text" value="1" /></td>
-                            <td class="align-middle"><input class="form-control" id="inputPerk1ProAmount" type="text" value="5" /></td>
-                            <td class="align-middle"><input class="form-control" id="inputPerk1PremiumAmount" type="text" value="unlimited" /></td>
-                            <td class="align-middle"><button type="button" class="btn btn-danger">Delete Perk</button></td>
+                            <td class="align-middle"><input class="form-control" id="inputPerk1FreeAmount" type="text"
+                                    value="1" /></td>
+                            <td class="align-middle"><input class="form-control" id="inputPerk1ProAmount" type="text"
+                                    value="5" /></td>
+                            <td class="align-middle"><input class="form-control" id="inputPerk1PremiumAmount"
+                                    type="text" value="unlimited" /></td>
+                            <td class="align-middle"><button type="button" class="btn btn-danger">Delete</button>
+                            </td>
                         </tr>
                         <tr>
                             <th class="align-middle" scope="row">Google Searches</th>
-                            <td class="align-middle"><input class="form-control" id="inputPerk2FreeAmount" type="text" value="1" /></td>
-                            <td class="align-middle"><input class="form-control" id="inputPerk2ProAmount" type="text" value="5" /></td>
-                            <td class="align-middle"><input class="form-control" id="inputPerk2PremiumAmount" type="text" value="unlimited" /></td>
-                            <td class="align-middle"><button type="button" class="btn btn-danger">Delete Perk</button></td>
+                            <td class="align-middle"><input class="form-control" id="inputPerk2FreeAmount" type="text"
+                                    value="1" /></td>
+                            <td class="align-middle"><input class="form-control" id="inputPerk2ProAmount" type="text"
+                                    value="5" /></td>
+                            <td class="align-middle"><input class="form-control" id="inputPerk2PremiumAmount"
+                                    type="text" value="unlimited" /></td>
+                            <td class="align-middle"><button type="button" class="btn btn-danger">Delete</button>
+                            </td>
                         </tr>
                         <tr>
                             <th class="align-middle" scope="row">Tutoring Sessions</th>
-                            <td class="align-middle"><input class="form-control" id="inputPerk3FreeAmount" type="text" value="0" /></td>
-                            <td class="align-middle"><input class="form-control" id="inputPerk3ProAmount" type="text" value="1" /></td>
-                            <td class="align-middle"><input class="form-control" id="inputPerk3PremiumAmount" type="text" value="4" /></td>
-                            <td class="align-middle"><button type="button" class="btn btn-danger">Delete Perk</button></td>
+                            <td class="align-middle"><input class="form-control" id="inputPerk3FreeAmount" type="text"
+                                    value="0" /></td>
+                            <td class="align-middle"><input class="form-control" id="inputPerk3ProAmount" type="text"
+                                    value="1" /></td>
+                            <td class="align-middle"><input class="form-control" id="inputPerk3PremiumAmount"
+                                    type="text" value="4" /></td>
+                            <td class="align-middle"><button type="button" class="btn btn-danger">Delete</button>
+                            </td>
                         </tr>
                         <tr>
                             <th class="align-middle" scope="row">Code Reviews</th>
-                            <td class="align-middle"><input class="form-control" id="inputPerk4FreeAmount" type="text" value="0" /></td>
-                            <td class="align-middle"><input class="form-control" id="inputPerk4ProAmount" type="text" value="0" /></td>
-                            <td class="align-middle"><input class="form-control" id="inputPerk4PremiumAmount" type="text" value="1" /></td>
-                            <td class="align-middle"><button type="button" class="btn btn-danger">Delete Perk</button></td>
+                            <td class="align-middle"><input class="form-control" id="inputPerk4FreeAmount" type="text"
+                                    value="0" /></td>
+                            <td class="align-middle"><input class="form-control" id="inputPerk4ProAmount" type="text"
+                                    value="0" /></td>
+                            <td class="align-middle"><input class="form-control" id="inputPerk4PremiumAmount"
+                                    type="text" value="1" /></td>
+                            <td class="align-middle"><button type="button" class="btn btn-danger">Delete</button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
-                <button type="button" class="btn btn-success">Add New Perk +</button>
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addPerkModal"
+                    data-backdrop="static" data-keyboard="false">Add New Perk +</button>
                 <a class="btn btn-primary" href="creator_settings.html">Save Subscription</a>
             </form>
         </div>
         <div class="col-sm-1"></div>
+    </div>
+    <div class="modal fade" id="addPerkModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addPerkModalLabel">Add New Perk</h5>
+                </div>
+                <form>
+                    <div class="modal-body">
+                        <div class="row mb-3">
+                            <div class="col-md-4 d-flex align-items-center">
+                                <label class="m-0" for="inputService">Service:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select class="custom-select" id="inputService">
+                                    <option selected>Choose...</option>
+                                    <option value="1">CSE 101 Tutor</option>
+                                    <option value="2">Digital Art</option>
+                                    <option value="3">Homework Help</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-success">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </body>
 
