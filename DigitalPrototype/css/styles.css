@@ -111,3 +111,8 @@ body, html {
     transform: translate(-50%, -50%);
     color: white;
 }
+
+.icon:before {
+    font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f155";
+    margin-right: 0.3em;
+}
