@@ -121,7 +121,7 @@
                     <p class="m-0">Password:</p>
                 </div>
                 <div class="col-md-10">
-                    <a class="btn btn-primary" href="#">Change Password</a>
+                    <a class="btn btn-primary" href="password.html">Change Password</a>
                 </div>
             </div>
             <div class="row mb-3">
@@ -129,11 +129,32 @@
                     <p class="m-0">Crypto Wallet:</p>
                 </div>
                 <div class="col-md-10">
-                    <a class="btn btn-primary" href="#">Link a Wallet</a>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#linkwallet">Link a Wallet</button>
                 </div>
             </div>
         </div>
         <div class="col-sm-3"></div>
+        <div class="modal fade" id="linkwallet" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="subscriptionConfirmLabel">Linking your Algorand Wallet</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <form class="m-3">
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Wallet Address</label>
+                      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="eg: 1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2">
+                    </div>
+                  </form>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-success" data-dismiss="modal">Link</button>
+                </div>
+              </div>
+            </div>
+        </div>
     </div>
 </body>
 
