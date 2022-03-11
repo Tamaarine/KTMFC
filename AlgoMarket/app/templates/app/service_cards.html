@@ -1,0 +1,22 @@
+{% load static %}
+
+{% if service_card_list %}
+<div class="row mx-5">
+    {% for service in service_card_list %}
+    <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="card">
+            <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+                {% with "app/assets/img/"|add:service.image_path as image_path %}
+                <img class="card-img-top " src="{% static image_path %}" alt="Card image cap">
+                {% endwith %}
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ service.name }}</h5>
+                <p class="card-text">{{ service.description }}</p>
+                <a href="/app/store" class="btn btn-primary" target="_blank">Store</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
