@@ -18,7 +18,15 @@
 
     <h1 class="mt-5 ml-5"><span>Search results</span></h1>
 
-    {% include "app/service_cards.html" %}
+    {% if service_card_list %}
+    <div class="row mx-5">
+        {% for service in service_card_list %}
+        <div class="col-lg-3 col-md-4 col-sm-6">
+            {% include "app/service_card.html" %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 </body>
 
 </html>

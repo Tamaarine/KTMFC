@@ -4,24 +4,30 @@ def index(request):
     context = {
         'nav_bar_name': None,
         'nav_bar_list': [
-            {'name': 'Login', 'url': '/app/login'},
-            {'name': 'Register', 'url': '/app/register'}
+            {'name': 'Login', 'url': 'login'},
+            {'name': 'Register', 'url': 'register'}
         ]
     }
     return render(request, 'app/index.html', context)
 
+def login(request):
+    return render(request, 'app/login.html')
+
 def register(request):
     return render(request, 'app/register.html')
 
-def login(request):
-    return render(request, 'app/login.html')
+def register_creator(request):
+    return
+
+def password(request):
+    return
 
 def search(request):
     context = {
         'nav_bar_name': None,
         'nav_bar_list': [
-            {'name': 'Login', 'url': '/app/login'},
-            {'name': 'Register', 'url': '/app/register'}
+            {'name': 'Login', 'url': 'login'},
+            {'name': 'Register', 'url': 'register'}
         ],
         'service_card_list': [
             {'name': 'Anime Sketches', 'description': 'I draw beautiful anime sketches for Algorand!', 'image_path': 'yes.jpg'},
@@ -32,3 +38,21 @@ def search(request):
         ]
     }
     return render(request, 'app/search.html', context)
+
+def store(request):
+    return
+
+def creator(request):
+    return
+
+def settings(request):
+    return
+
+def history(request):
+    return
+
+def services(request):
+    return
+
+def subscription(request):
+    return

@@ -1,0 +1,16 @@
+{% load static %}
+
+{% if service %}
+<div class="card">
+    <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
+        {% with "app/assets/img/"|add:service.image_path as image_path %}
+        <img class="card-img-top " src="{% static image_path %}" alt="Card image cap">
+        {% endwith %}
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ service.name }}</h5>
+        <p class="card-text">{{ service.description }}</p>
+        <a href="{% url 'store' %}" class="btn btn-primary">Store</a>
+    </div>
+</div>
+{% endif %}
