@@ -165,7 +165,49 @@ def history(request):
     return render(request, 'app/history.html', context)
 
 def services(request):
-    return
+    context = {
+        'navbar': {
+            'name': 'KTMcdonnell',
+            'list': [
+                {'name': 'My Profile', 'url': 'profile'},
+                {'name': 'Settings', 'url': 'settings'},
+                {'name': 'My Services', 'url': 'services'},
+                {'name': 'My Subscription', 'url': 'subscription'},
+                {'name': 'History', 'url': 'history'},
+                {'name': 'Logout', 'url': 'index'}
+            ]
+        },
+        'service_list': [
+            {'name': 'Anime Sketches', 'description': 'I draw beautiful anime sketches for Algorand!', 'cost': 50, 'image_path': 'yes.jpg'},
+            {'name': 'Graphic DESIGN!', 'description': 'I will make beautiful graphic design for anything', 'cost': 75, 'image_path': 'design.jpg'},
+            {'name': 'Profession Googler', 'description': 'I am a professional googler and I will google for you', 'cost': 10, 'image_path': 'google.jpg'}
+        ]
+    }
+    return render(request, 'app/manage_services.html', context)
 
 def subscription(request):
-    return
+    context = {
+        'navbar': {
+            'name': 'KTMcdonnell',
+            'list': [
+                {'name': 'My Profile', 'url': 'profile'},
+                {'name': 'Settings', 'url': 'settings'},
+                {'name': 'My Services', 'url': 'services'},
+                {'name': 'My Subscription', 'url': 'subscription'},
+                {'name': 'History', 'url': 'history'},
+                {'name': 'Logout', 'url': 'index'}
+            ]
+        },
+        'service_list': [
+            {'name': 'Anime Sketches', 'description': 'I draw beautiful anime sketches for Algorand!', 'cost': 50, 'image_path': 'yes.jpg'},
+            {'name': 'Graphic DESIGN!', 'description': 'I will make beautiful graphic design for anything', 'cost': 75, 'image_path': 'design.jpg'},
+            {'name': 'Profession Googler', 'description': 'I am a professional googler and I will google for you', 'cost': 10, 'image_path': 'google.jpg'}
+        ],
+        'subscription': {
+            'perks': ['homework questions', 'google searches', 'tutoring sessions', 'code reviews'],
+            'free': {'cost': 0, 'quantities': [1,1,0,0]},
+            'pro': {'cost': 50, 'quantities': [5,5,1,0]},
+            'premium': {'cost': 100, 'quantities': ['unlimited','unlimited',4,1]}
+        }
+    }
+    return render(request, 'app/manage_subscription.html', context)
