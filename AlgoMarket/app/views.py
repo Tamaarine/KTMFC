@@ -2,11 +2,13 @@ from django.shortcuts import render
 
 def index(request):
     context = {
-        'nav_bar_name': None,
-        'nav_bar_list': [
-            {'name': 'Login', 'url': 'login'},
-            {'name': 'Register', 'url': 'register'}
-        ]
+        'navbar': {
+            'name': None,
+            'list': [
+                {'name': 'Login', 'url': 'login'},
+                {'name': 'Register', 'url': 'register'}
+            ]
+        }
     }
     return render(request, 'app/index.html', context)
 
@@ -24,11 +26,13 @@ def password(request):
 
 def search(request):
     context = {
-        'nav_bar_name': None,
-        'nav_bar_list': [
-            {'name': 'Login', 'url': 'login'},
-            {'name': 'Register', 'url': 'register'}
-        ],
+        'navbar': {
+            'name': None,
+            'list': [
+                {'name': 'Login', 'url': 'login'},
+                {'name': 'Register', 'url': 'register'}
+            ]
+        },
         'service_list': [
             {'name': 'Anime Sketches', 'description': 'I draw beautiful anime sketches for Algorand!', 'image_path': 'yes.jpg'},
             {'name': 'Singing!', 'description': 'I will voice over anything you write for Cryptocurrency', 'image_path': 'sing.jpg'},
@@ -41,11 +45,13 @@ def search(request):
 
 def store(request):
     context = {
-        'nav_bar_name': None,
-        'nav_bar_list': [
-            {'name': 'Login', 'url': 'login'},
-            {'name': 'Register', 'url': 'register'}
-        ],
+        'navbar': {
+            'name': None,
+            'list': [
+                {'name': 'Login', 'url': 'login'},
+                {'name': 'Register', 'url': 'register'}
+            ]
+        },
         'service': {
             'name': 'Profession Googler',
             'image_paths': ['search1.PNG', 'search2.PNG', 'search3.PNG', 'search4.PNG'],
@@ -66,14 +72,97 @@ def store(request):
     }
     return render(request, 'app/store.html', context)
 
-def creator(request):
-    return
+def profile(request):
+    context = {
+        'navbar': {
+            'name': 'KTMcdonnell',
+            'list': [
+                {'name': 'My Profile', 'url': 'profile'},
+                {'name': 'Settings', 'url': 'settings'},
+                {'name': 'My Services', 'url': 'services'},
+                {'name': 'My Subscription', 'url': 'subscription'},
+                {'name': 'History', 'url': 'history'},
+                {'name': 'Logout', 'url': 'index'}
+            ]
+        },
+        'user': {
+            'creator': True,
+            'username': 'KTMcdonnell',
+            'email': 'ktm@cs.stonybrook.edu',
+            'image_path': 'ktm.jpg',
+            'first_name': 'Kevin',
+            'last_name': 'McDonnell',
+            'services_completed': 37,
+            'subscriber_count': 3,
+            'rating': 5,
+            'description': 'I am teaching professor in the Department of Computer Science at Stony Brook University, where I have worked since the summer of 2015. I teach a variety of 100-level and 200-level Computer Science courses.'
+        },
+        'service_list': [
+            {'name': 'Anime Sketches', 'description': 'I draw beautiful anime sketches for Algorand!', 'image_path': 'yes.jpg'},
+            {'name': 'Graphic DESIGN!', 'description': 'I will make beautiful graphic design for anything', 'image_path': 'design.jpg'},
+            {'name': 'Profession Googler', 'description': 'I am a professional googler and I will google for you', 'image_path': 'google.jpg'}
+        ],
+        'subscription': {
+            'perks': ['homework questions', 'google searches', 'tutoring sessions', 'code reviews'],
+            'free': {'cost': 0, 'quantities': [1,1,0,0]},
+            'pro': {'cost': 50, 'quantities': [5,5,1,0]},
+            'premium': {'cost': 100, 'quantities': ['unlimited','unlimited',4,1]}
+        }
+    }
+    return render(request, 'app/profile.html', context)
 
 def settings(request):
-    return
+    context = {
+        'navbar': {
+            'name': 'KTMcdonnell',
+            'list': [
+                {'name': 'My Profile', 'url': 'profile'},
+                {'name': 'Settings', 'url': 'settings'},
+                {'name': 'My Services', 'url': 'services'},
+                {'name': 'My Subscription', 'url': 'subscription'},
+                {'name': 'History', 'url': 'history'},
+                {'name': 'Logout', 'url': 'index'}
+            ]
+        },
+        'user': {
+            'creator': True,
+            'username': 'KTMcdonnell',
+            'image_path': 'ktm.jpg',
+            'first_name': 'Kevin',
+            'last_name': 'McDonnell',
+            'description': 'I am teaching professor in the Department of Computer Science at Stony Brook University, where I have worked since the summer of 2015. I teach a variety of 100-level and 200-level Computer Science courses.'
+        }
+    }
+    return render(request, 'app/settings.html', context)
 
 def history(request):
-    return
+    context = {
+        'navbar': {
+            'name': 'KTMcdonnell',
+            'list': [
+                {'name': 'My Profile', 'url': 'profile'},
+                {'name': 'Settings', 'url': 'settings'},
+                {'name': 'My Services', 'url': 'services'},
+                {'name': 'My Subscription', 'url': 'subscription'},
+                {'name': 'History', 'url': 'history'},
+                {'name': 'Logout', 'url': 'index'}
+            ]
+        },
+        'transactions': [
+            {'date': '2/27/2022', 'service': 'CSE 101 Tutoring', 'creator': 'KTMcdonnell', 'Price': 50},
+            {'date': '1/13/2022', 'service': 'Video Editing', 'creator': 'Rickster99', 'Price': 25},
+            {'date': '12/24/2021', 'service': 'Christmas Graphic Design', 'creator': 'SantaClaus1234', 'Price': 25},
+            {'date': '7/20/2021', 'service': 'Personal Website Design', 'creator': 'webdevpro1337', 'Price': 100},
+            {'date': '2/10/2021', 'service': 'Valentine\'s Song', 'creator': 'SongWriter369', 'Price': 75},
+            {'date': '2/9/2021', 'service': 'Valentine\'s Art', 'creator': 'HeartDrawings<3', 'Price': 15}
+        ],
+        'subscriptions': [
+            {'creator': 'KTMcdonnell', 'tier': 'Premium', 'cost': 100, 'status': 'Active'},
+            {'creator': 'Rickster99', 'tier': 'Free', 'cost': 0, 'status': 'Active'},
+            {'creator': 'WhaleLover42', 'tier': 'Pro', 'cost': 10, 'status': 'Inactive'}
+        ]
+    }
+    return render(request, 'app/history.html', context)
 
 def services(request):
     return

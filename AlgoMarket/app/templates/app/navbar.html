@@ -33,16 +33,16 @@
                 <a class="nav-link dropdown-toggle sign-in-btn am-text-secondary" href="#" id="navbarDropdown"
                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="mr-1">
-                        {% if nav_bar_name %}
-                        {{ nav_bar_name }}
+                        {% if navbar.name %}
+                        {{ navbar.name }}
                         {% else %}
                         Sign In
                         {% endif %}
                     </span>
                 </a>
-                {% if nav_bar_list %}
+                {% if navbar.list %}
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                    {% for item in nav_bar_list %}
+                    {% for item in navbar.list %}
                     <a class="dropdown-item" href="{% url item.url %}">{{ item.name }}</a>
                     {% endfor %}
                 </div>
