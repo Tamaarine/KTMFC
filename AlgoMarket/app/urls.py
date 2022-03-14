@@ -13,5 +13,6 @@ urlpatterns = [
     path('settings', views.settings, name='settings'),
     path('history', views.history, name='history'),
     path('services', views.services, name='services'),
-    path('subscription', views.subscription, name='subscription')
+    path('subscription', views.subscription, name='subscription'),
+    path('test', views.viewmodel, name='testing')
 ]
