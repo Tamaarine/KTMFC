@@ -14,70 +14,19 @@
 </head>
 
 <body>
-    {% include "app/navbar.html" %}
+    {% include 'app/navbar.html' %}
 
     <h1 class="mt-5 ml-5"><span>Search results</span></h1>
 
+    {% if service_list %}
     <div class="row mx-5">
+        {% for service in service_list %}
         <div class="col-lg-3 col-md-4 col-sm-6">
-            <div class="card">
-                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
-                    <img class="card-img-top " src="{% static 'app/assets/img/yes.jpg' %}" alt="Card image cap">
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Anime Sketches</h5>
-                    <p class="card-text">I draw beautiful anime sketches for Algorand!</p>
-                    <a href="/app/store" class="btn btn-primary" target="_blank">Store</a>
-                </div>
-            </div>
+            {% include 'app/service_card.html' %}
         </div>
-        <div class="col-lg-3 col-md-4 col-sm-6">
-            <div class="card">
-                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
-                    <img class="card-img-top " src="{% static 'app/assets/img/sing.jpg' %}" alt="Card image cap">
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Singing!</h5>
-                    <p class="card-text">I will voice over anything you write for Cryptocurrency</p>
-                    <a href="/app/store" class="btn btn-primary" target="_blank">Store</a>
-                </div>
-            </div>
-        </div><div class="col-lg-3 col-md-4 col-sm-6">
-            <div class="card">
-                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
-                    <img class="card-img-top " src="{% static 'app/assets/img/accountant.png' %}" alt="Card image cap">
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Tax</h5>
-                    <p class="card-text">I do your taxes for crypto</p>
-                    <a href="/app/store" class="btn btn-primary" target="_blank">Store</a>
-                </div>
-            </div>
-        </div><div class="col-lg-3 col-md-4 col-sm-6">
-            <div class="card">
-                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
-                    <img class="card-img-top " src="{% static 'app/assets/img/design.jpg' %}" alt="Card image cap">
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Graphic DESIGN!</h5>
-                    <p class="card-text">I will make beautiful graphic design for anything</p>
-                    <a href="/app/store" class="btn btn-primary" target="_blank">Store</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6">
-            <div class="card">
-                <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
-                    <img class="card-img-top " src="{% static 'app/assets/img/google.jpg' %}" alt="Card image cap">
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Profession Googler</h5>
-                    <p class="card-text">I'm a professional googler and I will google for you</p>
-                    <a href="/app/store" class="btn btn-primary" target="_blank">Store</a>
-                </div>
-            </div>
-        </div>
+        {% endfor %}
     </div>
+    {% endif %}
 </body>
 
 </html>

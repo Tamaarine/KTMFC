@@ -63,6 +63,30 @@ body, html {
     object-fit: cover;
 }
 
+.text-bold, .text-bold:hover
+{
+    color: black;
+}
+
+.ratings {
+    background-color: #fff;
+    padding: 30px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 10px 10px #E0E0E0
+}
+
+.product-rating {
+    font-size: 50px
+}
+
+.link::before { 
+    display: block; 
+    content: " "; 
+    margin-top: -67px; 
+    height: 67px; 
+    visibility: hidden; 
+  }
+
 /* The hero image */
 .hero-image {
     /* Use "linear-gradient" to add a darken background effect to the image (photographer.jpg). This will make the text easier to read */
@@ -86,4 +110,16 @@ body, html {
     left: 50%;
     transform: translate(-50%, -50%);
     color: white;
+}
+
+.carousel-item img {
+    object-fit: cover;
+    object-position: 0px 20px; 
+    height: 40vh;
+    overflow: hidden;
+}
+
+.icon:before {
+    font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f155";
+    margin-right: 0.3em;
 }
