@@ -34,15 +34,16 @@
                                                 src="{% static 'app/assets/img/logo-white.svg' %}" width="44"></span>Login</h3>
                                 </div>
                                 <div class="card-body">
-                                    <form>
+                                    <form method="POST" action="/login">
+                                        {% csrf_token %}
                                         <div class="form-floating mb-3">
                                             <input class="form-control" id="inputEmail" type="email"
-                                                placeholder="name@example.com" />
+                                                placeholder="name@example.com" name="email" required/>
                                             <label for="inputEmail">Email address</label>
                                         </div>
                                         <div class="form-floating mb-3">
                                             <input class="form-control" id="inputPassword" type="password"
-                                                placeholder="Password" />
+                                                placeholder="Password" name="password" required/>
                                             <label for="inputPassword">Password</label>
                                         </div>
                                         <div class="form-check mb-3">
@@ -53,7 +54,7 @@
                                         </div>
                                         <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
                                             <a class="small" href="{% url 'password' %}">Forgot Password?</a>
-                                            <a class="btn btn-primary" href="{% url 'index' %}">Login</a>
+                                            <button class="btn btn-primary" type="submit">Login</button>
                                         </div>
                                     </form>
                                 </div>
@@ -69,7 +70,6 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
-    <script src="js/scripts.js"></script>
 </body>
 
 </html>
