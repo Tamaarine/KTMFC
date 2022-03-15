@@ -1,7 +1,9 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
+import datetime
 
 # Create your models here.
-class User(models.Model):
+class User(AbstractUser):
     email = models.CharField(max_length=200, primary_key=True)
     username = models.CharField(max_length=200)
     firstName = models.CharField(max_length=20)
@@ -13,6 +15,10 @@ class User(models.Model):
     service_completed = models.IntegerField()
     subscriber_count = models.IntegerField()
     bio = models.CharField(max_length=200)
+    last_login = models.TimeField(default=datetime.datetime.now())
+    
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
 
 class Service(models.Model):
     id = models.IntegerField(primary_key=True)
