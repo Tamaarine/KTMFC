@@ -1,7 +1,7 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from .models import User
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login as auth_login, logout
 
 
 def index(request):
@@ -17,17 +17,29 @@ def index(request):
     return render(request, 'app/index.html', context)
 
 def login(request):
-    
-    if request.POST:
-        return HttpResponse("is a post request")
-    else:
-        return HttpResponse("It is not a post request")
-    
-    
-    return render(request, 'app/login.html')
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            return HttpResponseRedirect('search')
+            
+        user = authenticate(request, useremail=request.POST.get('email'), password=request.POST.get('password'))
+        if user is not None:
+            auth_login(request, user)
+            return HttpResponseRedirect('search')
+        else:
+            return HttpResponse("NOT A VALID USER!")
+        
+    elif request.method == "GET":
+        return render(request, 'app/login.html')
 
 def register(request):
-    return render(request, 'app/register.html')
+    if request.method == "POST":
+        # Making a post request we will handle it
+        print(request.POST.get('password'))
+        
+        return HttpResponse("THIS IS A POST REQUEST!")
+    elif request.method == "GET":
+        # User is just getting the registeration html, just sent it
+        return render(request, 'app/register.html')
 
 def register_creator(request):
     return render(request, 'app/register_creator.html')

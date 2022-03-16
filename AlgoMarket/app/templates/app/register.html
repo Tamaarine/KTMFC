@@ -34,47 +34,49 @@
                                                 src="{% static 'app/assets/img/logo-white.svg' %}" width="44"></span>Create Account</h3>
                                 </div>
                                 <div class="card-body">
-                                    <form>
+                                    <form method="POST" action="/register">
+                                        {% csrf_token %}
                                         <div class="row mb-3">
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3 mb-md-0">
                                                     <input class="form-control" id="inputFirstName" type="text"
-                                                        placeholder="Enter your first name" />
+                                                        placeholder="Enter your first name" name="firstname" required/>
                                                     <label for="inputFirstName">First name</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating">
                                                     <input class="form-control" id="inputLastName" type="text"
-                                                        placeholder="Enter your last name" />
+                                                        placeholder="Enter your last name" name="lastname" required/>
                                                     <label for="inputLastName">Last name</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-floating mb-3">
                                             <input class="form-control" id="inputEmail" type="email"
-                                                placeholder="name@example.com" />
+                                                placeholder="name@example.com" name="email" required/>
                                             <label for="inputEmail">Email address</label>
                                         </div>
                                         <div class="row mb-3">
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3 mb-md-0">
                                                     <input class="form-control" id="inputPassword" type="password"
-                                                        placeholder="Create a password" />
+                                                        placeholder="Create a password" name="password" required/>
                                                     <label for="inputPassword">Password</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3 mb-md-0">
                                                     <input class="form-control" id="inputPasswordConfirm"
-                                                        type="password" placeholder="Confirm password" />
+                                                        type="password" placeholder="Confirm password" required/>
                                                     <label for="inputPasswordConfirm">Confirm Password</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="mt-4 mb-0">
-                                            <div class="d-grid"><a class="btn btn-primary btn-block"
-                                                    href="{% url 'index' %}">Create Account</a></div>
+                                            <div class="d-grid">
+                                                <button class="btn btn-primary btn-block" type="submit">Create Account</button>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>
