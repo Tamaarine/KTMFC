@@ -1,25 +1,40 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 from .models import User
-from django.contrib.auth import authenticate, login as auth_login, logout
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.contrib.auth.hashers import check_password, make_password
 
 
 def index(request):
-    context = {
-        'navbar': {
-            'name': None,
-            'list': [
-                {'name': 'Login', 'url': 'login'},
-                {'name': 'Register', 'url': 'register'}
-            ]
+    if request.user.is_authenticated:
+        context = {
+            'navbar': {
+                'name': request.user.username,
+                'list': [
+                    {'name': 'Profile', 'url': 'profile'},
+                    {'name': 'Logout', 'url': 'logout'}
+                ]
+            }
         }
-    }
+    else:
+        context = {
+            'navbar': {
+                'name': None,
+                'list': [
+                    {'name': 'Login', 'url': 'login'},
+                    {'name': 'Register', 'url': 'register'}
+                ]
+            }
+        }
     return render(request, 'app/index.html', context)
 
 def login(request):
+    if request.user.is_authenticated:
+        # Already authenticated no reason to go here ever again
+        return HttpResponseRedirect('search')
+        
     if request.method == "POST":
-        if request.user.is_authenticated:
-            return HttpResponseRedirect('search')
             
         user = authenticate(request, useremail=request.POST.get('email'), password=request.POST.get('password'))
         if user is not None:
@@ -30,6 +45,10 @@ def login(request):
         
     elif request.method == "GET":
         return render(request, 'app/login.html')
+
+def logout(request):
+    auth_logout(request)
+    return HttpResponseRedirect(reverse('index'))
 
 def register(request):
     if request.method == "POST":
@@ -97,17 +116,6 @@ def store(request):
 
 def profile(request):
     context = {
-        'navbar': {
-            'name': 'KTMcdonnell',
-            'list': [
-                {'name': 'My Profile', 'url': 'profile'},
-                {'name': 'Settings', 'url': 'settings'},
-                {'name': 'My Services', 'url': 'services'},
-                {'name': 'My Subscription', 'url': 'subscription'},
-                {'name': 'History', 'url': 'history'},
-                {'name': 'Logout', 'url': 'index'}
-            ]
-        },
         'user': {
             'creator': True,
             'username': 'KTMcdonnell',
