@@ -35,7 +35,6 @@ def login(request):
         return HttpResponseRedirect('search')
         
     if request.method == "POST":
-            
         user = authenticate(request, useremail=request.POST.get('email'), password=request.POST.get('password'))
         if user is not None:
             auth_login(request, user)
@@ -47,9 +46,12 @@ def login(request):
         return render(request, 'app/login.html')
 
 def logout(request):
-    auth_logout(request)
-    return HttpResponseRedirect(reverse('index'))
-
+    if request.user.is_authenticated:
+        auth_logout(request)
+        return render(request, 'app/index.html')
+    else:
+        return HttpResponseRedirect('index')
+    
 def register(request):
     if request.method == "POST":
         # Making a post request we will handle it
