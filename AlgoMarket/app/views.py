@@ -35,7 +35,7 @@ def login(request):
         return HttpResponseRedirect('search')
         
     if request.method == "POST":
-        user = authenticate(request, useremail=request.POST.get('email'), password=request.POST.get('password'))
+        user = authenticate(request, username=request.POST.get('email'), password=request.POST.get('password'))
         if user is not None:
             auth_login(request, user)
             return HttpResponseRedirect('search')
