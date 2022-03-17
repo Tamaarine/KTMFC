@@ -50,7 +50,7 @@
         <p class="card-text text-left w-100"><b>Description</b></p>
         <p class="card-text text-left">{{ user.description }}</p>
         <hr style="border-color: #DDD; width: 100%">
-        <button type="button" class="btn btn-danger btn-block">Report {% if user.creator %}Creator{% else %}User{% endif %}</button>
+        <a href="{% url 'report' %}" class="btn btn-danger btn-block">Report {% if user.creator %}Creator{% else %}User{% endif %}</a>
       </div>
     </div>
     {% if user.creator %}
