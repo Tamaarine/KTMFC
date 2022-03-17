@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 import datetime
+from django.contrib.auth.hashers import make_password
+
 
 # Create your models here.
 class CustomUserManager(BaseUserManager):
@@ -8,10 +10,12 @@ class CustomUserManager(BaseUserManager):
     CustomUserManger used for creating normal users and superusers
     Passwords are stored in hash
     '''
-    def create_user(self, email, password, username=None):
-        toSave = User(email=email)
+    def create_user(self, email, password, first_name, last_name, username):
+        toSave = User(email=email, first_name=first_name, last_name=last_name, username=username)
+        toSave.password = make_password(password, username + first_name)
         toSave.set_password(raw_password=password)
         toSave.save()
+        return toSave
     def create_superuser(self, email, password, username=None):
         toSave = User(email=email, is_superuser=True, is_staff=True)
         toSave.set_password(raw_password=password)
@@ -19,19 +23,12 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractUser):
     email = models.CharField(max_length=200, primary_key=True)
-    username = models.CharField(max_length=200)
-    firstName = models.CharField(max_length=20)
-    lastName = models.CharField(max_length=20)
-    password = models.CharField(max_length=200)
     walletAddress = models.CharField(max_length=200)
-    created = models.TimeField(auto_now_add=True)
     last_updateed = models.TimeField(auto_now=True)
     service_completed = models.IntegerField(default=0)
     subscriber_count = models.IntegerField(default=0)
     bio = models.CharField(max_length=200)
     last_login = models.TimeField(default=datetime.datetime.now())
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     
