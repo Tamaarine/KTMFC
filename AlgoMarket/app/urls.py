@@ -1,20 +1,19 @@
 from django.urls import path
-from . import views
+from . import requests
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('login', views.login, name='login'),
-    path('logout', views.logout, name='logout'),
-    path('register', views.register, name='register'),
-    path('register_creator', views.register_creator, name='register_creator'),
-    path('password', views.password, name='password'),
-    path('search', views.search, name='search'),
-    path('store', views.store, name='store'),
-    path('profile', views.profile, name='profile'),
-    path('settings', views.settings, name='settings'),
-    path('history', views.history, name='history'),
-    path('services', views.services, name='services'),
-    path('subscription', views.subscription, name='subscription'),
-    path('report', views.report, name='report'),
-    path('test', views.viewmodel, name='testing')
+    path('', requests.index, name='index'),
+    path('login', requests.login, name='login'),
+    path('logout', requests.logout, name='logout'),
+    path('register', requests.register, name='register'),
+    path('register_creator', requests.register_creator, name='register_creator'),
+    path('password', requests.password, name='password'),
+    path('search', requests.search, name='search'),
+    path('store', requests.store, name='store'),
+    path('profile', requests.profile, name='profile'),
+    path('settings', requests.settings, name='settings'),
+    path('history', requests.history, name='history'),
+    path('services', requests.services, name='services'),
+    path('subscription', requests.subscription, name='subscription'),
+    path('report', requests.report, name='report'),
 ]

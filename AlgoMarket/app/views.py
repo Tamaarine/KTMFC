@@ -30,20 +30,7 @@ def index(request):
     return render(request, 'app/index.html', context)
 
 def login(request):
-    if request.user.is_authenticated:
-        # Already authenticated no reason to go here ever again
-        return HttpResponseRedirect('search')
-        
-    if request.method == "POST":
-        user = authenticate(request, username=request.POST.get('email'), password=request.POST.get('password'))
-        if user is not None:
-            auth_login(request, user)
-            return HttpResponseRedirect('search')
-        else:
-            return HttpResponse("NOT A VALID USER!")
-        
-    elif request.method == "GET":
-        return render(request, 'app/login.html')
+    return render(request, 'app/login.html')
 
 def logout(request):
     if request.user.is_authenticated:
@@ -53,14 +40,7 @@ def logout(request):
         return HttpResponseRedirect('index')
     
 def register(request):
-    if request.method == "POST":
-        # Making a post request we will handle it
-        print(request.POST.get('password'))
-        
-        return HttpResponse("THIS IS A POST REQUEST!")
-    elif request.method == "GET":
-        # User is just getting the registeration html, just sent it
-        return render(request, 'app/register.html')
+    return render(request, 'app/register.html')
 
 def register_creator(request):
     return render(request, 'app/register_creator.html')
@@ -254,11 +234,3 @@ def report(request):
         ],
     }
     return render(request, 'app/report.html', context)
-
-def viewmodel(request):
-    # return HttpResponse("hello world")
-    response = ""
-    for user in User.objects.all():
-        response += f"<H1>Email: {user.email} Bio: {user.bio} Username: {user.username} Password: {user.password}</H1>"
-    
-    return HttpResponse(response)
