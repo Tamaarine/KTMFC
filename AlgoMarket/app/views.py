@@ -3,8 +3,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from .models import User
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
-from django.contrib.auth.hashers import check_password, make_password
-
+from django.contrib import messages
 
 def index(request):
     if request.user.is_authenticated:
@@ -35,7 +34,7 @@ def login(request):
         return HttpResponseRedirect('search')
         
     if request.method == "POST":
-        user = authenticate(request, useremail=request.POST.get('email'), password=request.POST.get('password'))
+        user = authenticate(request, username=request.POST.get('email'), password=request.POST.get('password'))
         if user is not None:
             auth_login(request, user)
             return HttpResponseRedirect('search')
@@ -50,14 +49,24 @@ def logout(request):
         auth_logout(request)
         return render(request, 'app/index.html')
     else:
-        return HttpResponseRedirect('index')
+        return HttpResponseRedirect('/')
     
 def register(request):
+    if request.user.is_authenticated:
+        # Already authenticated no reason to go here ever again
+        return HttpResponseRedirect('search')
+    
     if request.method == "POST":
         # Making a post request we will handle it
-        print(request.POST.get('password'))
-        
-        return HttpResponse("THIS IS A POST REQUEST!")
+        inEmail = request.POST.get('email')
+        inPassword = request.POST.get('password')
+        inFirst = request.POST.get('firstname')
+        inLast = request.POST.get('lastname')
+        inUsername = request.POST.get('username')
+        user = User.objects.create_user(inEmail, inPassword, inFirst, inLast, inUsername)
+        auth_login(request, user)
+        messages.success(request, "Registration successful." )
+        return HttpResponseRedirect('/')
     elif request.method == "GET":
         # User is just getting the registeration html, just sent it
         return render(request, 'app/register.html')
