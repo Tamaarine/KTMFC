@@ -67,14 +67,15 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="newServiceModalLabel">Create New Service</h5>
                 </div>
-                <form>
+                <form method="POST" action="/services">
+                    {% csrf_token %}
                     <div class="modal-body">
                         <div class="row mb-3">
                             <div class="col-md-4 d-flex align-items-center">
                                 <label class="m-0" for="inputName">Name:</label>
                             </div>
                             <div class="col-md-8">
-                                <input class="form-control" id="inputName" type="text" />
+                                <input class="form-control" id="inputName" type="text" name="name" required />
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -82,18 +83,18 @@
                                 <label class="m-0" for="inputDescription">Description:</label>
                             </div>
                             <div class="col-md-8">
-                                <textarea class="form-control" id="inputDescription" rows="5"></textarea>
+                                <textarea class="form-control" id="inputDescription" rows="5" name="description" required></textarea>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4 d-flex align-items-center">
-                                <label class="m-0" for="inputCost">Cost:</label>
+                                <label class="m-0" for="inputPrice">Price:</label>
                             </div>
                             <div class="col-md-5">
-                                <input class="form-control" id="inputCost" type="text" />
+                                <input class="form-control" id="inputPrice" type="number" name="price" required />
                             </div>
                             <div class="col-md-3 d-flex align-items-center p-0">
-                                <label class="m-0" for="inputCost">ALGO</label>
+                                <label class="m-0" for="inputPrice">ALGO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -107,7 +108,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-success">Create</button>
+                        <button type="submit" class="btn btn-success">Create</button>
                     </div>
                 </form>
             </div>
