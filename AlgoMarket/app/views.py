@@ -134,11 +134,3 @@ def subscription(request):
         }
     }
     return render(request, 'app/manage_subscription.html', context)
-    
-def viewmodel(request):
-    # return HttpResponse("hello world")
-    response = ""
-    for user in User.objects.all():
-        response += f"<H1>Email: {user.email} Bio: {user.bio} Username: {user.username} Password: {user.password}</H1>"
-    
-    return HttpResponse(response)

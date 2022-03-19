@@ -91,13 +91,16 @@ def services(request):
         service = Service(id=Service.objects.count(), name=inName, seller=request.user, description=inDescription, price=inPrice, amount_available=1)
         service.save()
         messages.success(request, "Service creation successful." )
-        return HttpResponseRedirect('services')
+        # then respond with the page with updated list
+        service_list = Service.objects.filter(seller=request.user)
+        return views.services(request, service_list)
 
     if request.method == "PUT":
-        return HttpResponse("Received put request")
+        # find and update the appropriate Service object in the database
+        messages.success(request, "Service update was successful." )
+        # then respond with the page with updated list
+        service_list = Service.objects.filter(seller=request.user)
+        return views.services(request, service_list)
 
 def subscription(request):
     return views.subscription(request)
-    
-def report(request):
-    return views.report(request)

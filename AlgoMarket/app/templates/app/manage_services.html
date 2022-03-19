@@ -121,8 +121,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="editServiceModalLabel">Edit Service</h5>
                 </div>
-                <form>
-                    {% csrf_token %}
+                <form onsubmit="updateService(event)">
                     <input id="updateServiceID" type="hidden" name="serviceID" />
                     <div class="modal-body">
                         <div class="row mb-3">
@@ -163,7 +162,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary" onClick="updateService()">Update</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
                     </div>
                 </form>
             </div>
@@ -184,37 +183,7 @@
             modal.find('#updateServiceID').val(id)
         })
     </script>
-    <script>
-        //function to get the CSRF-token from cookies
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-        //script to send a PUT request for updating a service in the database
-        async function updateService() {
-            let data = {
-                'id': $('#updateServiceID').val(),
-                'name': $('#updateName').val(),
-                'description': $('#updateDescription').val(),
-                'price': $('#updatePrice').val()
-            }
-            const response = await fetch('/services', {
-                method: 'PUT',
-                headers: {'X-CSRFToken': getCookie('csrftoken')},
-                body: JSON.stringify(data)
-            })
-        }
-    </script>
+    <script src="{% static 'app/javascript/service_requests.js' %}"></script>
 </body>
 
 </html>
