@@ -36,7 +36,7 @@
                     <tr>
                         <td class="align-middle">{{ service.name }}</td>
                         <td class="align-middle">{{ service.description }}</td>
-                        <td class="align-middle">{{ service.cost }} ALGO</td>
+                        <td class="align-middle">{{ service.price }} ALGO</td>
                         <td class="align-middle">{{ service.image_path }}</td>
                         <td class="align-middle">
                             <button
@@ -46,9 +46,10 @@
                                 data-target="#editServiceModal"
                                 data-service-name="{{ service.name }}"
                                 data-service-description="{{ service.description }}"
-                                data-service-cost="{{ service.cost }}"
+                                data-service-price="{{ service.price }}"
+                                data-service-id="{{ service.id }}"
                                 >
-                                Edit Service
+                                Edit
                         </button>
                         </td>
                     </tr>
@@ -72,37 +73,37 @@
                     <div class="modal-body">
                         <div class="row mb-3">
                             <div class="col-md-4 d-flex align-items-center">
-                                <label class="m-0" for="inputName">Name:</label>
+                                <label class="m-0" for="createName">Name:</label>
                             </div>
                             <div class="col-md-8">
-                                <input class="form-control" id="inputName" type="text" name="name" required />
+                                <input class="form-control" id="createName" type="text" name="name" required />
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4 d-flex align-items-center">
-                                <label class="m-0" for="inputDescription">Description:</label>
+                                <label class="m-0" for="createDescription">Description:</label>
                             </div>
                             <div class="col-md-8">
-                                <textarea class="form-control" id="inputDescription" rows="5" name="description" required></textarea>
+                                <textarea class="form-control" id="createDescription" rows="5" name="description" required></textarea>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4 d-flex align-items-center">
-                                <label class="m-0" for="inputPrice">Price:</label>
+                                <label class="m-0" for="createPrice">Price:</label>
                             </div>
                             <div class="col-md-5">
-                                <input class="form-control" id="inputPrice" type="number" name="price" required />
+                                <input class="form-control" id="createPrice" type="number" name="price" required />
                             </div>
                             <div class="col-md-3 d-flex align-items-center p-0">
-                                <label class="m-0" for="inputPrice">ALGO</label>
+                                <label class="m-0" for="createPrice">ALGO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4 d-flex align-items-center">
-                                <label class="m-0" for="inputImage">Image:</label>
+                                <label class="m-0" for="createImage">Image:</label>
                             </div>
                             <div class="col-md-8">
-                                <input class="form-control-file" id="inputImage" type="file">
+                                <input class="form-control-file" id="createImage" type="file">
                             </div>
                         </div>
                     </div>
@@ -121,47 +122,48 @@
                     <h5 class="modal-title" id="editServiceModalLabel">Edit Service</h5>
                 </div>
                 <form>
+                    {% csrf_token %}
+                    <input id="updateServiceID" type="hidden" name="serviceID" />
                     <div class="modal-body">
                         <div class="row mb-3">
                             <div class="col-md-4 d-flex align-items-center">
-                                <label class="m-0" for="inputName">Name:</label>
+                                <label class="m-0" for="updateName">Name:</label>
                             </div>
                             <div class="col-md-8">
-                                <input class="form-control" id="inputName" type="text" value="CSE 101 Tutor" />
+                                <input class="form-control" id="updateName" type="text" name="name" required />
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4 d-flex align-items-center">
-                                <label class="m-0" for="inputDescription">Description:</label>
+                                <label class="m-0" for="updateDescription">Description:</label>
                             </div>
                             <div class="col-md-8">
-                                <textarea class="form-control" id="inputDescription"
-                                    rows="5">I will help you study for your CSE 101 exams!</textarea>
+                                <textarea class="form-control" id="updateDescription" rows="5" name="description" required></textarea>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4 d-flex align-items-center">
-                                <label class="m-0" for="inputCost">Cost:</label>
+                                <label class="m-0" for="updatePrice">Price:</label>
                             </div>
                             <div class="col-md-5">
-                                <input class="form-control" id="inputCost" type="text" value="50" />
+                                <input class="form-control" id="updatePrice" type="number" name="price" required />
                             </div>
                             <div class="col-md-3 d-flex align-items-center p-0">
-                                <label class="m-0" for="inputCost">ALGO</label>
+                                <label class="m-0" for="updatePrice">ALGO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4 d-flex align-items-center">
-                                <label class="m-0" for="inputImage">Image:</label>
+                                <label class="m-0" for="updateImage">Image:</label>
                             </div>
                             <div class="col-md-8">
-                                <input class="form-control-file" id="inputImage" type="file">
+                                <input class="form-control-file" id="updateImage" type="file">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary">Update</button>
+                        <button type="button" class="btn btn-primary" onClick="updateService()">Update</button>
                     </div>
                 </form>
             </div>
@@ -173,12 +175,45 @@
             let button = $(event.relatedTarget) // Button that triggered the modal
             let name = button.data('service-name')
             let description = button.data('service-description')
-            let cost = button.data('service-cost')
-            var modal = $(this)
-            modal.find('#inputName').val(name)
-            modal.find('#inputDescription').val(description)
-            modal.find('#inputCost').val(cost)
+            let price = button.data('service-price')
+            let id = button.data('service-id')
+            let modal = $(this)
+            modal.find('#updateName').val(name)
+            modal.find('#updateDescription').val(description)
+            modal.find('#updatePrice').val(price)
+            modal.find('#updateServiceID').val(id)
         })
+    </script>
+    <script>
+        //function to get the CSRF-token from cookies
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        //script to send a PUT request for updating a service in the database
+        async function updateService() {
+            let data = {
+                'id': $('#updateServiceID').val(),
+                'name': $('#updateName').val(),
+                'description': $('#updateDescription').val(),
+                'price': $('#updatePrice').val()
+            }
+            const response = await fetch('/services', {
+                method: 'PUT',
+                headers: {'X-CSRFToken': getCookie('csrftoken')},
+                body: JSON.stringify(data)
+            })
+        }
     </script>
 </body>
 

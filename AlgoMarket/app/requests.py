@@ -93,8 +93,11 @@ def services(request):
         messages.success(request, "Service creation successful." )
         return HttpResponseRedirect('services')
 
+    if request.method == "PUT":
+        return HttpResponse("Received put request")
+
 def subscription(request):
-    return views.services(request)
+    return views.subscription(request)
     
 def report(request):
     return views.report(request)
