@@ -17,9 +17,19 @@ function getCookie(name) {
 //function to send a PUT request for updating a service in the database
 async function updateService(event) {
     event.preventDefault();
+    data = {
+        'id': event.target.elements.id.value,
+        'name': event.target.elements.name.value,
+        'description': event.target.elements.description.value,
+        'price': event.target.elements.price.value
+    }
     const response = await fetch('/services', {
         method: 'PUT',
         headers: {'X-CSRFToken': getCookie('csrftoken')},
-        body: event.target.elements
+        body: JSON.stringify(data)
     });
+    if (response.ok) {
+        const row = document.getElementById('service' + data.id);
+        
+    }
 }

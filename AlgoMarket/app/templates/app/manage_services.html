@@ -31,9 +31,9 @@
                         <th scope="col">Edit</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="serviceTable">
                     {% for service in service_list %}
-                    <tr>
+                    <tr id="service{{ service.id }}">
                         <td class="align-middle">{{ service.name }}</td>
                         <td class="align-middle">{{ service.description }}</td>
                         <td class="align-middle">{{ service.price }} ALGO</td>
@@ -122,7 +122,7 @@
                     <h5 class="modal-title" id="editServiceModalLabel">Edit Service</h5>
                 </div>
                 <form onsubmit="updateService(event)">
-                    <input id="updateServiceID" type="hidden" name="serviceID" />
+                    <input id="updateid" type="hidden" name="id" />
                     <div class="modal-body">
                         <div class="row mb-3">
                             <div class="col-md-4 d-flex align-items-center">
@@ -162,7 +162,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Update</button>
+                        <button type="submit" class="btn btn-primary" data-dismiss="modal">Update</button>
                     </div>
                 </form>
             </div>
@@ -180,7 +180,7 @@
             modal.find('#updateName').val(name)
             modal.find('#updateDescription').val(description)
             modal.find('#updatePrice').val(price)
-            modal.find('#updateServiceID').val(id)
+            modal.find('#updateid').val(id)
         })
     </script>
     <script src="{% static 'app/javascript/service_requests.js' %}"></script>

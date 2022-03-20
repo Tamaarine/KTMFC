@@ -5,6 +5,7 @@ from .models import User, Service
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.hashers import check_password, make_password
 from django.contrib import messages
+import json
 from . import views
 
 
@@ -97,10 +98,15 @@ def services(request):
 
     if request.method == "PUT":
         # find and update the appropriate Service object in the database
+        data = json.loads(request.body)
+        service = Service.objects.get(pk=data['id'])
+        service.name = data['name']
+        service.description = data['description']
+        service.price = data['price']
+        service.save()
         messages.success(request, "Service update was successful." )
-        # then respond with the page with updated list
-        service_list = Service.objects.filter(seller=request.user)
-        return views.services(request, service_list)
+        # then respond with a 200 OK if the update was successful
+        return HttpResponse()
 
 def subscription(request):
     return views.subscription(request)
