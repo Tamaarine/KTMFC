@@ -31,24 +31,26 @@
                         <th scope="col">Edit</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="serviceTable">
                     {% for service in service_list %}
-                    <tr>
-                        <td class="align-middle">{{ service.name }}</td>
-                        <td class="align-middle">{{ service.description }}</td>
-                        <td class="align-middle">{{ service.cost }} ALGO</td>
+                    <tr id="service{{ service.id }}">
+                        <td id="service{{ service.id }}name" class="align-middle">{{ service.name }}</td>
+                        <td id="service{{ service.id }}description" class="align-middle">{{ service.description }}</td>
+                        <td id="service{{ service.id }}price" class="align-middle">{{ service.price }} ALGO</td>
                         <td class="align-middle">{{ service.image_path }}</td>
                         <td class="align-middle">
                             <button
+                                id="service{{ service.id }}editbutton" 
                                 type="button"
                                 class="btn btn-primary"
                                 data-toggle="modal"
                                 data-target="#editServiceModal"
-                                data-service-name="{{ service.name }}"
-                                data-service-description="{{ service.description }}"
-                                data-service-cost="{{ service.cost }}"
+                                data-name="{{ service.name }}"
+                                data-description="{{ service.description }}"
+                                data-price="{{ service.price }}"
+                                data-id="{{ service.id }}"
                                 >
-                                Edit Service
+                                Edit
                         </button>
                         </td>
                     </tr>
@@ -67,47 +69,48 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="newServiceModalLabel">Create New Service</h5>
                 </div>
-                <form>
+                <form method="POST" action="/services">
+                    {% csrf_token %}
                     <div class="modal-body">
                         <div class="row mb-3">
                             <div class="col-md-4 d-flex align-items-center">
-                                <label class="m-0" for="inputName">Name:</label>
+                                <label class="m-0" for="createName">Name:</label>
                             </div>
                             <div class="col-md-8">
-                                <input class="form-control" id="inputName" type="text" />
+                                <input class="form-control" id="createName" type="text" name="name" required />
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4 d-flex align-items-center">
-                                <label class="m-0" for="inputDescription">Description:</label>
+                                <label class="m-0" for="createDescription">Description:</label>
                             </div>
                             <div class="col-md-8">
-                                <textarea class="form-control" id="inputDescription" rows="5"></textarea>
+                                <textarea class="form-control" id="createDescription" rows="5" name="description" required></textarea>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4 d-flex align-items-center">
-                                <label class="m-0" for="inputCost">Cost:</label>
+                                <label class="m-0" for="createPrice">Price:</label>
                             </div>
                             <div class="col-md-5">
-                                <input class="form-control" id="inputCost" type="text" />
+                                <input class="form-control" id="createPrice" type="number" name="price" required />
                             </div>
                             <div class="col-md-3 d-flex align-items-center p-0">
-                                <label class="m-0" for="inputCost">ALGO</label>
+                                <label class="m-0" for="createPrice">ALGO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4 d-flex align-items-center">
-                                <label class="m-0" for="inputImage">Image:</label>
+                                <label class="m-0" for="createImage">Image:</label>
                             </div>
                             <div class="col-md-8">
-                                <input class="form-control-file" id="inputImage" type="file">
+                                <input class="form-control-file" id="createImage" type="file">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-success">Create</button>
+                        <button type="submit" class="btn btn-success">Create</button>
                     </div>
                 </form>
             </div>
@@ -119,48 +122,48 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="editServiceModalLabel">Edit Service</h5>
                 </div>
-                <form>
+                <form onsubmit="updateService(event)">
+                    <input id="updateId" type="hidden" name="id" />
                     <div class="modal-body">
                         <div class="row mb-3">
                             <div class="col-md-4 d-flex align-items-center">
-                                <label class="m-0" for="inputName">Name:</label>
+                                <label class="m-0" for="updateName">Name:</label>
                             </div>
                             <div class="col-md-8">
-                                <input class="form-control" id="inputName" type="text" value="CSE 101 Tutor" />
+                                <input class="form-control" id="updateName" type="text" name="name" required />
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4 d-flex align-items-center">
-                                <label class="m-0" for="inputDescription">Description:</label>
+                                <label class="m-0" for="updateDescription">Description:</label>
                             </div>
                             <div class="col-md-8">
-                                <textarea class="form-control" id="inputDescription"
-                                    rows="5">I will help you study for your CSE 101 exams!</textarea>
+                                <textarea class="form-control" id="updateDescription" rows="5" name="description" required></textarea>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4 d-flex align-items-center">
-                                <label class="m-0" for="inputCost">Cost:</label>
+                                <label class="m-0" for="updatePrice">Price:</label>
                             </div>
                             <div class="col-md-5">
-                                <input class="form-control" id="inputCost" type="text" value="50" />
+                                <input class="form-control" id="updatePrice" type="number" name="price" required />
                             </div>
                             <div class="col-md-3 d-flex align-items-center p-0">
-                                <label class="m-0" for="inputCost">ALGO</label>
+                                <label class="m-0" for="updatePrice">ALGO</label>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4 d-flex align-items-center">
-                                <label class="m-0" for="inputImage">Image:</label>
+                                <label class="m-0" for="updateImage">Image:</label>
                             </div>
                             <div class="col-md-8">
-                                <input class="form-control-file" id="inputImage" type="file">
+                                <input class="form-control-file" id="updateImage" type="file">
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary">Update</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
                     </div>
                 </form>
             </div>
@@ -170,15 +173,18 @@
         // script to get the correct data in the edit service modal depending on which service is being edited
         $('#editServiceModal').on('show.bs.modal', function (event) {
             let button = $(event.relatedTarget) // Button that triggered the modal
-            let name = button.data('service-name')
-            let description = button.data('service-description')
-            let cost = button.data('service-cost')
-            var modal = $(this)
-            modal.find('#inputName').val(name)
-            modal.find('#inputDescription').val(description)
-            modal.find('#inputCost').val(cost)
+            let name = button.data('name')
+            let description = button.data('description')
+            let price = button.data('price')
+            let id = button.data('id')
+            let modal = $(this)
+            modal.find('#updateName').val(name)
+            modal.find('#updateDescription').val(description)
+            modal.find('#updatePrice').val(price)
+            modal.find('#updateId').val(id)
         })
     </script>
+    <script src="{% static 'app/javascript/service_requests.js' %}"></script>
 </body>
 
 </html>

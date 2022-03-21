@@ -6,70 +6,13 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 from django.contrib import messages
 
 def index(request):
-    if request.user.is_authenticated:
-        context = {
-            'navbar': {
-                'name': request.user.username,
-                'list': [
-                    {'name': 'Profile', 'url': 'profile'},
-                    {'name': 'Logout', 'url': 'logout'}
-                ]
-            }
-        }
-    else:
-        context = {
-            'navbar': {
-                'name': None,
-                'list': [
-                    {'name': 'Login', 'url': 'login'},
-                    {'name': 'Register', 'url': 'register'}
-                ]
-            }
-        }
-    return render(request, 'app/index.html', context)
+    return render(request, 'app/index.html')
 
 def login(request):
-    if request.user.is_authenticated:
-        # Already authenticated no reason to go here ever again
-        return HttpResponseRedirect('search')
-        
-    if request.method == "POST":
-        user = authenticate(request, username=request.POST.get('email'), password=request.POST.get('password'))
-        if user is not None:
-            auth_login(request, user)
-            return HttpResponseRedirect('search')
-        else:
-            return HttpResponse("NOT A VALID USER!")
-        
-    elif request.method == "GET":
-        return render(request, 'app/login.html')
-
-def logout(request):
-    if request.user.is_authenticated:
-        auth_logout(request)
-        return render(request, 'app/index.html')
-    else:
-        return HttpResponseRedirect('/')
+    return render(request, 'app/login.html')
     
 def register(request):
-    if request.user.is_authenticated:
-        # Already authenticated no reason to go here ever again
-        return HttpResponseRedirect('search')
-    
-    if request.method == "POST":
-        # Making a post request we will handle it
-        inEmail = request.POST.get('email')
-        inPassword = request.POST.get('password')
-        inFirst = request.POST.get('firstname')
-        inLast = request.POST.get('lastname')
-        inUsername = request.POST.get('username')
-        user = User.objects.create_user(inEmail, inPassword, inFirst, inLast, inUsername)
-        auth_login(request, user)
-        messages.success(request, "Registration successful." )
-        return HttpResponseRedirect('/')
-    elif request.method == "GET":
-        # User is just getting the registeration html, just sent it
-        return render(request, 'app/register.html')
+    return render(request, 'app/register.html')
 
 def register_creator(request):
     return render(request, 'app/register_creator.html')
@@ -79,13 +22,6 @@ def password(request):
 
 def search(request):
     context = {
-        'navbar': {
-            'name': None,
-            'list': [
-                {'name': 'Login', 'url': 'login'},
-                {'name': 'Register', 'url': 'register'}
-            ]
-        },
         'service_list': [
             {'name': 'Anime Sketches', 'description': 'I draw beautiful anime sketches for Algorand!', 'image_path': 'yes.jpg'},
             {'name': 'Singing!', 'description': 'I will voice over anything you write for Cryptocurrency', 'image_path': 'sing.jpg'},
@@ -98,13 +34,6 @@ def search(request):
 
 def store(request):
     context = {
-        'navbar': {
-            'name': None,
-            'list': [
-                {'name': 'Login', 'url': 'login'},
-                {'name': 'Register', 'url': 'register'}
-            ]
-        },
         'service': {
             'name': 'Profession Googler',
             'image_paths': ['search1.PNG', 'search2.PNG', 'search3.PNG', 'search4.PNG'],
@@ -155,17 +84,6 @@ def profile(request):
 
 def settings(request):
     context = {
-        'navbar': {
-            'name': 'KTMcdonnell',
-            'list': [
-                {'name': 'My Profile', 'url': 'profile'},
-                {'name': 'Settings', 'url': 'settings'},
-                {'name': 'My Services', 'url': 'services'},
-                {'name': 'My Subscription', 'url': 'subscription'},
-                {'name': 'History', 'url': 'history'},
-                {'name': 'Logout', 'url': 'index'}
-            ]
-        },
         'user': {
             'creator': True,
             'username': 'KTMcdonnell',
@@ -179,17 +97,6 @@ def settings(request):
 
 def history(request):
     context = {
-        'navbar': {
-            'name': 'KTMcdonnell',
-            'list': [
-                {'name': 'My Profile', 'url': 'profile'},
-                {'name': 'Settings', 'url': 'settings'},
-                {'name': 'My Services', 'url': 'services'},
-                {'name': 'My Subscription', 'url': 'subscription'},
-                {'name': 'History', 'url': 'history'},
-                {'name': 'Logout', 'url': 'index'}
-            ]
-        },
         'transactions': [
             {'date': '2/27/2022', 'service': 'CSE 101 Tutoring', 'creator': 'KTMcdonnell', 'Price': 50},
             {'date': '1/13/2022', 'service': 'Video Editing', 'creator': 'Rickster99', 'Price': 25},
@@ -206,40 +113,14 @@ def history(request):
     }
     return render(request, 'app/history.html', context)
 
-def services(request):
+def services(request, service_list):
     context = {
-        'navbar': {
-            'name': 'KTMcdonnell',
-            'list': [
-                {'name': 'My Profile', 'url': 'profile'},
-                {'name': 'Settings', 'url': 'settings'},
-                {'name': 'My Services', 'url': 'services'},
-                {'name': 'My Subscription', 'url': 'subscription'},
-                {'name': 'History', 'url': 'history'},
-                {'name': 'Logout', 'url': 'index'}
-            ]
-        },
-        'service_list': [
-            {'name': 'Anime Sketches', 'description': 'I draw beautiful anime sketches for Algorand!', 'cost': 50, 'image_path': 'yes.jpg'},
-            {'name': 'Graphic DESIGN!', 'description': 'I will make beautiful graphic design for anything', 'cost': 75, 'image_path': 'design.jpg'},
-            {'name': 'Profession Googler', 'description': 'I am a professional googler and I will google for you', 'cost': 10, 'image_path': 'google.jpg'}
-        ]
+        'service_list': service_list
     }
     return render(request, 'app/manage_services.html', context)
 
 def subscription(request):
     context = {
-        'navbar': {
-            'name': 'KTMcdonnell',
-            'list': [
-                {'name': 'My Profile', 'url': 'profile'},
-                {'name': 'Settings', 'url': 'settings'},
-                {'name': 'My Services', 'url': 'services'},
-                {'name': 'My Subscription', 'url': 'subscription'},
-                {'name': 'History', 'url': 'history'},
-                {'name': 'Logout', 'url': 'index'}
-            ]
-        },
         'service_list': [
             {'name': 'Anime Sketches', 'description': 'I draw beautiful anime sketches for Algorand!', 'cost': 50, 'image_path': 'yes.jpg'},
             {'name': 'Graphic DESIGN!', 'description': 'I will make beautiful graphic design for anything', 'cost': 75, 'image_path': 'design.jpg'},
@@ -253,11 +134,3 @@ def subscription(request):
         }
     }
     return render(request, 'app/manage_subscription.html', context)
-    
-def viewmodel(request):
-    # return HttpResponse("hello world")
-    response = ""
-    for user in User.objects.all():
-        response += f"<H1>Email: {user.email} Bio: {user.bio} Username: {user.username} Password: {user.password}</H1>"
-    
-    return HttpResponse(response)
