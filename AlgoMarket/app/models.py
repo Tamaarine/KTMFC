@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
-import datetime
 from django.contrib.auth.hashers import make_password
 
 
@@ -24,12 +23,12 @@ class CustomUserManager(BaseUserManager):
 class User(AbstractUser):
     email = models.CharField(max_length=200, primary_key=True)
     walletAddress = models.CharField(max_length=200)
-    last_updateed = models.TimeField(auto_now=True)
+    last_updated = models.TimeField(auto_now=True)
     creator = models.BooleanField(default=False)
     service_completed = models.IntegerField(default=0)
     subscriber_count = models.IntegerField(default=0)
     bio = models.CharField(max_length=200)
-    last_login = models.TimeField(default=datetime.datetime.now())
+    last_login = models.TimeField(auto_now=True)
     is_superuser = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     

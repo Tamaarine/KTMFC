@@ -34,20 +34,21 @@
                 <tbody id="serviceTable">
                     {% for service in service_list %}
                     <tr id="service{{ service.id }}">
-                        <td class="align-middle">{{ service.name }}</td>
-                        <td class="align-middle">{{ service.description }}</td>
-                        <td class="align-middle">{{ service.price }} ALGO</td>
+                        <td id="service{{ service.id }}name" class="align-middle">{{ service.name }}</td>
+                        <td id="service{{ service.id }}description" class="align-middle">{{ service.description }}</td>
+                        <td id="service{{ service.id }}price" class="align-middle">{{ service.price }} ALGO</td>
                         <td class="align-middle">{{ service.image_path }}</td>
                         <td class="align-middle">
                             <button
+                                id="service{{ service.id }}editbutton" 
                                 type="button"
                                 class="btn btn-primary"
                                 data-toggle="modal"
                                 data-target="#editServiceModal"
-                                data-service-name="{{ service.name }}"
-                                data-service-description="{{ service.description }}"
-                                data-service-price="{{ service.price }}"
-                                data-service-id="{{ service.id }}"
+                                data-name="{{ service.name }}"
+                                data-description="{{ service.description }}"
+                                data-price="{{ service.price }}"
+                                data-id="{{ service.id }}"
                                 >
                                 Edit
                         </button>
@@ -122,7 +123,7 @@
                     <h5 class="modal-title" id="editServiceModalLabel">Edit Service</h5>
                 </div>
                 <form onsubmit="updateService(event)">
-                    <input id="updateid" type="hidden" name="id" />
+                    <input id="updateId" type="hidden" name="id" />
                     <div class="modal-body">
                         <div class="row mb-3">
                             <div class="col-md-4 d-flex align-items-center">
@@ -162,7 +163,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" data-dismiss="modal">Update</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
                     </div>
                 </form>
             </div>
@@ -172,15 +173,15 @@
         // script to get the correct data in the edit service modal depending on which service is being edited
         $('#editServiceModal').on('show.bs.modal', function (event) {
             let button = $(event.relatedTarget) // Button that triggered the modal
-            let name = button.data('service-name')
-            let description = button.data('service-description')
-            let price = button.data('service-price')
-            let id = button.data('service-id')
+            let name = button.data('name')
+            let description = button.data('description')
+            let price = button.data('price')
+            let id = button.data('id')
             let modal = $(this)
             modal.find('#updateName').val(name)
             modal.find('#updateDescription').val(description)
             modal.find('#updatePrice').val(price)
-            modal.find('#updateid').val(id)
+            modal.find('#updateId').val(id)
         })
     </script>
     <script src="{% static 'app/javascript/service_requests.js' %}"></script>

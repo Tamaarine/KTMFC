@@ -29,7 +29,6 @@ async function updateService(event) {
         body: JSON.stringify(data)
     });
     if (response.ok) {
-        const row = document.getElementById('service' + data.id);
-        
+        location.reload();
     }
 }
