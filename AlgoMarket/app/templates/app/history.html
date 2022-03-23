@@ -1,62 +1,58 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load custom_tags %}
 
 {% block body %}
 
-<div class="row mx-5 my-5">
-    <div class="col-sm-2"></div>
-    <div class="col-sm-8">
-        <h1 class="flex-grow-1 m-0">Transaction History</h1>
-        <hr style="border-color: #DDD; width: 100%">
-        {% if transactions %}
-        <table class="table table-hover">
-            <thead class="thead-light">
-                <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Service</th>
-                    <th scope="col">Creator</th>
-                    <th scope="col">Price</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for transaction in transactions %}
-                <tr>
-                    <th scope="row">{{ transaction.date }}</th>
-                    <td>{{ transaction.service }}</td>
-                    <td>{{ transaction.creator }}</td>
-                    <td>{{ transaction.cost }} ALGO</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% endif %}
-        <h1>Subscriptions</h1>
-        <hr style="border-color: #DDD; width: 100%">
-        {% if subscriptions %}
-        <table class="table table-hover">
-            <thead class="thead-light">
-                <tr>
-                    <th scope="col">Creator</th>
-                    <th scope="col">Level</th>
-                    <th scope="col">Cost/mo</th>
-                    <th scope="col">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for subscription in subscriptions %}
-                <tr>
-                    <td>{{ subscription.creator }}</td>
-                    <td>{{ subscription.tier }}</td>
-                    <td>{{ subscription.cost }} ALGO</td>
-                    <td>{{ subscription.status }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% endif %}
-        <a class="btn btn-primary" href="{% url 'settings' %}">&#x0003C;&#x0003C; Return to Settings</a>
-    </div>
-    <div class="col-sm-2"></div>
-</div>
-
+{% center col-sm-8 my-5 %}
+<h1 class="flex-grow-1 m-0">Transaction History</h1>
+<hr style="border-color: #DDD; width: 100%">
+{% if transactions %}
+<table class="table table-hover">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Service</th>
+            <th scope="col">Creator</th>
+            <th scope="col">Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for transaction in transactions %}
+        <tr>
+            <th scope="row">{{ transaction.date }}</th>
+            <td>{{ transaction.service }}</td>
+            <td>{{ transaction.creator }}</td>
+            <td>{{ transaction.cost }} ALGO</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+<h1>Subscriptions</h1>
+<hr style="border-color: #DDD; width: 100%">
+{% if subscriptions %}
+<table class="table table-hover">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Creator</th>
+            <th scope="col">Level</th>
+            <th scope="col">Cost/mo</th>
+            <th scope="col">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for subscription in subscriptions %}
+        <tr>
+            <td>{{ subscription.creator }}</td>
+            <td>{{ subscription.tier }}</td>
+            <td>{{ subscription.cost }} ALGO</td>
+            <td>{{ subscription.status }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+<a class="btn btn-primary" href="{% url 'settings' %}">&#x0003C;&#x0003C; Return to Settings</a>
+{% endcenter %}
 {% endblock %}

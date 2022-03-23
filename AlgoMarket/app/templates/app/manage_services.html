@@ -1,55 +1,53 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load custom_tags %}
 
 {% block body %}
 
-<div class="row mx-5 my-5">
-    <div class="col-sm-2"></div>
-    <div class="col-sm-8">
-        <h1>Your Services</h1>
-        <hr style="border-color: #DDD; width: 100%">
-        <table class="table table-hover">
-            <thead class="thead-light">
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Cost</th>
-                    <th scope="col">Image</th>
-                    <th scope="col">Edit</th>
-                </tr>
-            </thead>
-            <tbody id="serviceTable">
-                {% for service in service_list %}
-                <tr id="service{{ service.id }}">
-                    <td id="service{{ service.id }}name" class="align-middle">{{ service.name }}</td>
-                    <td id="service{{ service.id }}description" class="align-middle">{{ service.description }}</td>
-                    <td id="service{{ service.id }}price" class="align-middle">{{ service.price }} ALGO</td>
-                    <td class="align-middle">{{ service.image_path }}</td>
-                    <td class="align-middle">
-                        <button
-                        id="service{{ service.id }}editbutton" 
-                        type="button"
-                        class="btn btn-primary"
-                        data-toggle="modal"
-                        data-target="#editServiceModal"
-                        data-name="{{ service.name }}"
-                        data-description="{{ service.description }}"
-                        data-price="{{ service.price }}"
-                        data-id="{{ service.id }}"
-                        >
-                        Edit
-                    </button>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <a class="btn btn-primary" href="{% url 'settings' %}">&#x0003C;&#x0003C; Return to Settings</a>
-    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#newServiceModal"
-    data-backdrop="static" data-keyboard="false">Create New Service +</button>
-</div>
-<div class="col-sm-2"></div>
-</div>
+{% center col-sm-8 my-5 %}
+<h1>Your Services</h1>
+<hr style="border-color: #DDD; width: 100%">
+<table class="table table-hover">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Cost</th>
+            <th scope="col">Image</th>
+            <th scope="col">Edit</th>
+        </tr>
+    </thead>
+    <tbody id="serviceTable">
+        {% for service in service_list %}
+        <tr id="service{{ service.id }}">
+            <td id="service{{ service.id }}name" class="align-middle">{{ service.name }}</td>
+            <td id="service{{ service.id }}description" class="align-middle">{{ service.description }}</td>
+            <td id="service{{ service.id }}price" class="align-middle">{{ service.price }} ALGO</td>
+            <td class="align-middle">{{ service.image_path }}</td>
+            <td class="align-middle">
+                <button
+                id="service{{ service.id }}editbutton" 
+                type="button"
+                class="btn btn-primary"
+                data-toggle="modal"
+                data-target="#editServiceModal"
+                data-name="{{ service.name }}"
+                data-description="{{ service.description }}"
+                data-price="{{ service.price }}"
+                data-id="{{ service.id }}"
+                >
+                Edit
+            </button>
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+<a class="btn btn-primary" href="{% url 'settings' %}">&#x0003C;&#x0003C; Return to Settings</a>
+<button type="button" class="btn btn-success" data-toggle="modal" data-target="#newServiceModal"
+data-backdrop="static" data-keyboard="false">Create New Service +</button>
+{% endcenter %}
+
 <div class="modal fade" id="newServiceModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
