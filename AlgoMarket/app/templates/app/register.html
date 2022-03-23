@@ -36,45 +36,52 @@
                                 <div class="card-body">
                                     <form method="POST" action="/register">
                                         {% csrf_token %}
+                                        {% if messages %}
+                                        <ul class="messages">
+                                            {% for message in messages %}
+                                            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                        {% endif %}
                                         <div class="row mb-3">
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3 mb-md-0">
-                                                    <input class="form-control" id="inputFirstName" type="text"
-                                                        placeholder="Enter your first name" name="firstname" required/>
-                                                    <label for="inputFirstName">First name</label>
+                                                    {{ form.first_name.errors }}
+                                                    {{ form.first_name }}
+                                                    <label for="{{ form.first_name.id_for_label }}">First Name</label>
                                                 </div>
-                                            </div>
+                                            </div> 
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <input class="form-control" id="inputLastName" type="text"
-                                                        placeholder="Enter your last name" name="lastname" required/>
-                                                    <label for="inputLastName">Last name</label>
+                                                    {{ form.last_name.errors }}
+                                                    {{ form.last_name }}
+                                                    <label for="{{ form.last_name.id_for_label }}">Last Name</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-floating mb-3">
-                                            <input class="form-control" id="inputEmail" type="text"
-                                                placeholder="Kittypics" name="username" required/>
-                                            <label for="inputEmail">Username</label>
+                                            {{ form.username.errors }}
+                                            {{ form.username }}
+                                            <label for="{{ form.username.id_for_label }}">Username</label>
                                         </div>
                                         <div class="form-floating mb-3">
-                                            <input class="form-control" id="inputEmail" type="email"
-                                                placeholder="name@example.com" name="email" required/>
-                                            <label for="inputEmail">Email address</label>
+                                            {{ form.email.errors }}
+                                            {{ form.email }}
+                                            <label for="{{ form.email.id_for_label }}">Email</label>
                                         </div>
                                         <div class="row mb-3">
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3 mb-md-0">
-                                                    <input class="form-control" id="inputPassword" type="password"
-                                                        placeholder="Create a password" name="password" required/>
-                                                    <label for="inputPassword">Password</label>
+                                                    {{ form.password.errors }}
+                                                    {{ form.password }}
+                                                    <label for="{{ form.password.id_for_label }}">Password</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3 mb-md-0">
-                                                    <input class="form-control" id="inputPasswordConfirm"
-                                                        type="password" placeholder="Confirm password" required/>
-                                                    <label for="inputPasswordConfirm">Confirm Password</label>
+                                                    {{ form.confirmed_password.errors }}
+                                                    {{ form.confirmed_password }}
+                                                    <label for="{{ form.confirmed_password.id_for_label }}">Confirm Password</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -97,7 +104,6 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
-    <script src="js/scripts.js"></script>
 </body>
 
 </html>
