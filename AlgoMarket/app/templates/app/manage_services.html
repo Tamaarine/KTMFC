@@ -28,6 +28,7 @@
                         <th scope="col">Description</th>
                         <th scope="col">Cost</th>
                         <th scope="col">Image</th>
+                        <th scope="col">Status</th>
                         <th scope="col">Edit</th>
                     </tr>
                 </thead>
@@ -38,6 +39,13 @@
                         <td id="service{{ service.id }}description" class="align-middle">{{ service.description }}</td>
                         <td id="service{{ service.id }}price" class="align-middle">{{ service.price }} ALGO</td>
                         <td class="align-middle">{{ service.image_path }}</td>
+                        {% if service.active %}
+                        <td class="align-middle" style="color:limegreen">ACTIVE</td>
+                        {% elif not service.approved %}
+                        <td class="align-middle" style="color:gray">PENDING APPROVAL</td>
+                        {% else %}
+                        <td class="align-middle" style="color:red">INACTIVE</td>
+                        {% endif %}
                         <td class="align-middle">
                             <button
                                 id="service{{ service.id }}editbutton" 
@@ -69,8 +77,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="newServiceModalLabel">Create New Service</h5>
                 </div>
-                <form method="POST" action="/services">
-                    {% csrf_token %}
+                <form onsubmit="addService(event)">
                     <div class="modal-body">
                         <div class="row mb-3">
                             <div class="col-md-4 d-flex align-items-center">

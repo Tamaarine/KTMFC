@@ -47,7 +47,8 @@ class Service(models.Model):
     created = models.TimeField(auto_now_add=True)
     last_updated = models.TimeField(auto_now=True)
     imagePath = models.CharField(max_length=200)
-    active = models.BooleanField(default=False)
+    approved = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
     
 class Transaction(models.Model):
     id = models.IntegerField(primary_key=True)

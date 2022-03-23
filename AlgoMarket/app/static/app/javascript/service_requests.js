@@ -14,8 +14,29 @@ function getCookie(name) {
     return cookieValue;
 }
 
+//function to sent POST request for creating a new service
+function addService(event) {
+    event.preventDefault();
+    data = {
+        'name': event.target.elements.name.value,
+        'description': event.target.elements.description.value,
+        'price': event.target.elements.price.value
+    }
+    fetch('/services', {
+        method: 'POST',
+        headers: {'X-CSRFToken': getCookie('csrftoken')},
+        body: JSON.stringify(data)
+    }).then(response => {
+        return response.text();
+    }).then(html => {
+        document.open();
+        document.write(html);
+        document.close();
+    });
+}
+
 //function to send a PUT request for updating a service in the database
-async function updateService(event) {
+function updateService(event) {
     event.preventDefault();
     data = {
         'id': event.target.elements.id.value,
@@ -23,12 +44,15 @@ async function updateService(event) {
         'description': event.target.elements.description.value,
         'price': event.target.elements.price.value
     }
-    const response = await fetch('/services', {
+    fetch('/services', {
         method: 'PUT',
         headers: {'X-CSRFToken': getCookie('csrftoken')},
         body: JSON.stringify(data)
+    }).then(response => {
+        return response.text();
+    }).then(html => {
+        document.open();
+        document.write(html);
+        document.close();
     });
-    if (response.ok) {
-        location.reload();
-    }
 }
