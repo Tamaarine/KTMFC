@@ -41,3 +41,11 @@ class UserRegisterForm(forms.Form):
             raise forms.ValidationError("Duplicate user")
         else:
             return user 
+
+class UserLoginForm(forms.Form):
+    email = forms.EmailField(label='Email',
+                widget=forms.EmailInput(attrs={'placeholder': 'name@domain.com', 'class': 'form-control'}))
+    password = forms.CharField(label='Password', max_length=128,
+                widget=forms.TextInput(attrs={'placeholder': 'Password', 'class': 'form-control', 'type': 'password'}))
+                
+    
