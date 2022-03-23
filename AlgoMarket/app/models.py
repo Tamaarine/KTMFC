@@ -11,26 +11,31 @@ class CustomUserManager(BaseUserManager):
     Passwords are stored in hash
     '''
     def create_user(self, email, password, first_name, last_name, username):
-        toSave = User(email=email, first_name=first_name, last_name=last_name, username=username)
-        toSave.password = make_password(password, username + first_name)
-        toSave.set_password(raw_password=password)
-        toSave.save()
-        return toSave
+        try:
+            exist = User.objects.get(pk=email)
+            return None
+        except User.DoesNotExist:
+            toSave = User(email=email, first_name=first_name, last_name=last_name, username=username)
+            toSave.password = make_password(password, username + first_name)
+            toSave.set_password(raw_password=password)
+            toSave.save()
+            return toSave
     def create_superuser(self, email, password, username=None):
         toSave = User(email=email, is_superuser=True, is_staff=True)
         toSave.set_password(raw_password=password)
         toSave.save()
 
 class User(AbstractUser):
-    email = models.EmailField(max_length=200, primary_key=True)
+    email = models.EmailField(max_length=200, primary_key=True, unique=True)
     walletAddress = models.CharField(max_length=200)
     last_updateed = models.TimeField(auto_now=True)
     service_completed = models.IntegerField(default=0)
     subscriber_count = models.IntegerField(default=0)
     bio = models.CharField(max_length=200)
-    last_login = models.TimeField(default=datetime.datetime.now())
     is_superuser = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
+    
+    username = models.CharField(max_length=200)
     
     objects = CustomUserManager()
     
