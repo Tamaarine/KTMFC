@@ -14,38 +14,80 @@
             <th scope="col">Description</th>
             <th scope="col">Cost</th>
             <th scope="col">Image</th>
+            <th scope="col">Status</th>
+            <th scope="col">Activate</th>
             <th scope="col">Edit</th>
         </tr>
     </thead>
     <tbody id="serviceTable">
         {% for service in service_list %}
-        <tr id="service{{ service.id }}">
-            <td id="service{{ service.id }}name" class="align-middle">{{ service.name }}</td>
-            <td id="service{{ service.id }}description" class="align-middle">{{ service.description }}</td>
-            <td id="service{{ service.id }}price" class="align-middle">{{ service.price }} ALGO</td>
-            <td class="align-middle">{{ service.image_path }}</td>
+        {% if service.active or not service.approved %}
+        <tr id="service{{ service.id }}" class="service-active" >
+            {% else %}
+            <tr id="service{{ service.id }}" class="service-inactive" hidden >
+                {% endif %}
+                <td id="service{{ service.id }}name" class="align-middle">{{ service.name }}</td>
+                <td id="service{{ service.id }}description" class="align-middle">{{ service.description }}</td>
+                <td id="service{{ service.id }}price" class="align-middle">{{ service.price }} ALGO</td>
+                <td class="align-middle">{{ service.image_path }}</td>
+                {% if service.active %}
+                <td class="align-middle" style="color:limegreen">ACTIVE</td>
+                <td class="align-middle">
+                    <button
+                    type="button"
+                    id="toggleActiveButton{{ service.id }}"
+                    class="btn btn-light"
+                    onClick="toggleActive(this.id)">
+                    Deactivate
+                </button>
+            </td>
+            {% elif not service.approved %}
+            <td class="align-middle" style="color:gray">PENDING APPROVAL</td>
+            <td class="align-middle"></td>
+            {% else %}
+            <td class="align-middle" style="color:red">INACTIVE</td>
             <td class="align-middle">
                 <button
-                id="service{{ service.id }}editbutton" 
                 type="button"
-                class="btn btn-primary"
-                data-toggle="modal"
-                data-target="#editServiceModal"
-                data-name="{{ service.name }}"
-                data-description="{{ service.description }}"
-                data-price="{{ service.price }}"
-                data-id="{{ service.id }}"
-                >
-                Edit
+                id="toggleActiveButton{{ service.id }}"
+                class="btn btn-light"
+                onClick="toggleActive(this.id)">
+                Activate
             </button>
         </td>
-    </tr>
-    {% endfor %}
+        {% endif %}
+        <td class="align-middle">
+            <button
+            id="service{{ service.id }}editbutton" 
+            type="button"
+            class="btn btn-primary"
+            data-toggle="modal"
+            data-target="#editServiceModal"
+            data-name="{{ service.name }}"
+            data-description="{{ service.description }}"
+            data-price="{{ service.price }}"
+            data-id="{{ service.id }}"
+            >
+            Edit
+        </button>
+    </td>
+</tr>
+{% endfor %}
 </tbody>
 </table>
-<a class="btn btn-primary" href="{% url 'settings' %}">&#x0003C;&#x0003C; Return to Settings</a>
-<button type="button" class="btn btn-success" data-toggle="modal" data-target="#newServiceModal"
-data-backdrop="static" data-keyboard="false">Create New Service +</button>
+<div class="d-flex align-items-center justify-content-between">
+    <button
+    type="button"
+    class="btn btn-success mr-auto"
+    data-toggle="modal"
+    data-target="#newServiceModal"
+    data-backdrop="static"
+    data-keyboard="false">
+    Create New Service +
+</button>
+<label class="form-check-label">Show Inactive Services</label>
+<input type="checkbox" id="showInactivesInput" class="check-input m-2 mr-3" />
+</div>
 {% endcenter %}
 
 <div class="modal fade" id="newServiceModal" tabindex="-1" role="dialog">
@@ -54,8 +96,7 @@ data-backdrop="static" data-keyboard="false">Create New Service +</button>
             <div class="modal-header">
                 <h5 class="modal-title" id="newServiceModalLabel">Create New Service</h5>
             </div>
-            <form method="POST" action="/services">
-                {% csrf_token %}
+            <form onsubmit="addService(event)">
                 <div class="modal-body">
                     <div class="row mb-3">
                         <div class="col-md-4 d-flex align-items-center">
@@ -95,10 +136,33 @@ data-backdrop="static" data-keyboard="false">Create New Service +</button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-success">Create</button>
+                    <button type="submit" class="btn btn-success">Submit for Approval</button>
                 </div>
-            </form>
-        </div>
+                <div class="row mb-3">
+                    <div class="col-md-4 d-flex align-items-center">
+                        <label class="m-0" for="createPrice">Price:</label>
+                    </div>
+                    <div class="col-md-5">
+                        <input class="form-control" id="createPrice" type="number" name="price" required />
+                    </div>
+                    <div class="col-md-3 d-flex align-items-center p-0">
+                        <label class="m-0" for="createPrice">ALGO</label>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4 d-flex align-items-center">
+                        <label class="m-0" for="createImage">Image:</label>
+                    </div>
+                    <div class="col-md-8">
+                        <input class="form-control-file" id="createImage" type="file">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-success">Create</button>
+            </div>
+        </form>
     </div>
 </div>
 <div class="modal fade" id="editServiceModal" tabindex="-1" role="dialog">
@@ -118,13 +182,9 @@ data-backdrop="static" data-keyboard="false">Create New Service +</button>
                             <input class="form-control" id="updateName" type="text" name="name" required />
                         </div>
                     </div>
-                    <div class="row mb-3">
-                        <div class="col-md-4 d-flex align-items-center">
-                            <label class="m-0" for="updateDescription">Description:</label>
-                        </div>
-                        <div class="col-md-8">
-                            <textarea class="form-control" id="updateDescription" rows="5" name="description" required></textarea>
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit for Approval</button>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-4 d-flex align-items-center">
@@ -155,6 +215,22 @@ data-backdrop="static" data-keyboard="false">Create New Service +</button>
     </div>
 </div>
 <script>
+    //on page load set the checkbox to stored value or default to true
+    $('#showInactivesInput').prop('checked' , ( typeof sessionStorage.showInactives !== 'undefined' ) ? (sessionStorage.showInactives=='true') : true );
+    $(document).ready(function() {
+        if ($('#showInactivesInput').prop('checked')) {
+            $('.service-inactive').removeAttr('hidden');
+        }
+    });
+    // script to hide or show inactive services
+    $('#showInactivesInput').change(function (event) {
+        sessionStorage.showInactives = $(this).prop('checked');
+        if (!this.checked) {
+            $('.service-inactive').attr('hidden', true);
+        } else {
+            $('.service-inactive').removeAttr('hidden');
+        }
+    });
     // script to get the correct data in the edit service modal depending on which service is being edited
     $('#editServiceModal').on('show.bs.modal', function (event) {
         let button = $(event.relatedTarget) // Button that triggered the modal
@@ -167,7 +243,7 @@ data-backdrop="static" data-keyboard="false">Create New Service +</button>
         modal.find('#updateDescription').val(description)
         modal.find('#updatePrice').val(price)
         modal.find('#updateId').val(id)
-    })
+    });
 </script>
 <script src="{% static 'app/javascript/service_requests.js' %}"></script>
 
