@@ -35,7 +35,11 @@
                 </thead>
                 <tbody id="serviceTable">
                     {% for service in service_list %}
-                    <tr id="service{{ service.id }}">
+                    {% if service.active or not service.approved %}
+                    <tr id="service{{ service.id }}" class="service-active" >
+                    {% else %}
+                    <tr id="service{{ service.id }}" class="service-inactive" hidden >
+                    {% endif %}
                         <td id="service{{ service.id }}name" class="align-middle">{{ service.name }}</td>
                         <td id="service{{ service.id }}description" class="align-middle">{{ service.description }}</td>
                         <td id="service{{ service.id }}price" class="align-middle">{{ service.price }} ALGO</td>
@@ -85,9 +89,19 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <a class="btn btn-primary" href="{% url 'settings' %}">&#x0003C;&#x0003C; Return to Settings</a>
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#newServiceModal"
-                data-backdrop="static" data-keyboard="false">Create New Service +</button>
+            <div class="d-flex align-items-center justify-content-between">
+                <button
+                    type="button"
+                    class="btn btn-success mr-auto"
+                    data-toggle="modal"
+                    data-target="#newServiceModal"
+                    data-backdrop="static"
+                    data-keyboard="false">
+                    Create New Service +
+                </button>
+                <label class="form-check-label">Show Inactive Services</label>
+                <input type="checkbox" id="showInactivesInput" class="check-input m-2 mr-3" />
+            </div>
         </div>
         <div class="col-sm-2"></div>
     </div>
@@ -197,6 +211,22 @@
         </div>
     </div>
     <script>
+        //on page load set the checkbox to stored value or default to true
+        $('#showInactivesInput').prop('checked' , ( typeof sessionStorage.showInactives !== 'undefined' ) ? (sessionStorage.showInactives=='true') : true );
+        $(document).ready(function() {
+            if ($('#showInactivesInput').prop('checked')) {
+                $('.service-inactive').removeAttr('hidden');
+            }
+        });
+        // script to hide or show inactive services
+        $('#showInactivesInput').change(function (event) {
+            sessionStorage.showInactives = $(this).prop('checked');
+            if (!this.checked) {
+                $('.service-inactive').attr('hidden', true);
+            } else {
+                $('.service-inactive').removeAttr('hidden');
+            }
+        });
         // script to get the correct data in the edit service modal depending on which service is being edited
         $('#editServiceModal').on('show.bs.modal', function (event) {
             let button = $(event.relatedTarget) // Button that triggered the modal
@@ -209,7 +239,7 @@
             modal.find('#updateDescription').val(description)
             modal.find('#updatePrice').val(price)
             modal.find('#updateId').val(id)
-        })
+        });
     </script>
     <script src="{% static 'app/javascript/service_requests.js' %}"></script>
 </body>
