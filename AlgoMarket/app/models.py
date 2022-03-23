@@ -22,7 +22,7 @@ class CustomUserManager(BaseUserManager):
         toSave.save()
 
 class User(AbstractUser):
-    email = models.CharField(max_length=200, primary_key=True)
+    email = models.EmailField(max_length=200, primary_key=True)
     walletAddress = models.CharField(max_length=200)
     last_updateed = models.TimeField(auto_now=True)
     service_completed = models.IntegerField(default=0)
