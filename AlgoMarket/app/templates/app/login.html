@@ -36,6 +36,13 @@
                                 <div class="card-body">
                                     <form method="POST" action="/login">
                                         {% csrf_token %}
+                                        {% if messages %}
+                                        <ul class="messages">
+                                            {% for message in messages %}
+                                            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                        {% endif %}
                                         <div class="form-floating mb-3">
                                             <input class="form-control" id="inputEmail" type="email"
                                                 placeholder="name@example.com" name="email" required/>

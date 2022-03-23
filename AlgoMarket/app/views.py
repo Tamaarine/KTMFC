@@ -41,10 +41,9 @@ def login(request):
             auth_login(request, user)
             return HttpResponseRedirect('search')
         else:
-            return HttpResponse("NOT A VALID USER!")
+            messages.error(request, "Email/Password not valid")
         
-    elif request.method == "GET":
-        return render(request, 'app/login.html')
+    return render(request, 'app/login.html')
 
 def logout(request):
     if request.user.is_authenticated:
