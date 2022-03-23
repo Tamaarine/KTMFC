@@ -87,7 +87,13 @@ def services(request):
     if request.method == "POST":
         # create a new Service object in the database
         data = json.loads(request.body)
-        service = Service(id=Service.objects.count(), name=data['name'], seller=request.user, description=data['description'], price=data['price'], amount_available=1)
+        service = Service(
+            id=Service.objects.count(),
+            name=data['name'],
+            seller=request.user,
+            description=data['description'],
+            price=data['price']
+        )
         service.save()
         messages.success(request, "Service creation successful." )
         # then respond with the page with updated list
@@ -95,19 +101,30 @@ def services(request):
         return views.services(request, service_list)
 
     if request.method == "PUT":
-        # find and update the appropriate Service object in the database
+        # find the appropriate Service object in the database
         data = json.loads(request.body)
         service = Service.objects.get(pk=data['id'])
-        if (service.seller != request.user):
+        if service.seller != request.user:
             return HttpResponse("YOU CANNOT ONLY EDIT SERVICES THAT ARE YOURS!")
-        service.name = data['name']
-        service.description = data['description']
-        service.price = data['price']
-        service.save()
-        messages.success(request, "Service update was successful." )
-        # then respond with a the new page to load
-        service_list = Service.objects.filter(seller=request.user)
-        return views.services(request, service_list)
+        if data['action'] == "update-service":
+            # update the service in the database
+            service.name = data['name']
+            service.description = data['description']
+            service.price = data['price']
+            service.approved = False
+            service.active = False
+            service.save()
+            messages.success(request, "Service update was successful." )
+            # then respond with a the new page to load
+            service_list = Service.objects.filter(seller=request.user)
+            return views.services(request, service_list)
+        if data['action'] == "toggle-active":
+            # change the active status in the database
+            service.active = not service.active
+            service.save()
+            # then respond with a the new page to load
+            service_list = Service.objects.filter(seller=request.user)
+            return views.services(request, service_list)
 
 def subscription(request):
     return views.subscription(request)
