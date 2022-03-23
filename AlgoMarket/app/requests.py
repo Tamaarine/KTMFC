@@ -92,7 +92,8 @@ def services(request):
             name=data['name'],
             seller=request.user,
             description=data['description'],
-            price=data['price']
+            price=data['price'],
+            amount_available=-1
         )
         service.save()
         messages.success(request, "Service creation successful." )
