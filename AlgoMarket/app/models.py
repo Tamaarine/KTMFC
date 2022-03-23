@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
-import datetime
 from django.contrib.auth.hashers import make_password
 
 
@@ -28,7 +27,8 @@ class CustomUserManager(BaseUserManager):
 class User(AbstractUser):
     email = models.EmailField(max_length=200, primary_key=True, unique=True)
     walletAddress = models.CharField(max_length=200)
-    last_updateed = models.TimeField(auto_now=True)
+    last_updated = models.TimeField(auto_now=True)
+    creator = models.BooleanField(default=False)
     service_completed = models.IntegerField(default=0)
     subscriber_count = models.IntegerField(default=0)
     bio = models.CharField(max_length=200)
@@ -44,16 +44,16 @@ class User(AbstractUser):
 
 class Service(models.Model):
     id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=200)
     seller = models.ForeignKey(User, on_delete=models.CASCADE)
-    username = models.CharField(max_length=200)
     description = models.CharField(max_length=200)
-    price = models.IntegerField()
+    price = models.IntegerField(default=-1)
     amount_available = models.IntegerField()
     created = models.TimeField(auto_now_add=True)
-    last_updateed = models.TimeField(auto_now=True)
+    last_updated = models.TimeField(auto_now=True)
     imagePath = models.CharField(max_length=200)
-    renewalRate = models.IntegerField()
-    activate = models.BooleanField(default=False)
+    approved = models.BooleanField(default=False)
+    active = models.BooleanField(default=False)
     
 class Transaction(models.Model):
     id = models.IntegerField(primary_key=True)
