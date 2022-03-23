@@ -7,7 +7,7 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.contrib import messages
 import json
 from . import views
-from .forms import UserRegisterForm
+from .forms import UserLoginForm, UserRegisterForm
 
 
 def index(request):
@@ -19,15 +19,22 @@ def login(request):
         return HttpResponseRedirect('/')
         
     if request.method == "POST":
-        user = authenticate(request, username=request.POST.get('email'), password=request.POST.get('password'))
-        if user is not None:
-            auth_login(request, user)
-            return HttpResponseRedirect('search')
-        else:
-            messages.error(request, "Email/Password not valid")
+        form = UserLoginForm(request.POST)
+        
+        if form.is_valid():
+            inEmail = form.cleaned_data['email']
+            inPassword = form.cleaned_data['password']
+        
+            user = authenticate(request, username=inEmail, password=inPassword)
+            if user is not None:
+                auth_login(request, user)
+                return HttpResponseRedirect('search')
+            else:
+                messages.error(request, "Email/Password not valid")
         
     elif request.method == "GET":
-        return views.login(request)
+        return views.login(request, UserLoginForm())
+    return render(request, 'app/login.html', {'form': form})
 
 def logout(request):
     if request.user.is_authenticated:

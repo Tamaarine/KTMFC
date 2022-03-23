@@ -8,8 +8,8 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 def index(request):
     return render(request, 'app/index.html')
 
-def login(request):
-    return render(request, 'app/login.html')
+def login(request, form):
+    return render(request, 'app/login.html', {'form':form})
 
 def register(request, form):
     return render(request, 'app/register.html', {'form': form})
