@@ -42,11 +42,12 @@ class Service(models.Model):
     name = models.CharField(max_length=200)
     seller = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=200)
-    price = models.IntegerField()
+    price = models.IntegerField(default=-1)
     amount_available = models.IntegerField()
     created = models.TimeField(auto_now_add=True)
     last_updated = models.TimeField(auto_now=True)
     imagePath = models.CharField(max_length=200)
+    approved = models.BooleanField(default=False)
     active = models.BooleanField(default=False)
     
 class Transaction(models.Model):
