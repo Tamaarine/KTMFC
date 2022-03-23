@@ -7,6 +7,7 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.contrib import messages
 import json
 from . import views
+from .forms import UserRegisterForm
 
 
 def index(request):
@@ -21,9 +22,9 @@ def login(request):
         user = authenticate(request, username=request.POST.get('email'), password=request.POST.get('password'))
         if user is not None:
             auth_login(request, user)
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('search')
         else:
-            return HttpResponse("NOT A VALID USER!")
+            messages.error(request, "Email/Password not valid")
         
     elif request.method == "GET":
         return views.login(request)
@@ -40,19 +41,17 @@ def register(request):
     
     if request.method == "POST":
         # Making a post request we will handle it
-        inEmail = request.POST.get('email')
-        inPassword = request.POST.get('password')
-        inFirst = request.POST.get('firstname')
-        inLast = request.POST.get('lastname')
-        inUsername = request.POST.get('username')
-        user = User.objects.create_user(inEmail, inPassword, inFirst, inLast, inUsername)
-        auth_login(request, user)
-        messages.success(request, "Registration successful." )
-        return HttpResponseRedirect('/')
-
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            try:
+                user = form.save(request)            
+                auth_login(request, user)
+                return HttpResponseRedirect('/')
+            except:
+                pass
     elif request.method == "GET":
-        # User is just getting the registeration html, just sent it
-        return views.register(request)
+        return views.register(request, UserRegisterForm())
+    return render(request, 'app/register.html', {'form': form})
 
 def register_creator(request):
     return views.register_creator(request)

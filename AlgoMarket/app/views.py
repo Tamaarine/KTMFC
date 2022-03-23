@@ -4,53 +4,14 @@ from django.shortcuts import render
 from django.urls import reverse
 from .models import User
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
-from django.contrib import messages
-from .forms import UserRegisterForm, forms
 
 def index(request):
     return render(request, 'app/index.html')
 
 def login(request):
-    if request.user.is_authenticated:
-        # Already authenticated no reason to go here ever again
-        return HttpResponseRedirect('search')
-        
-    if request.method == "POST":
-        user = authenticate(request, username=request.POST.get('email'), password=request.POST.get('password'))
-        if user is not None:
-            auth_login(request, user)
-            return HttpResponseRedirect('search')
-        else:
-            messages.error(request, "Email/Password not valid")
-        
     return render(request, 'app/login.html')
 
-def logout(request):
-    if request.user.is_authenticated:
-        auth_logout(request)
-        return render(request, 'app/index.html')
-    else:
-        return HttpResponseRedirect('/')
-    
-def register(request):
-    if request.user.is_authenticated:
-        # Already authenticated no reason to go here ever again
-        return HttpResponseRedirect('search')
-    
-    if request.method == "POST":
-        # Making a post request we will handle it
-        form = UserRegisterForm(request.POST)
-        if form.is_valid():
-            try:
-                user = form.save(request)            
-                auth_login(request, user)
-                return HttpResponseRedirect('/')
-            except:
-                pass
-                
-    elif request.method == "GET":
-        # Sent the user registeration form
-        form = UserRegisterForm()
+def register(request, form):
     return render(request, 'app/register.html', {'form': form})
 
 def register_creator(request):
