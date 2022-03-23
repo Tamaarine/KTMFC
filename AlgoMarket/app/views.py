@@ -1,9 +1,11 @@
+from django import forms
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from .models import User
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib import messages
+from .forms import UserRegisterForm, forms
 
 def index(request):
     if request.user.is_authenticated:
@@ -58,18 +60,19 @@ def register(request):
     
     if request.method == "POST":
         # Making a post request we will handle it
-        inEmail = request.POST.get('email')
-        inPassword = request.POST.get('password')
-        inFirst = request.POST.get('firstname')
-        inLast = request.POST.get('lastname')
-        inUsername = request.POST.get('username')
-        user = User.objects.create_user(inEmail, inPassword, inFirst, inLast, inUsername)
-        auth_login(request, user)
-        messages.success(request, "Registration successful." )
-        return HttpResponseRedirect('/')
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            try:
+                user = form.save(request)            
+                auth_login(request, user)
+                return HttpResponseRedirect('/')
+            except:
+                pass
+                
     elif request.method == "GET":
-        # User is just getting the registeration html, just sent it
-        return render(request, 'app/register.html')
+        # Sent the user registeration form
+        form = UserRegisterForm()
+    return render(request, 'app/register.html', {'form': form})
 
 def register_creator(request):
     return render(request, 'app/register_creator.html')
