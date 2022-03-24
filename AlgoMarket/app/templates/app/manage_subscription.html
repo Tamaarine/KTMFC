@@ -7,7 +7,7 @@
 {% center col-sm-8 my-5 %}
 <h1>Your Subscription</h1>
 <hr style="border-color: #DDD; width: 100%">
-<form>
+<form onsubmit="createSubscription(event)">
     <table class="table table-hover">
         <thead class="thead-light">
             <tr>
@@ -22,7 +22,7 @@
                 <th class="align-middle" scope="col">
                     <div class="row">
                         <div class="col-auto d-flex align-items-center">
-                            <input class="form-control" id="inputFreeCost" type="text" value="{{ subscription.free.cost }}" />
+                            <input class="form-control" id="inputFreeCost" type="text" value="0" disabled />
                             <p class="my-0 ml-1">ALGO</p>
                         </div>
                     </div>
@@ -30,7 +30,8 @@
                 <th class="align-middle" scope="col">
                     <div class="row">
                         <div class="col-auto d-flex align-items-center">
-                            <input class="form-control" id="inputProCost" type="text" value="{{ subscription.pro.cost }}" />
+                            <input class="form-control" id="inputProPrice" name="proPrice" type="text"
+                                value="{{ subscription.pro_price }}" required />
                             <p class="my-0 ml-1">ALGO</p>
                         </div>
                     </div>
@@ -38,76 +39,83 @@
                 <th class="align-middle" scope="col">
                     <div class="row">
                         <div class="col-auto d-flex align-items-center">
-                            <input class="form-control" id="inputPremiumCost" type="text" value="{{ subscription.premium.cost }}" />
+                            <input class="form-control" id="inputPremiumPrice" name="premiumPrice" type="text"
+                                value="{{ subscription.premium_price }}" required />
                             <p class="my-0 ml-1">ALGO</p>
                         </div>
                     </div>
                 </th>
-                <th class="align-middle" scope="col">Delete</th>
+                <th class="align-middle" scope="col"></th>
             </tr>
         </thead>
         <tbody>
-            {% load custom_tags %}
             {% for perk in subscription.perks %}
             <tr>
                 <th class="align-middle" scope="row">{{ perk }}</th>
                 {% with forloop.counter|add:-1 as ind %}
-                <td class="align-middle"><input class="form-control" id="inputPerk{{ forloop.counter }}FreeAmount" type="text"
-                    value="{{ subscription.free.quantities|index:ind }}" /></td>
-                    <td class="align-middle"><input class="form-control" id="inputPerk{{ forloop.counter }}ProAmount" type="text"
-                        value="{{ subscription.pro.quantities|index:ind }}" /></td>
-                        <td class="align-middle"><input class="form-control" id="inputPerk{{ forloop.counter }}PremiumAmount"
-                            type="text" value="{{ subscription.premium.quantities|index:ind }}" /></td>
-                            {% endwith %}
-                            <td class="align-middle"><button type="button" class="btn btn-danger">Delete</button></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                <a class="btn btn-primary" href="{% url 'settings' %}">&#x0003C;&#x0003C; Save and Return to Settings</a>
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addPerkModal" data-backdrop="static" data-keyboard="false">Add New Perk +</button>
-            </form>
-            {% endcenter %}
-            
-            <div class="modal fade" id="addPerkModal" tabindex="-1" role="dialog">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="addPerkModalLabel">Add New Perk</h5>
+                <td class="align-middle"><input class="form-control" id="inputPerk{{ forloop.counter }}FreeAmount"
+                        type="text" value="{{ subscription.free.quantities|index:ind }}" /></td>
+                <td class="align-middle"><input class="form-control" id="inputPerk{{ forloop.counter }}ProAmount"
+                        type="text" value="{{ subscription.pro.quantities|index:ind }}" /></td>
+                <td class="align-middle"><input class="form-control" id="inputPerk{{ forloop.counter }}PremiumAmount"
+                        type="text" value="{{ subscription.premium.quantities|index:ind }}" /></td>
+                {% endwith %}
+                <td class="align-middle"><button type="button" class="btn btn-danger">Delete</button></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if subscription %}
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addPerkModal" data-backdrop="static"
+        data-keyboard="false">Add New Perk +</button>
+    <button type="submit" class="btn btn-primary">Submit For Approval</button>
+    {% else %}
+    <p>You do not currently have a subscription!</p>
+    <button type="submit" class="btn btn-success">Start Subscription</button>
+    {% endif %}
+</form>
+{% endcenter %}
+
+<div class="modal fade" id="addPerkModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPerkModalLabel">Add New Perk</h5>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4 d-flex align-items-center justify-content-end">
+                            <label for="inputPerk">New Perk:</label>
                         </div>
-                        <form>
-                            <div class="modal-body">
-                                <div class="row mb-3">
-                                    <div class="col-md-4 d-flex align-items-center justify-content-end">
-                                        <label for="inputPerk">New Perk:</label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <input id="inputPerk" class="form-control">
-                                    </div>
-                                    <div class="col-md-4 d-flex align-items-center justify-content-center">
-                                        <label>or</label>
-                                    </div>
-                                    <div class="col-md-8"></div>
-                                    <div class="col-md-4 d-flex align-items-center justify-content-end">
-                                        <label class="m-0" for="inputService">Existing Service:</label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <select class="custom-select" id="inputService">
-                                            <option selected>Choose...</option>
-                                            {% for service in service_list %}
-                                            <option value="{{ forloop.counter }}">{{ service.name }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                                <button type="button" class="btn btn-success">Add</button>
-                            </div>
-                        </form>
+                        <div class="col-md-8">
+                            <input id="inputPerk" class="form-control">
+                        </div>
+                        <div class="col-md-4 d-flex align-items-center justify-content-center">
+                            <label>or</label>
+                        </div>
+                        <div class="col-md-8"></div>
+                        <div class="col-md-4 d-flex align-items-center justify-content-end">
+                            <label class="m-0" for="inputService">Existing Service:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <select class="custom-select" id="inputService">
+                                <option selected>Choose...</option>
+                                {% for service in service_list %}
+                                <option value="{{ forloop.counter }}">{{ service.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            {% endblock %}
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="{% static 'app/javascript/subscription_requests.js' %}"></script>
+
+{% endblock %}

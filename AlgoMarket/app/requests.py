@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import User, Service
+from .models import User, Service, Subscription
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.hashers import check_password, make_password
 from django.contrib import messages
@@ -84,7 +84,7 @@ def history(request):
 
 def services(request):
     if not request.user.creator:
-        return HttpResponse("ONLY CREATORS CAN CREATE OR EDIT SERVICES!")
+        return HttpResponse("ONLY CREATORS CAN MANAGE THEIR SERVICES!")
 
     if request.method == "GET":
         # query the database for services provided by the current user
@@ -135,4 +135,34 @@ def services(request):
             return views.services(request, service_list)
 
 def subscription(request):
-    return views.subscription(request)
+    if not request.user.creator:
+        return HttpResponse("ONLY CREATORS CAN MANAGE THEIR SUBSCRIPTION!")
+
+    if request.method == "GET":
+        # attempt to find the current user's subscription
+        try:
+            subscription = Subscription.objects.get(pk=request.user)
+        except Subscription.DoesNotExist:
+            subscription = None
+        return views.subscription(request, subscription)
+
+    if request.method == "POST":
+        # check for existing subscription by user
+        try:
+            subscription = Subscription.objects.get(pk=request.user)
+            return HttpResponse("CREATOR CANNOT CREATE MULTIPLE SUBSCRIPTIONS!")
+        except Subscription.DoesNotExist:
+            pass
+        # create a new Subscription object in the database
+        data = json.loads(request.body)
+        subscription = Subscription(
+            seller=request.user,
+            pro_price=data['proPrice'],
+            premium_price=data['premiumPrice']
+        )
+        subscription.save()
+        messages.success(request, "Subscription creation successful." )
+        # then respond with the page with updated subscription
+        return views.subscription(request, subscription)
+        
+        return HttpResponse("Responding to POST")
