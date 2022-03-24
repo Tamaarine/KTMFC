@@ -73,7 +73,8 @@ def store(request):
     return views.store(request)
 
 def profile(request):
-    return views.profile(request)
+    service_list = Service.objects.filter(seller=request.user, approved=True, active=True)
+    return views.profile(request, service_list)
 
 def settings(request):
     return views.settings(request)

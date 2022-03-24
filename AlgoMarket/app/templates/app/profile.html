@@ -7,11 +7,15 @@
     <div class="{% if user.creator %}col-sm-1{% else %}col-sm-4{% endif %}"></div>
     <div class="{% if user.creator %}col-sm-3{% else %}col-sm-4{% endif %}">
         <div class="d-flex flex-column align-items-center text-center border p-4">
+            {% if user.image_path %}
             {% with "app/assets/img/"|add:user.image_path as image_path %}
             <img class="rounded-circle mb-3" width="200px" src="{% static image_path %}">
             {% endwith %}
-            <h4 class="card-title"><b>KTMcdonnell</b></h4>
-            <p class="card-text">ktm@cs.stonybrook.edu</p>
+            {% else %}
+            <img class="rounded-circle mb-3" width="200px" src="{% static 'app/assets/img/user.png' %}">
+            {% endif %}
+            <h4 class="card-title"><b>{{ user.username }}</b></h4>
+            <p class="card-text">{{ user.email }}</p>
             <a class="btn btn-light" href="{% url 'settings' %}">
                 Edit Profile
                 <span class="bi-pencil-fill"></span>
@@ -34,8 +38,8 @@
                 {% endif %}
             </dl>
             <hr style="border-color: #DDD; width: 100%">
-            <p class="card-text text-left w-100"><b>Description</b></p>
-            <p class="card-text text-left">{{ user.description }}</p>
+            <p class="card-text text-left w-100"><b>Biography</b></p>
+            <p class="card-text text-left">{{ user.biography }}</p>
             <hr style="border-color: #DDD; width: 100%">
             <button type="button" class="btn btn-danger btn-block">Report {% if user.creator %}Creator{% else %}User{% endif %}</button>
         </div>

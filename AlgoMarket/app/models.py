@@ -26,16 +26,16 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractUser):
     email = models.EmailField(max_length=200, primary_key=True, unique=True)
-    walletAddress = models.CharField(max_length=200)
+    username = models.CharField(max_length=200)
+    image_path = models.CharField(max_length=200, blank=True)
+    wallet_address = models.CharField(max_length=200)
     last_updated = models.TimeField(auto_now=True)
     creator = models.BooleanField(default=False)
-    service_completed = models.IntegerField(default=0)
+    services_completed = models.IntegerField(default=0)
     subscriber_count = models.IntegerField(default=0)
-    bio = models.CharField(max_length=200)
+    biography = models.CharField(max_length=200)
     is_superuser = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    
-    username = models.CharField(max_length=200)
     
     objects = CustomUserManager()
     
@@ -47,11 +47,11 @@ class Service(models.Model):
     name = models.CharField(max_length=200)
     seller = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=200)
-    price = models.IntegerField(default=-1)
-    amount_available = models.IntegerField()
+    price = models.IntegerField(default=1)
+    image_path = models.CharField(max_length=200, blank=True)
+    amount_available = models.IntegerField(default=-1)
     created = models.TimeField(auto_now_add=True)
     last_updated = models.TimeField(auto_now=True)
-    imagePath = models.CharField(max_length=200)
     approved = models.BooleanField(default=False)
     active = models.BooleanField(default=False)
     

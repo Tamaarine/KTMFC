@@ -54,25 +54,9 @@ def store(request):
     }
     return render(request, 'app/store.html', context)
 
-def profile(request):
+def profile(request, service_list):
     context = {
-        'user': {
-            'creator': True,
-            'username': 'KTMcdonnell',
-            'email': 'ktm@cs.stonybrook.edu',
-            'image_path': 'ktm.jpg',
-            'first_name': 'Kevin',
-            'last_name': 'McDonnell',
-            'services_completed': 37,
-            'subscriber_count': 3,
-            'rating': 5,
-            'description': 'I am teaching professor in the Department of Computer Science at Stony Brook University, where I have worked since the summer of 2015. I teach a variety of 100-level and 200-level Computer Science courses.'
-        },
-        'service_list': [
-            {'name': 'Anime Sketches', 'description': 'I draw beautiful anime sketches for Algorand!', 'image_path': 'yes.jpg'},
-            {'name': 'Graphic DESIGN!', 'description': 'I will make beautiful graphic design for anything', 'image_path': 'design.jpg'},
-            {'name': 'Profession Googler', 'description': 'I am a professional googler and I will google for you', 'image_path': 'google.jpg'}
-        ],
+        'service_list': service_list,
         'subscription': {
             'perks': ['homework questions', 'google searches', 'tutoring sessions', 'code reviews'],
             'free': {'cost': 0, 'quantities': [1,1,0,0]},
