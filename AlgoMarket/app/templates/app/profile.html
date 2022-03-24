@@ -3,9 +3,9 @@
 
 {% block body %}
 
-<div class="row mx-5 my-5">
-    <div class="{% if user.creator %}col-sm-1{% else %}col-sm-4{% endif %}"></div>
-    <div class="{% if user.creator %}col-sm-3{% else %}col-sm-4{% endif %}">
+<div class="row d-flex justify-content-center mx-5 my-5">
+    <div class="{% if user.creator %}col-sm-1{% endif %}"></div>
+    <div class="col-sm-3">
         <div class="d-flex flex-column align-items-center text-center border p-4">
             {% if user.image_path %}
             {% with "app/assets/img/"|add:user.image_path as image_path %}
@@ -128,7 +128,7 @@
         {% endif %}
     </div>
     {% endif %}
-    <div class="{% if user.creator %}col-sm-1{% else %}col-sm-4{% endif %}"></div>
+    <div class="{% if user.creator %}col-sm-1{% endif %}"></div>
 </div>
 
 {% endblock %}

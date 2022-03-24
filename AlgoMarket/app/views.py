@@ -57,12 +57,7 @@ def store(request):
 def profile(request, service_list):
     context = {
         'service_list': service_list,
-        'subscription': {
-            'perks': ['homework questions', 'google searches', 'tutoring sessions', 'code reviews'],
-            'free': {'cost': 0, 'quantities': [1,1,0,0]},
-            'pro': {'cost': 50, 'quantities': [5,5,1,0]},
-            'premium': {'cost': 100, 'quantities': ['unlimited','unlimited',4,1]}
-        }
+        'subscription': {}
     }
     return render(request, 'app/profile.html', context)
 

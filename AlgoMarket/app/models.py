@@ -54,6 +54,19 @@ class Service(models.Model):
     last_updated = models.TimeField(auto_now=True)
     approved = models.BooleanField(default=False)
     active = models.BooleanField(default=False)
+
+class Subscription(models.Model):
+    seller = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    pro_cost = models.IntegerField()
+    premium_cost = models.IntegerField()
+
+class Perk(models.Model):
+    id = models.IntegerField(primary_key=True)
+    subscription = models.ForeignKey(Subscription, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200)
+    free_amount = models.IntegerField(default=0)
+    pro_amount = models.IntegerField(default=0)
+    premium_amount = models.IntegerField(default=0)
     
 class Transaction(models.Model):
     id = models.IntegerField(primary_key=True)
