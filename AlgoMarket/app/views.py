@@ -2,7 +2,7 @@ from django import forms
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import User
+from .models import User, Service, Subscription, Perk
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 
 def index(request):
@@ -92,19 +92,23 @@ def history(request):
     }
     return render(request, 'app/history.html', context)
 
-def services(request, service_list):
+def services(request):
+    service_list = Service.objects.filter(seller=request.user)
     context = {
         'service_list': service_list
     }
     return render(request, 'app/manage_services.html', context)
 
-def subscription(request, subscription):
+def subscription(request):
+    try:
+        subscription = Subscription.objects.get(pk=request.user)
+    except Subscription.DoesNotExist:
+        subscription = None
+    service_list = Service.objects.filter(seller=request.user, approved=True, active=True)
+    perk_list = Perk.objects.filter(subscription=subscription)
     context = {
-        'service_list': [
-            {'name': 'Anime Sketches', 'description': 'I draw beautiful anime sketches for Algorand!', 'cost': 50, 'image_path': 'yes.jpg'},
-            {'name': 'Graphic DESIGN!', 'description': 'I will make beautiful graphic design for anything', 'cost': 75, 'image_path': 'design.jpg'},
-            {'name': 'Profession Googler', 'description': 'I am a professional googler and I will google for you', 'cost': 10, 'image_path': 'google.jpg'}
-        ],
-        'subscription': subscription
+        'subscription': subscription,
+        'service_list': service_list,
+        'perk_list': perk_list
     }
     return render(request, 'app/manage_subscription.html', context)

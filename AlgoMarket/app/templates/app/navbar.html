@@ -46,8 +46,8 @@
                     <a class="dropdown-item" href="{% url 'settings' %}">Settings</a>
                     <a class="dropdown-item" href="{% url 'history' %}">History</a>
                     {% if user.creator %}
-                    <a class="dropdown-item" href="{% url 'services' %}">Manage Services</a>
-                    <a class="dropdown-item" href="{% url 'subscription' %}">Manage Subscription</a>
+                    <a class="dropdown-item" href="{% url 'services' %}">Services</a>
+                    <a class="dropdown-item" href="{% url 'subscription' %}">Subscription</a>
                     {% endif %}
                     <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                     {% else %}

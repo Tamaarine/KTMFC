@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import User, Service, Subscription
+from .models import User, Service, Subscription, Perk
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.hashers import check_password, make_password
 from django.contrib import messages
@@ -88,8 +88,7 @@ def services(request):
 
     if request.method == "GET":
         # query the database for services provided by the current user
-        service_list = Service.objects.filter(seller=request.user)
-        return views.services(request, service_list)
+        return views.services(request)
 
     if request.method == "POST":
         # create a new Service object in the database
@@ -105,8 +104,7 @@ def services(request):
         service.save()
         messages.success(request, "Service creation successful." )
         # then respond with the page with updated list
-        service_list = Service.objects.filter(seller=request.user)
-        return views.services(request, service_list)
+        return views.services(request)
 
     if request.method == "PUT":
         # find the appropriate Service object in the database
@@ -124,15 +122,13 @@ def services(request):
             service.save()
             messages.success(request, "Service update was successful." )
             # then respond with a the new page to load
-            service_list = Service.objects.filter(seller=request.user)
-            return views.services(request, service_list)
+            return views.services(request)
         if data['action'] == "toggle-active":
             # change the active status in the database
             service.active = not service.active
             service.save()
             # then respond with a the new page to load
-            service_list = Service.objects.filter(seller=request.user)
-            return views.services(request, service_list)
+            return views.services(request)
 
 def subscription(request):
     if not request.user.creator:
@@ -140,11 +136,7 @@ def subscription(request):
 
     if request.method == "GET":
         # attempt to find the current user's subscription
-        try:
-            subscription = Subscription.objects.get(pk=request.user)
-        except Subscription.DoesNotExist:
-            subscription = None
-        return views.subscription(request, subscription)
+        return views.subscription(request)
 
     if request.method == "POST":
         # check for existing subscription by user
@@ -154,15 +146,36 @@ def subscription(request):
         except Subscription.DoesNotExist:
             pass
         # create a new Subscription object in the database
-        data = json.loads(request.body)
         subscription = Subscription(
-            seller=request.user,
-            pro_price=data['proPrice'],
-            premium_price=data['premiumPrice']
+            seller=request.user
         )
         subscription.save()
         messages.success(request, "Subscription creation successful." )
         # then respond with the page with updated subscription
-        return views.subscription(request, subscription)
-        
-        return HttpResponse("Responding to POST")
+        return views.subscription(request)
+
+    if request.method == "PUT":
+        data = json.loads(request.body)
+        if data['action'] == 'add-perk':
+            # check if current user has a subscription
+            try:
+                subscription = Subscription.objects.get(pk=request.user)
+            except Subscription.DoesNotExist:
+                return HttpResponse("CANNOT ADD A PERK TO NON-EXISTENT SUBSCRIPTION!")
+            # check if the requested service exists and is owned by the current user
+            try:
+                service = Service.objects.get(pk=data['service_id'])
+                if service.seller != request.user:
+                    return HttpResponse("CANNOT ADD A SERVICE THAT YOU DO NOT OWN AS A PERK!")
+            except Service.DoesNotExist:
+                return HttpResponse("SELECTED SERVICE FOR PERK DOES NOT EXIST!")
+            # create a new Perk in the database for current user's subscription
+            perk = Perk(
+                id=Perk.objects.count(),
+                subscription=subscription,
+                service=service
+            )
+            perk.save()
+            messages.success(request, "Perk creation successful." )
+            # then respond with the page with updated subscription
+            return views.subscription(request)

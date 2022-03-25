@@ -15,14 +15,28 @@ function getCookie(name) {
 }
 
 //function to send POST request to initialize a creator's subscription
-function createSubscription(event) {
-    event.preventDefault();
-    data = {
-        'proPrice': event.target.elements.proPrice.value,
-        'premiumPrice': event.target.elements.premiumPrice.value
-    }
+function createSubscription() {
     fetch('/subscription', {
         method: 'POST',
+        headers: {'X-CSRFToken': getCookie('csrftoken')}
+    }).then(response => {
+        return response.text();
+    }).then(html => {
+        document.open();
+        document.write(html);
+        document.close();
+    });
+}
+
+//function to send a PUT request to add a perk to the subscription
+function addPerk(event) {
+    event.preventDefault();
+    data = {
+        'service_id': event.target.elements.serviceSelect.value,
+        'action': 'add-perk'
+    }
+    fetch('/subscription', {
+        method: 'PUT',
         headers: {'X-CSRFToken': getCookie('csrftoken')},
         body: JSON.stringify(data)
     }).then(response => {

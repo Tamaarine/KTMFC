@@ -57,8 +57,8 @@ class Service(models.Model):
 
 class Subscription(models.Model):
     seller = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    pro_price = models.IntegerField()
-    premium_price = models.IntegerField()
+    pro_price = models.IntegerField(default=0)
+    premium_price = models.IntegerField(default=0)
 
 class Perk(models.Model):
     id = models.IntegerField(primary_key=True)
