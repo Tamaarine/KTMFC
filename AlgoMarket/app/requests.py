@@ -62,7 +62,11 @@ def register(request):
     return render(request, 'app/register.html', {'form': form})
 
 def register_creator(request):
-    return views.register_creator(request)
+    if request.user.is_authenticated:
+        return views.register_creator(request)
+    # User is not logged in please go login to become a creator
+    messages.error(request, "Your are not logged in, please log in to register to become a creator!")
+    return views.login(request, UserLoginForm())
 
 def password(request):
     return views.password(request)
