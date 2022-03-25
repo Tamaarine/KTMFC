@@ -54,10 +54,17 @@ def store(request):
     }
     return render(request, 'app/store.html', context)
 
-def profile(request, service_list):
+def profile(request):
+    service_list = Service.objects.filter(seller=request.user, approved=True, active=True)
+    try:
+        subscription = Subscription.objects.get(pk=request.user)
+    except Subscription.DoesNotExist:
+        subscription = None
+    perk_list = Perk.objects.filter(subscription=subscription)
     context = {
         'service_list': service_list,
-        'subscription': {}
+        'subscription': subscription,
+        'perk_list': perk_list
     }
     return render(request, 'app/profile.html', context)
 

@@ -75,13 +75,10 @@
                         <h4 class="my-0 fw-normal">Free</h4>
                     </div>
                     <div class="card-body">
-                        <h1 class="card-title pricing-card-title">{{ subscription.free.cost }} ALGO<small class="text-muted fw-light">/mo</small></h1>
+                        <h1 class="card-title pricing-card-title">0 ALGO<small class="text-muted fw-light">/mo</small></h1>
                         <ul class="list-unstyled mt-3 mb-4">
-                            {% load custom_tags %}
-                            {% for quantity in subscription.free.quantities %}
-                            {% with forloop.counter|add:-1 as ind %}
-                            <li>{{ quantity }} {{ subscription.perks|index:ind }}</li>
-                            {% endwith %}
+                            {% for perk in perk_list %}
+                            <li>{{ perk.free_amount }} {{ perk.service.name }}</li>
                             {% endfor %}
                         </ul>
                         <button type="button" class="w-100 btn btn-lg btn-outline-primary">Subscribe</button>
@@ -94,12 +91,10 @@
                         <h4 class="my-0 fw-normal">Pro</h4>
                     </div>
                     <div class="card-body">
-                        <h1 class="card-title pricing-card-title">{{ subscription.pro.cost }} ALGO<small class="text-muted fw-light">/mo</small></h1>
+                        <h1 class="card-title pricing-card-title">{{ subscription.pro_price }} ALGO<small class="text-muted fw-light">/mo</small></h1>
                         <ul class="list-unstyled mt-3 mb-4">
-                            {% for quantity in subscription.pro.quantities %}
-                            {% with forloop.counter|add:-1 as ind %}
-                            <li>{{ quantity }} {{ subscription.perks|index:ind }}</li>
-                            {% endwith %}
+                            {% for perk in perk_list %}
+                            <li>{{ perk.pro_amount }} {{ perk.service.name }}</li>
                             {% endfor %}
                         </ul>
                         <button type="button" class="w-100 btn btn-lg btn-primary">Subscribe</button>
@@ -112,12 +107,10 @@
                         <h4 class="my-0 fw-normal">Premium</h4>
                     </div>
                     <div class="card-body">
-                        <h1 class="card-title pricing-card-title">{{ subscription.premium.cost }} ALGO<small class="text-muted fw-light">/mo</small></h1>
+                        <h1 class="card-title pricing-card-title">{{ subscription.premium_price }} ALGO<small class="text-muted fw-light">/mo</small></h1>
                         <ul class="list-unstyled mt-3 mb-4">
-                            {% for quantity in subscription.premium.quantities %}
-                            {% with forloop.counter|add:-1 as ind %}
-                            <li>{{ quantity }} {{ subscription.perks|index:ind }}</li>
-                            {% endwith %}
+                            {% for perk in perk_list %}
+                            <li>{{ perk.premium_amount }} {{ perk.service.name }}</li>
                             {% endfor %}
                         </ul>
                         <button type="button" class="w-100 btn btn-lg btn-primary">Subscribe</button>
