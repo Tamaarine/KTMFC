@@ -14,8 +14,8 @@ def login(request, form):
 def register(request, form):
     return render(request, 'app/register.html', {'form': form})
 
-def register_creator(request):
-    return render(request, 'app/register_creator.html')
+def register_creator(request, form):
+    return render(request, 'app/register_creator.html', {'form': form})
 
 def password(request):
     return render(request, 'app/password.html')

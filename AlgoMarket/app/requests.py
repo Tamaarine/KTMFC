@@ -7,7 +7,7 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.contrib import messages
 import json
 from . import views
-from .forms import UserLoginForm, UserRegisterForm
+from .forms import UserLoginForm, UserRegisterForm, CreatorEssayForm
 
 
 def index(request):
@@ -63,7 +63,23 @@ def register(request):
 
 def register_creator(request):
     if request.user.is_authenticated:
-        return views.register_creator(request)
+        print("user is authenticated")
+        if request.method == "GET":
+            # Return the register creator page view
+            print("is a get")
+            form = CreatorEssayForm()
+            return render(request, 'app/register_creator.html', {'form':form})
+        elif request.method == "POST":
+            # The user submitted the form, time to process it and store it into the
+            # database for moderators to view
+            print("got here")            
+            form = CreatorEssayForm(request.POST)
+            if form.is_valid():
+                request.user.creator_essay = form.cleaned_data['essay']
+                request.user.save()
+                return HttpResponse("Essay saved you will hear from us soon!")
+            
+            
     # User is not logged in please go login to become a creator
     messages.error(request, "Your are not logged in, please log in to register to become a creator!")
     return views.login(request, UserLoginForm())

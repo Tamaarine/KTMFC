@@ -48,11 +48,11 @@ class User(AbstractUser):
     is_superuser = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     email = models.EmailField(unique=True)
+    creator_essay = models.CharField(max_length=300)
     
     objects = CustomUserManager()
     
     REQUIRED_FIELDS = []
-
 
 class Service(models.Model):
     id = models.IntegerField(primary_key=True)
