@@ -1,6 +1,9 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.contrib.auth.hashers import make_password
+from . import errors
+
+
 
 
 # Create your models here.
@@ -10,22 +13,32 @@ class CustomUserManager(BaseUserManager):
     Passwords are stored in hash
     '''
     def create_user(self, email, password, first_name, last_name, username):
-        try:
-            exist = User.objects.get(pk=email)
-            return None
-        except User.DoesNotExist:
-            toSave = User(email=email, first_name=first_name, last_name=last_name, username=username)
-            toSave.password = make_password(password, username + first_name)
-            toSave.set_password(raw_password=password)
-            toSave.save()
-            return toSave
+        unique_fields = ['email', 'username']
+        unique_input = [email, username]
+        error = [errors.EmailExist, errors.UsernameExist]
+    
+        for i in range(len(unique_fields)):
+            kwarg = {unique_fields[i]: unique_input[i]}
+            try:
+                _ = User.objects.get(**kwarg)
+                raise error[i]
+            except User.DoesNotExist:
+                # That particular user with the specified yield don't exists. Fine continue
+                pass
+        # Safe to add it now, no duplicate user
+        toSave = User(email=email, first_name=first_name, last_name=last_name, username=username)
+        toSave.password = make_password(password, username + first_name)
+        toSave.set_password(raw_password=password)
+        toSave.save()
+        return toSave
+        
     def create_superuser(self, email, password, username=None):
         toSave = User(email=email, is_superuser=True, is_staff=True)
         toSave.set_password(raw_password=password)
         toSave.save()
 
 class User(AbstractUser):
-    email = models.EmailField(max_length=200, primary_key=True, unique=True)
+    username = models.CharField(max_length=200, unique=True, primary_key=True)
     walletAddress = models.CharField(max_length=200)
     last_updated = models.TimeField(auto_now=True)
     creator = models.BooleanField(default=False)
@@ -34,13 +47,9 @@ class User(AbstractUser):
     bio = models.CharField(max_length=200)
     is_superuser = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    
-    username = models.CharField(max_length=200)
+    email = models.EmailField(unique=True)
     
     objects = CustomUserManager()
-    
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
 
 class Service(models.Model):
     id = models.IntegerField(primary_key=True)

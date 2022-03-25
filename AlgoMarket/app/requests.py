@@ -22,15 +22,15 @@ def login(request):
         form = UserLoginForm(request.POST)
         
         if form.is_valid():
-            inEmail = form.cleaned_data['email']
+            inUsername = form.cleaned_data['username']
             inPassword = form.cleaned_data['password']
         
-            user = authenticate(request, username=inEmail, password=inPassword)
+            user = authenticate(request, username=inUsername, password=inPassword)
             if user is not None:
                 auth_login(request, user)
                 return HttpResponseRedirect('search')
             else:
-                messages.error(request, "Email/Password not valid")
+                messages.error(request, "Username/Password not valid")
         
     elif request.method == "GET":
         return views.login(request, UserLoginForm())
@@ -55,6 +55,7 @@ def register(request):
                 auth_login(request, user)
                 return HttpResponseRedirect('/')
             except:
+                # Error handled inside save don't need to do anything
                 pass
     elif request.method == "GET":
         return views.register(request, UserRegisterForm())
