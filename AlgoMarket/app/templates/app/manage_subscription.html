@@ -8,7 +8,7 @@
 <h1>Your Subscription</h1>
 <hr style="border-color: #DDD; width: 100%">
 {% if subscription %}
-<form>
+<form onsubmit="updateSubscription(event)">
     <table class="table table-hover">
         <thead class="thead-light">
             <tr>
@@ -23,7 +23,7 @@
                 <th class="align-middle" scope="col">
                     <div class="row">
                         <div class="col-auto d-flex align-items-center">
-                            <input class="form-control" id="inputFreeCost" type="text" value="0" disabled />
+                            <input class="form-control" id="inputFreePrice" name="freePrice" type="text" value="0" disabled />
                             <p class="my-0 ml-1">ALGO</p>
                         </div>
                     </div>
@@ -31,8 +31,7 @@
                 <th class="align-middle" scope="col">
                     <div class="row">
                         <div class="col-auto d-flex align-items-center">
-                            <input class="form-control" id="inputProPrice" name="proPrice" type="number"
-                                value="{{ subscription.pro_price }}" required />
+                            <input class="form-control" id="inputProPrice" name="proPrice" type="number" value="{{ subscription.pro_price }}" required />
                             <p class="my-0 ml-1">ALGO</p>
                         </div>
                     </div>
@@ -40,8 +39,7 @@
                 <th class="align-middle" scope="col">
                     <div class="row">
                         <div class="col-auto d-flex align-items-center">
-                            <input class="form-control" id="inputPremiumPrice" name="premiumPrice" type="number"
-                                value="{{ subscription.premium_price }}" required />
+                            <input class="form-control" id="inputPremiumPrice" name="premiumPrice" type="number" value="{{ subscription.premium_price }}" required />
                             <p class="my-0 ml-1">ALGO</p>
                         </div>
                     </div>
@@ -49,21 +47,21 @@
                 <th class="align-middle" scope="col"></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="perkTable">
             {% for perk in perk_list %}
             <tr>
                 <th class="align-middle" scope="row">{{ perk.service.name }}</th>
-                <td class="align-middle"><input class="form-control" id="perk{{ perk.service }}FreeAmount" type="number" value="{{ perk.free_amount }}" /></td>
-                <td class="align-middle"><input class="form-control" id="perk{{ perk.service }}ProAmount" type="number" value="{{ perk.pro_amount }}" /></td>
-                <td class="align-middle"><input class="form-control" id="perk{{ perk.service }}PremiumAmount" type="number" value="{{ perk.premium_amount }}" /></td>
-                <td class="align-middle"><button type="button" class="btn btn-danger">Delete</button></td>
+                <td class="align-middle"><input class="form-control" name="perk-{{ perk.service.id }}-FreeAmount" type="number" value="{{ perk.free_amount }}" required /></td>
+                <td class="align-middle"><input class="form-control" name="perk-{{ perk.service.id }}-ProAmount" type="number" value="{{ perk.pro_amount }}" required /></td>
+                <td class="align-middle"><input class="form-control" name="perk-{{ perk.service.id }}-PremiumAmount" type="number" value="{{ perk.premium_amount }}" required /></td>
+                <td class="align-middle"><button type="button" class="btn btn-danger">Remove</button></td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addPerkModal" data-backdrop="static"
         data-keyboard="false">Add New Perk +</button>
-    <button type="button" class="btn btn-primary">Submit For Approval</button>
+    <button type="submit" class="btn btn-primary">Submit For Approval</button>
 </form>
 {% else %}
 <p>You do not currently have a subscription!</p>
@@ -77,7 +75,6 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="addPerkModalLabel">Add New Perk</h5>
             </div>
-            <form onsubmit="addPerk(event)">
                 <div class="modal-body">
                     <div class="row mb-3">
                         <div class="col-md-4 d-flex align-items-center justify-content-end">
@@ -95,9 +92,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-success">Add</button>
+                    <button type="button" class="btn btn-success" onClick="addPerk()" data-dismiss="modal">Add</button>
                 </div>
-            </form>
         </div>
     </div>
 </div>

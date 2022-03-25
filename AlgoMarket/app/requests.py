@@ -93,7 +93,6 @@ def services(request):
         # create a new Service object in the database
         data = json.loads(request.body)
         service = Service(
-            id=Service.objects.count(),
             name=data['name'],
             seller=request.user,
             description=data['description'],
@@ -155,26 +154,34 @@ def subscription(request):
 
     if request.method == "PUT":
         data = json.loads(request.body)
-        if data['action'] == 'add-perk':
-            # check if current user has a subscription
-            try:
-                subscription = Subscription.objects.get(pk=request.user)
-            except Subscription.DoesNotExist:
-                return HttpResponse("CANNOT ADD A PERK TO NON-EXISTENT SUBSCRIPTION!")
+        # check if current user has a subscription
+        try:
+            subscription = Subscription.objects.get(pk=request.user)
+        except Subscription.DoesNotExist:
+            return HttpResponse("CANNOT UPDATE NON-EXISTENT SUBSCRIPTION!")
+        # update the perk objects in the database
+        Perk.objects.filter(subscription=subscription).delete()
+        for id in data['perk_list']:
             # check if the requested service exists and is owned by the current user
             try:
-                service = Service.objects.get(pk=data['service_id'])
+                service = Service.objects.get(pk=id)
                 if service.seller != request.user:
                     return HttpResponse("CANNOT ADD A SERVICE THAT YOU DO NOT OWN AS A PERK!")
             except Service.DoesNotExist:
                 return HttpResponse("SELECTED SERVICE FOR PERK DOES NOT EXIST!")
-            # create a new Perk in the database for current user's subscription
+            # create the new perk into the database
             perk = Perk(
-                id=Perk.objects.count(),
-                subscription=subscription,
-                service=service
+                subscription = subscription,
+                service=service,
+                free_amount = data['perk_list'][id]['FreeAmount'],
+                pro_amount = data['perk_list'][id]['ProAmount'],
+                premium_amount = data['perk_list'][id]['PremiumAmount'],
             )
             perk.save()
-            messages.success(request, "Perk creation successful." )
-            # then respond with the page with updated subscription
-            return views.subscription(request)
+        # update the subscription object in the database
+        subscription.pro_price = data['pro_price']
+        subscription.premium_price = data ['premium_price']
+        subscription.approved = False
+        subscription.save()
+        # then respond with the page with updated subscription
+        return views.subscription(request)

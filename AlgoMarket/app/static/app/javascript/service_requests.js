@@ -17,7 +17,7 @@ function getCookie(name) {
 //function to sent POST request for creating a new service
 function addService(event) {
     event.preventDefault();
-    data = {
+    const data = {
         'name': event.target.elements.name.value,
         'description': event.target.elements.description.value,
         'price': event.target.elements.price.value
@@ -38,7 +38,7 @@ function addService(event) {
 //function to send a PUT request for updating a service in the database
 function updateService(event) {
     event.preventDefault();
-    data = {
+    const data = {
         'id': event.target.elements.id.value,
         'name': event.target.elements.name.value,
         'description': event.target.elements.description.value,
@@ -60,7 +60,7 @@ function updateService(event) {
 
 //function to send a PUT request to toggle the active/inactive status of a service
 function toggleActive(id) {
-    data = {
+    const data = {
         'id': id.substring(18),
         'action': 'toggle-active'
     }

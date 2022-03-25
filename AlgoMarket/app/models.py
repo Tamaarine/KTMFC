@@ -43,7 +43,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
 class Service(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200)
     seller = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=200)
@@ -59,9 +59,10 @@ class Subscription(models.Model):
     seller = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     pro_price = models.IntegerField(default=0)
     premium_price = models.IntegerField(default=0)
+    approved = models.BooleanField(default=False)
 
 class Perk(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     subscription = models.ForeignKey(Subscription, on_delete=models.CASCADE)
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
     free_amount = models.IntegerField(default=0)
