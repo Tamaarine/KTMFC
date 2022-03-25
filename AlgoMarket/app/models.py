@@ -32,8 +32,8 @@ class CustomUserManager(BaseUserManager):
         toSave.save()
         return toSave
         
-    def create_superuser(self, email, password, username=None):
-        toSave = User(email=email, is_superuser=True, is_staff=True)
+    def create_superuser(self, username=None, password=None):
+        toSave = User(username=username, is_superuser=True, is_staff=True)
         toSave.set_password(raw_password=password)
         toSave.save()
 
@@ -50,6 +50,9 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     
     objects = CustomUserManager()
+    
+    REQUIRED_FIELDS = []
+
 
 class Service(models.Model):
     id = models.IntegerField(primary_key=True)
