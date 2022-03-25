@@ -2,6 +2,7 @@ from django import forms
 from django.forms import TextInput, EmailField
 from app.models import User
 from django.contrib import messages
+from .errors import *
 
 class UserRegisterForm(forms.Form):
     username = forms.CharField(label='Username', max_length=150, 
@@ -33,18 +34,20 @@ class UserRegisterForm(forms.Form):
         inFirst = self.cleaned_data['first_name']
         inLast = self.cleaned_data['last_name']
         inUsername = self.cleaned_data['username']
-        user = User.objects.create_user(inEmail, password, inFirst, inLast, inUsername)
         
-        if user is None:
-            print("im here")
+        # If it passes all the field checks then user will be created and returned
+        try:
+            user = User.objects.create_user(inEmail, password, inFirst, inLast, inUsername)
+        except UsernameExist:
+            messages.error(request, "Same username exists")
+        except EmailExist:
             messages.error(request, "Same email exists")
-            raise forms.ValidationError("Duplicate user")
-        else:
-            return user 
+        
+        return user 
 
 class UserLoginForm(forms.Form):
-    email = forms.EmailField(label='Email',
-                widget=forms.EmailInput(attrs={'placeholder': 'name@domain.com', 'class': 'form-control'}))
+    username = forms.CharField(label='Username',
+                widget=forms.TextInput(attrs={'placeholder': 'Enter your Username', 'class': 'form-control'}))
     password = forms.CharField(label='Password', max_length=128,
                 widget=forms.TextInput(attrs={'placeholder': 'Password', 'class': 'form-control', 'type': 'password'}))
                 
