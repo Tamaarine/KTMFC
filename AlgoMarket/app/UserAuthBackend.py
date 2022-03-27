@@ -1,6 +1,7 @@
 from app.models import User
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.hashers import check_password
+from .errors import EmailNotVerified
 
 class CustomBackend(ModelBackend):
     def authenticate(self, request=None, username=None, password=None):
@@ -13,6 +14,10 @@ class CustomBackend(ModelBackend):
         '''
         try:
             user = User.objects.get(pk=username)
+            
+            if not user.is_active:
+                raise EmailNotVerified
+            
             if check_password(password, user.password):
                 return user
             else:
