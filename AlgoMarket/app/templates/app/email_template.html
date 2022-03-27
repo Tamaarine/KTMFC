@@ -1,0 +1,5 @@
+{% autoescape off %}
+Hello {{ username }}
+Please click on the link to verify your account!
+{% endautoescape %}
+<a href="http://localhost:8000{% url 'activate' username=username token=token %}">Click here</a>
