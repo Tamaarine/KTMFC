@@ -15,4 +15,5 @@ urlpatterns = [
     path('history', requests.history, name='history'),
     path('services', requests.services, name='services'),
     path('subscription', requests.subscription, name='subscription'),
+    path('report', requests.report, name='report'),
 ]

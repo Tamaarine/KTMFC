@@ -14,6 +14,13 @@ def login(request, form):
 def register(request, form):
     return render(request, 'app/register.html', {'form': form})
 
+def logout(request):
+    if request.user.is_authenticated:
+        auth_logout(request)
+        return render(request, 'app/index.html')
+    else:
+        return HttpResponseRedirect('index')
+    
 def register_creator(request):
     return render(request, 'app/register_creator.html')
 
@@ -134,3 +141,13 @@ def subscription(request):
         }
     }
     return render(request, 'app/manage_subscription.html', context)
+    
+def report(request):
+    context = {
+        'service_list': [
+            {'name': 'Anime Sketches', 'description': 'I draw beautiful anime sketches for Algorand!', 'cost': 50, 'image_path': 'yes.jpg'},
+            {'name': 'Graphic DESIGN!', 'description': 'I will make beautiful graphic design for anything', 'cost': 75, 'image_path': 'design.jpg'},
+            {'name': 'Profession Googler', 'description': 'I am a professional googler and I will google for you', 'cost': 10, 'image_path': 'google.jpg'}
+        ],
+    }
+    return render(request, 'app/report.html', context)
