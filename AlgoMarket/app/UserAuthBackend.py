@@ -20,8 +20,8 @@ class CustomBackend(ModelBackend):
         except User.DoesNotExist:
             return None
         
-    def get_user(self, useremail):
+    def get_user(self, username):
         try:
-            return User.objects.get(pk=useremail)
+            return User.objects.get(pk=username)
         except User.DoesNotExist:
             return None
