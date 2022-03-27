@@ -29,6 +29,7 @@ class CustomUserManager(BaseUserManager):
         toSave = User(email=email, first_name=first_name, last_name=last_name, username=username)
         toSave.password = make_password(password, username + first_name)
         toSave.set_password(raw_password=password)
+        toSave.is_active = False
         toSave.save()
         return toSave
         
