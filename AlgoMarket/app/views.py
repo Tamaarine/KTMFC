@@ -30,6 +30,8 @@ def search(request):
             {'name': 'Profession Googler', 'description': 'I am a professional googler and I will google for you', 'image_path': 'google.jpg'}
         ]
     }
+    q = request.GET.get('sch')
+    context['service_list'] = [x for x in context['service_list'] if (q in x['name'] or q in x['description'])]
     return render(request, 'app/search.html', context)
 
 def store(request):
