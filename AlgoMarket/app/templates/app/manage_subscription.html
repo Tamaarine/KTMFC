@@ -54,7 +54,7 @@
                 <td class="align-middle"><input class="form-control" name="perk-{{ perk.service.id }}-FreeAmount" type="number" value="{{ perk.free_amount }}" required /></td>
                 <td class="align-middle"><input class="form-control" name="perk-{{ perk.service.id }}-ProAmount" type="number" value="{{ perk.pro_amount }}" required /></td>
                 <td class="align-middle"><input class="form-control" name="perk-{{ perk.service.id }}-PremiumAmount" type="number" value="{{ perk.premium_amount }}" required /></td>
-                <td class="align-middle"><button type="button" class="btn btn-danger">Remove</button></td>
+                <td class="align-middle"><button type="button" class="btn btn-danger" onclick="removePerk(event)">Remove</button></td>
             </tr>
             {% endfor %}
         </tbody>

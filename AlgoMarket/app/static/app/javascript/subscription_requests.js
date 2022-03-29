@@ -35,13 +35,15 @@ function addPerk() {
     const service_name = selectService.options[selectService.selectedIndex].text;
     const table = document.getElementById('perkTable');
     const row = document.createElement('tr');
-    row.innerHTML = "<th class='align-middle' scope='row'>"+service_name+"</th><td class='align-middle'><input class='form-control' name='perk-"+service_id+"-FreeAmount' type='number' value='0' required /></td><td class='align-middle'><input class='form-control' name='perk-"+service_id+"-ProAmount' type='number' value='0' required /></td><td class='align-middle'><input class='form-control' name='perk-"+service_id+"-PremiumAmount' type='number' value='0' required /></td><td class='align-middle'><button type='button' class='btn btn-danger'>Remove</button></td>";
+    row.innerHTML = "<th class='align-middle' scope='row'>"+service_name+"</th><td class='align-middle'><input class='form-control' name='perk-"+service_id+"-FreeAmount' type='number' value='0' required /></td><td class='align-middle'><input class='form-control' name='perk-"+service_id+"-ProAmount' type='number' value='0' required /></td><td class='align-middle'><input class='form-control' name='perk-"+service_id+"-PremiumAmount' type='number' value='0' required /></td><td class='align-middle'><button type='button' class='btn btn-danger'  onclick='removePerk(event)'>Remove</button></td>";
     table.appendChild(row);
 }
 
 //function to remove a perk from the subscription table
 function removePerk(event) {
-
+    const row = event.target.parentElement.parentElement;
+    const table = document.getElementById('perkTable');
+    table.removeChild(row);
 }
 
 //function to send a PUT request to update the subscription details
