@@ -245,3 +245,6 @@ def subscription(request):
         subscription.save()
         # then respond with the page with updated subscription
         return views.subscription(request)
+      
+def report(request):
+    return views.report(request)
