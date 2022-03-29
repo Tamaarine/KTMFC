@@ -1,11 +1,8 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse
 from .models import User, Service, Subscription, Perk
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib import messages
-from django.core.mail import send_mail
-from django.conf import settings as django_settings
 from django.template.loader import render_to_string
 from .models import User, Service
 from . import views
@@ -114,12 +111,11 @@ def register_creator(request):
         elif request.method == "POST":
             # The user submitted the form, time to process it and store it into the
             # database for moderators to view
-            print("got here")            
             form = CreatorEssayForm(request.POST)
             if form.is_valid():
-                request.user.creator_essay = form.cleaned_data['essay']
+                request.user.essay = form.cleaned_data['essay']
                 request.user.save()
-                return HttpResponse("Essay saved you will hear from us soon!")
+                return render(request, 'app/thank_you.html')
             
             
     # User is not logged in please go login to become a creator
@@ -132,7 +128,32 @@ def password(request):
 def search(request):
     return views.search(request)
 
-def store(request):
+def store(request, store_id):
+    try:
+        service = Service.objects.get(pk=store_id)
+        context = {
+            'service': {
+            'name': service.name,
+            'description': service.description,
+            'example_works': 'Foo bar, foo bar Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores dicta veritatis mollitia, voluptates odit similique adipisci rerum in aperiam fugit! Sunt veniam numquam at quisquam officia veritatis, temporibus dicta nemo?',
+            'email': 'nowhere@mozilla.org',
+            'cost': 69.42,
+            'subscription_costs': [0, 10, 20],
+            'rating': 4.6,
+            'rating_count': 46,
+            'review_count': 15,
+            'reviews': [
+                {'author': 'rickylu', 'date': '3 October, 2022', 'rating': 1, 'text': 'Send help, the googler ain\'t googling'},
+                {'author': 'daniewu', 'date': '2 October, 2022', 'rating': 5, 'text': 'I came for the service, but stayed for the comments.'},
+                {'author': 'robots5252', 'date': '1 October, 2022', 'rating': 5, 'text': 'Two weirdos above me.'}
+            ]
+        }
+        }
+        
+    except:
+        return HttpResponse("No such store exists")
+    
+    
     return views.store(request)
 
 def profile(request):

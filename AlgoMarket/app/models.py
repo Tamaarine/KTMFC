@@ -50,6 +50,7 @@ class User(AbstractUser):
     biography = models.CharField(max_length=200)
     is_superuser = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
+    essay = models.CharField(max_length=1000)
     
     objects = CustomUserManager()
     
