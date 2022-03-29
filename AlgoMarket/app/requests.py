@@ -35,7 +35,7 @@ def login(request):
                 user = authenticate(request, username=inUsername, password=inPassword)
                 if user is not None:
                     auth_login(request, user)
-                    return HttpResponseRedirect('search')
+                    return HttpResponseRedirect('/')
                 else:
                     messages.error(request, "Username/Password not valid")
             except EmailNotVerified:
