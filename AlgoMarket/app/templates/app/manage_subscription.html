@@ -59,9 +59,16 @@
             {% endfor %}
         </tbody>
     </table>
-    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addPerkModal" data-backdrop="static"
-        data-keyboard="false">Add New Perk +</button>
-    <button type="submit" class="btn btn-primary">Submit For Approval</button>
+    <div class="d-flex align-items-center">
+        <button type="button" class="btn btn-success mx-1" data-toggle="modal" data-target="#addPerkModal" data-backdrop="static"
+            data-keyboard="false">Add New Perk +</button>
+        <button type="submit" class="btn btn-primary mx-1">Submit For Approval</button>
+        {% if subscription.approved %}
+        <p class="align-middle m-0 px-1" style="color:limegreen">APPROVED</p>
+        {% else %}
+        <p class="align-middle m-0 px-1" style="color:gray">PENDING APPROVAL</p>
+        {% endif %}
+    </div>
 </form>
 {% else %}
 <p>You do not currently have a subscription!</p>
