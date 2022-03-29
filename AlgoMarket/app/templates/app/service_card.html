@@ -8,13 +8,13 @@
         <img class="card-img-top " src="{% static image_path %}" alt="Card image cap">
         {% endwith %}
         {% else %}
-        <img class="card-img-top " src="{% static 'app/assets/img/background.png' %}" alt="Card image cap">
+        <img class="card-img-top " src="{% static 'app/assets/img/cover.jpg' %}" alt="Card image cap">
         {% endif %}
     </div>
     <div class="card-body">
         <h5 class="card-title">{{ service.name }}</h5>
         <p class="card-text">{{ service.description }}</p>
-        <a href="{% url 'store' %}" class="btn btn-primary">Store</a>
+        <a href="{% url 'store' store_id=service.id%}" class="btn btn-primary">Store</a>
     </div>
 </div>
 {% endif %}
