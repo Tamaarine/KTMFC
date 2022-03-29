@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import TextInput, EmailField
+from django.forms import TextInput, EmailField, Textarea
 from app.models import User
 from django.contrib import messages
 from .errors import *
@@ -51,4 +51,6 @@ class UserLoginForm(forms.Form):
     password = forms.CharField(label='Password', max_length=128,
                 widget=forms.TextInput(attrs={'placeholder': 'Password', 'class': 'form-control', 'type': 'password'}))
                 
-    
+class CreatorEssayForm(forms.Form):
+    essay = forms.CharField(max_length=300, 
+                widget=forms.Textarea(attrs={'placeholder': 'Share your work experience, projects, or area of expertise', 'class': 'form-control is-invalid', 'type': 'password'}))

@@ -30,6 +30,7 @@ class CustomUserManager(BaseUserManager):
         toSave = User(email=email, first_name=first_name, last_name=last_name, username=username)
         toSave.password = make_password(password, username + first_name)
         toSave.set_password(raw_password=password)
+        toSave.is_active = False
         toSave.save()
         return toSave
         
@@ -49,11 +50,11 @@ class User(AbstractUser):
     is_superuser = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     email = models.EmailField(unique=True)
+    creator_essay = models.CharField(max_length=300)
     
     objects = CustomUserManager()
     
     REQUIRED_FIELDS = []
-
 
 class Service(models.Model):
     id = models.IntegerField(primary_key=True)

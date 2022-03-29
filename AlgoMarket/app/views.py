@@ -14,6 +14,9 @@ def login(request, form):
 def register(request, form):
     return render(request, 'app/register.html', {'form': form})
 
+def register_creator(request, form):
+    return render(request, 'app/register_creator.html', {'form': form})
+
 def logout(request):
     if request.user.is_authenticated:
         auth_logout(request)
@@ -21,9 +24,6 @@ def logout(request):
     else:
         return HttpResponseRedirect('index')
     
-def register_creator(request):
-    return render(request, 'app/register_creator.html')
-
 def password(request):
     return render(request, 'app/password.html')
 
@@ -37,6 +37,8 @@ def search(request):
             {'name': 'Profession Googler', 'description': 'I am a professional googler and I will google for you', 'image_path': 'google.jpg'}
         ]
     }
+    q = request.GET.get('sch')
+    context['service_list'] = [x for x in context['service_list'] if (q in x['name'] or q in x['description'])]
     return render(request, 'app/search.html', context)
 
 def store(request):
