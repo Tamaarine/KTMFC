@@ -14,7 +14,14 @@
                 <a class="nav-link" href="#"> <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link am-text-secondary" href="{% url 'register_creator' %}">Become a creator</a>
+                {% if user.is_authenticated %}
+                    {% if not user.creator %}
+                    <a class="nav-link am-text-secondary" href="{% url 'register_creator' %}">Become a creator</a>
+                    {% else %}
+                    <button class="nav-link am-text-secondary" style="opacity: 0;" disabled>Become a creator</button>
+                    {% endif %}
+                {% endif %}
+                
             </li>
         </ul>
         <form action="/search" method="GET">
