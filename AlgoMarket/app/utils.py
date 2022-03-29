@@ -1,4 +1,4 @@
-import requests
+from . import requests
 
 def email(mail_subject, message, to_email):
     ret = requests.post(

@@ -3,9 +3,6 @@ from django.db import models
 from django.contrib.auth.hashers import make_password
 from . import errors
 
-
-
-
 # Create your models here.
 class CustomUserManager(BaseUserManager):
     '''
@@ -97,3 +94,7 @@ class Rating(models.Model):
     description = models.CharField(max_length=200)
     rating = models.IntegerField()
     
+class Report(models.Model):
+    reporter = models.ForeignKey(User, on_delete=models.CASCADE)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    description = models.CharField(max_length=200)
