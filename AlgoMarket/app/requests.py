@@ -50,7 +50,7 @@ def logout(request):
 def register(request):
     if request.user.is_authenticated:
         # Already authenticated no reason to go here ever again
-        return HttpResponseRedirect('search?sch=')
+        return HttpResponseRedirect('search')
     
     if request.method == "POST":
         # Making a post request we will handle it
