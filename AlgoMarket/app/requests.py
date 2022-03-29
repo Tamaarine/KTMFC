@@ -194,3 +194,6 @@ def services(request):
 
 def subscription(request):
     return views.subscription(request)
+
+def report(request):
+    return views.report(request)
