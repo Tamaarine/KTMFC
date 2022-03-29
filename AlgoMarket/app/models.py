@@ -37,7 +37,7 @@ class CustomUserManager(BaseUserManager):
         toSave.save()
 
 class User(AbstractUser):
-    email = models.EmailField(max_length=200, unique=True)
+    email = models.CharField(max_length=200, unique=True)
     username = models.CharField(max_length=200, primary_key=True, unique=True)
     image_path = models.CharField(max_length=200, blank=True)
     wallet_address = models.CharField(max_length=200)

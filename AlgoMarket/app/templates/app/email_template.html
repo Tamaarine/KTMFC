@@ -1,5 +1,12 @@
 {% autoescape off %}
-Hello {{ username }}
-Please click on the link to verify your account!
+Hello {{ username }} this is Algo-Market!
+Please click on the link in order to verify your account!
+http://localhost:8000{% url 'activate' username=username token=token %}
+
+You will have to login using your credentials after you have verified your email.
+
+Thank you!
+
+Team Algo-Market
+
 {% endautoescape %}
-<a href="http://localhost:8000{% url 'activate' username=username token=token %}">Click here</a>
