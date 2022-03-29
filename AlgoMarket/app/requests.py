@@ -36,7 +36,7 @@ def login(request):
                 user = authenticate(request, username=inUsername, password=inPassword)
                 if user is not None:
                     auth_login(request, user)
-                    return HttpResponseRedirect('search')
+                    return HttpResponseRedirect('search?sch=')
                 else:
                     messages.error(request, "Username/Password not valid")
             except EmailNotVerified:
@@ -53,7 +53,7 @@ def logout(request):
 def register(request):
     if request.user.is_authenticated:
         # Already authenticated no reason to go here ever again
-        return HttpResponseRedirect('search')
+        return HttpResponseRedirect('search?sch=')
     
     if request.method == "POST":
         # Making a post request we will handle it
@@ -172,6 +172,7 @@ def services(request):
             return HttpResponse("YOU CANNOT ONLY EDIT SERVICES THAT ARE YOURS!")
         if data['action'] == "update-service":
             # update the service in the database
+            print(data)
             service.name = data['name']
             service.description = data['description']
             service.price = data['price']
