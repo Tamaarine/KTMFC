@@ -57,7 +57,7 @@ def store(request):
 def profile(request):
     service_list = Service.objects.filter(seller=request.user, approved=True, active=True)
     try:
-        subscription = Subscription.objects.get(pk=request.user)
+        subscription = Subscription.objects.get(pk=request.user, approved=True)
     except Subscription.DoesNotExist:
         subscription = None
     perk_list = Perk.objects.filter(subscription=subscription)
