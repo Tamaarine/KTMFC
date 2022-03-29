@@ -20,6 +20,8 @@
                     {% else %}
                     <button class="nav-link am-text-secondary" style="opacity: 0;" disabled>Become a creator</button>
                     {% endif %}
+                {% else %}
+                <a class="nav-link am-text-secondary" href="{% url 'register_creator' %}">Become a creator</a>
                 {% endif %}
                 
             </li>
