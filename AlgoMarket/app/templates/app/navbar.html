@@ -14,17 +14,26 @@
                 <a class="nav-link" href="#"> <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
+                {% if user.is_authenticated %}
+                    {% if not user.creator %}
+                    <a class="nav-link am-text-secondary" href="{% url 'register_creator' %}">Become a creator</a>
+                    {% else %}
+                    <button class="nav-link am-text-secondary" style="opacity: 0;" disabled>Become a creator</button>
+                    {% endif %}
+                {% else %}
                 <a class="nav-link am-text-secondary" href="{% url 'register_creator' %}">Become a creator</a>
+                {% endif %}
+                
             </li>
         </ul>
-        <form action="/search" method="GET">
+        <form action="search" method="GET" id="searchForm">
             <div class="row m-auto">
                 <div class="col-11">
                     <input id="search" name="sch" class="form-control mr-sm-2" type="search" placeholder="Search the market..."
                         aria-label="Search">
                 </div>
                 <div class="col-1">
-                    <input class="btn search-btn am-text-secondary" type="submit" value="Search" href="/search.html"></input>
+                    <input class="btn search-btn am-text-secondary" type="submit" value="Search"></input>
                 </div>
             </div>
         </form>

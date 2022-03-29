@@ -28,17 +28,19 @@ def password(request):
     return render(request, 'app/password.html')
 
 def search(request):
+    query = request.GET.get('sch')
+    
+    if query is None:
+        return render(request, 'app/index.html',)
+        
+    services = Service.objects.filter(description__contains=request.GET.get('sch'))
+    service_list = []
+    for service in services:
+        service_list.append(service)
     context = {
-        'service_list': [
-            {'name': 'Anime Sketches', 'description': 'I draw beautiful anime sketches for Algorand!', 'image_path': 'yes.jpg'},
-            {'name': 'Singing!', 'description': 'I will voice over anything you write for Cryptocurrency', 'image_path': 'sing.jpg'},
-            {'name': 'Tax', 'description': 'I do your taxes for crypto', 'image_path': 'accountant.png'},
-            {'name': 'Graphic DESIGN!', 'description': 'I will make beautiful graphic design for anything', 'image_path': 'design.jpg'},
-            {'name': 'Profession Googler', 'description': 'I am a professional googler and I will google for you', 'image_path': 'google.jpg'}
-        ]
+        'service_list': service_list
     }
-    q = request.GET.get('sch')
-    context['service_list'] = [x for x in context['service_list'] if (q in x['name'] or q in x['description'])]
+    # context['service_list'] = [x for x in context['service_list'] if (q in x['name'] or q in x['description'])]
     return render(request, 'app/search.html', context)
 
 def store(request):
