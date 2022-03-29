@@ -1,6 +1,9 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.contrib.auth.hashers import make_password
+from . import errors
+
+
 
 
 # Create your models here.
@@ -10,17 +13,28 @@ class CustomUserManager(BaseUserManager):
     Passwords are stored in hash
     '''
     def create_user(self, email, password, first_name, last_name, username):
-        try:
-            exist = User.objects.get(pk=email)
-            return None
-        except User.DoesNotExist:
-            toSave = User(email=email, first_name=first_name, last_name=last_name, username=username)
-            toSave.password = make_password(password, username + first_name)
-            toSave.set_password(raw_password=password)
-            toSave.save()
-            return toSave
-    def create_superuser(self, email, password, username=None):
-        toSave = User(email=email, is_superuser=True, is_staff=True)
+        unique_fields = ['email', 'username']
+        unique_input = [email, username]
+        error = [errors.EmailExist, errors.UsernameExist]
+    
+        for i in range(len(unique_fields)):
+            kwarg = {unique_fields[i]: unique_input[i]}
+            try:
+                _ = User.objects.get(**kwarg)
+                raise error[i]
+            except User.DoesNotExist:
+                # That particular user with the specified yield don't exists. Fine continue
+                pass
+        # Safe to add it now, no duplicate user
+        toSave = User(email=email, first_name=first_name, last_name=last_name, username=username)
+        toSave.password = make_password(password, username + first_name)
+        toSave.set_password(raw_password=password)
+        toSave.is_active = False
+        toSave.save()
+        return toSave
+        
+    def create_superuser(self, username=None, password=None):
+        toSave = User(username=username, is_superuser=True, is_staff=True)
         toSave.set_password(raw_password=password)
         toSave.save()
 
@@ -39,7 +53,6 @@ class User(AbstractUser):
     
     objects = CustomUserManager()
     
-    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
 class Service(models.Model):

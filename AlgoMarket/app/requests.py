@@ -3,14 +3,21 @@ from django.shortcuts import render
 from django.urls import reverse
 from .models import User, Service, Subscription, Perk
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
-from django.contrib.auth.hashers import check_password, make_password
 from django.contrib import messages
-import json
+from django.core.mail import send_mail
+from django.conf import settings as django_settings
+from django.template.loader import render_to_string
+from .models import User, Service
 from . import views
-from .forms import UserLoginForm, UserRegisterForm
+from .errors import EmailNotVerified
+from .forms import UserLoginForm, UserRegisterForm, CreatorEssayForm
+from .tokenGenerator import token_generator
+import json
+from . import utils
 
 
 def index(request):
+    # send_mail("kill yourself", "please kiss me", 'algomarket@algomarket.com', ['irebootplaygt@gmail.com'])
     return views.index(request)
 
 def login(request):
@@ -22,16 +29,18 @@ def login(request):
         form = UserLoginForm(request.POST)
         
         if form.is_valid():
-            inEmail = form.cleaned_data['email']
+            inUsername = form.cleaned_data['username']
             inPassword = form.cleaned_data['password']
-        
-            user = authenticate(request, username=inEmail, password=inPassword)
-            if user is not None:
-                auth_login(request, user)
-                return HttpResponseRedirect('search')
-            else:
-                messages.error(request, "Email/Password not valid")
-        
+            
+            try:
+                user = authenticate(request, username=inUsername, password=inPassword)
+                if user is not None:
+                    auth_login(request, user)
+                    return HttpResponseRedirect('search')
+                else:
+                    messages.error(request, "Username/Password not valid")
+            except EmailNotVerified:
+                messages.error(request, "Account email is not verified")
     elif request.method == "GET":
         return views.login(request, UserLoginForm())
     return render(request, 'app/login.html', {'form': form})
@@ -51,17 +60,68 @@ def register(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             try:
-                user = form.save(request)            
-                auth_login(request, user)
-                return HttpResponseRedirect('/')
-            except:
+                user = form.save(request)
+                
+                mail_subject = "Please activate your account"
+                message = render_to_string('app/email_template.html', {
+                    'username': user.username,
+                    'token': token_generator.make_token(user)
+                })
+                
+                to_email = form.cleaned_data['email']
+                status_code = utils.email(mail_subject, message, to_email)
+                
+                if status_code == 200:
+                    messages.success(request, 'Please check your email for account verification')
+                else:
+                    messages.error(request, "Server side error")
+                
+                return render(request, 'app/register.html', {'form': UserRegisterForm()})
+            except Exception as e:
+                # Error handled inside save don't need to do anything
+                print(e)
                 pass
     elif request.method == "GET":
         return views.register(request, UserRegisterForm())
     return render(request, 'app/register.html', {'form': form})
 
+def activate(request, username, token):
+    try:
+        user = User.objects.get(pk=username)
+    except User.DoesNotExist:
+        user = None
+    
+    if user is not None and token_generator.check_token(user, token):
+        user.is_active = True
+        user.save()
+        return HttpResponse("Thank you for verifying your email!")
+    elif user.is_active:
+        return HttpResponse("User is already activated!")
+    else:
+        return HttpResponse("Invalid activation link!")
+
 def register_creator(request):
-    return views.register_creator(request)
+    if request.user.is_authenticated:
+        print("user is authenticated")
+        if request.method == "GET":
+            # Return the register creator page view
+            print("is a get")
+            form = CreatorEssayForm()
+            return render(request, 'app/register_creator.html', {'form':form})
+        elif request.method == "POST":
+            # The user submitted the form, time to process it and store it into the
+            # database for moderators to view
+            print("got here")            
+            form = CreatorEssayForm(request.POST)
+            if form.is_valid():
+                request.user.creator_essay = form.cleaned_data['essay']
+                request.user.save()
+                return HttpResponse("Essay saved you will hear from us soon!")
+            
+            
+    # User is not logged in please go login to become a creator
+    messages.error(request, "Your are not logged in, please log in to register to become a creator!")
+    return views.login(request, UserLoginForm())
 
 def password(request):
     return views.password(request)

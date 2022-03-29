@@ -7,46 +7,15 @@
 {% center col-sm-8 my-5 %}
 <div class="card p-4 am-secondary">
     <h1 class="card-title">Personal Info</h1>
-    <h5 class="card-subtitle mb-2 text-muted">Tell us a bit about yourself. This information will appear on
-        your public profile, so that potential buyers can get to know you better.</h5>
-        <form class="was-validated">
-            <h2><span>Full Name</span></h2>
-            <div class="form-group row">
-                <label for="staticEmail" class="col-sm-2 col-form-label">First Name</label>
-                <div class="col-sm-10">
-                    <input class="form-control" id="inputFN" placeholder="Ex. John" required>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="inputPassword" class="col-sm-2 col-form-label">Last Name</label>
-                <div class="col-sm-10">
-                    <input class="form-control" id="inputLN" placeholder="Ex. Smith" required>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="inputPassword" class="col-sm-2 col-form-label">Username</label>
-                <div class="col-sm-10">
-                    <input class="form-control" id="inputLN" placeholder="Ex. Pee pee poo poo" required>
-                </div>
-            </div>
-        </form>
-        <h2><span>Profile Picture</span></h2>
-        <form class="was-validated">
-            <div class="custom-file">
-                <input type="file" class="custom-file-input" id="validatedCustomFile" required>
-                <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
-                <div class="invalid-feedback">Please choose a profile picture</div>
-            </div>
-        </form>
+    <h5 class="card-subtitle mb-2 text-muted">Tell us a bit about what kind of product you are going to offer on AlgoMarket. This description will go help the admin to decide on approval. You will receive approval/disapproval in about 5 business days.</h5>
         <h2><span>Description</span></h2>
-        <form class="was-validated">
+        <form class="was-validated" method="POST" action="/register_creator"> {% csrf_token %}
             <label for="validationTextarea">What do you offer?</label>
-            <textarea class="form-control is-invalid" id="validationTextarea"
-            placeholder="Share your work experience, projects, or area of expertise" rows="6"
-            required></textarea>
+            {{ form.essay.errors }}
+            {{ form.essay }}
+            <button type="submit" class="btn btn-primary mt-4">Submit</button>
         </form>
         
-        <a href="{% url 'profile' %}" class="btn btn-primary mt-4">Submit</a>
     </div>
 </div>
 {% endcenter %}

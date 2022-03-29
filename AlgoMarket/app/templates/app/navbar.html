@@ -17,14 +17,14 @@
                 <a class="nav-link am-text-secondary" href="{% url 'register_creator' %}">Become a creator</a>
             </li>
         </ul>
-        <form>
+        <form action="/search" method="GET">
             <div class="row m-auto">
                 <div class="col-11">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search the market..."
+                    <input id="search" name="sch" class="form-control mr-sm-2" type="search" placeholder="Search the market..."
                         aria-label="Search">
                 </div>
                 <div class="col-1">
-                    <a class="btn search-btn am-text-secondary" href="{% url 'search' %}">Search</a>
+                    <input class="btn search-btn am-text-secondary" type="submit" value="Search" href="/search.html"></input>
                 </div>
             </div>
         </form>
