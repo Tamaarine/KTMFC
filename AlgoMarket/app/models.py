@@ -40,34 +40,48 @@ class CustomUserManager(BaseUserManager):
         toSave.save()
 
 class User(AbstractUser):
-    username = models.CharField(max_length=200, unique=True, primary_key=True)
-    walletAddress = models.CharField(max_length=200)
+    email = models.EmailField(max_length=200, primary_key=True, unique=True)
+    username = models.CharField(max_length=200)
+    image_path = models.CharField(max_length=200, blank=True)
+    wallet_address = models.CharField(max_length=200)
     last_updated = models.TimeField(auto_now=True)
     creator = models.BooleanField(default=False)
-    service_completed = models.IntegerField(default=0)
+    services_completed = models.IntegerField(default=0)
     subscriber_count = models.IntegerField(default=0)
-    bio = models.CharField(max_length=200)
+    biography = models.CharField(max_length=200)
     is_superuser = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    email = models.EmailField(unique=True)
-    creator_essay = models.CharField(max_length=300)
     
     objects = CustomUserManager()
     
     REQUIRED_FIELDS = []
 
 class Service(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200)
     seller = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=200)
-    price = models.IntegerField(default=-1)
-    amount_available = models.IntegerField()
+    price = models.IntegerField(default=1)
+    image_path = models.CharField(max_length=200, blank=True)
+    amount_available = models.IntegerField(default=-1)
     created = models.TimeField(auto_now_add=True)
     last_updated = models.TimeField(auto_now=True)
-    imagePath = models.CharField(max_length=200)
     approved = models.BooleanField(default=False)
     active = models.BooleanField(default=False)
+
+class Subscription(models.Model):
+    seller = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    pro_price = models.IntegerField(default=0)
+    premium_price = models.IntegerField(default=0)
+    approved = models.BooleanField(default=False)
+
+class Perk(models.Model):
+    id = models.AutoField(primary_key=True)
+    subscription = models.ForeignKey(Subscription, on_delete=models.CASCADE)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    free_amount = models.IntegerField(default=0)
+    pro_amount = models.IntegerField(default=0)
+    premium_amount = models.IntegerField(default=0)
     
 class Transaction(models.Model):
     id = models.IntegerField(primary_key=True)

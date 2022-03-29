@@ -2,7 +2,7 @@ from django import forms
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import User
+from .models import User, Service, Subscription, Perk
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 
 def index(request):
@@ -64,30 +64,16 @@ def store(request):
     return render(request, 'app/store.html', context)
 
 def profile(request):
+    service_list = Service.objects.filter(seller=request.user, approved=True, active=True)
+    try:
+        subscription = Subscription.objects.get(pk=request.user, approved=True)
+    except Subscription.DoesNotExist:
+        subscription = None
+    perk_list = Perk.objects.filter(subscription=subscription)
     context = {
-        'user': {
-            'creator': True,
-            'username': 'KTMcdonnell',
-            'email': 'ktm@cs.stonybrook.edu',
-            'image_path': 'ktm.jpg',
-            'first_name': 'Kevin',
-            'last_name': 'McDonnell',
-            'services_completed': 37,
-            'subscriber_count': 3,
-            'rating': 5,
-            'description': 'I am teaching professor in the Department of Computer Science at Stony Brook University, where I have worked since the summer of 2015. I teach a variety of 100-level and 200-level Computer Science courses.'
-        },
-        'service_list': [
-            {'name': 'Anime Sketches', 'description': 'I draw beautiful anime sketches for Algorand!', 'image_path': 'yes.jpg'},
-            {'name': 'Graphic DESIGN!', 'description': 'I will make beautiful graphic design for anything', 'image_path': 'design.jpg'},
-            {'name': 'Profession Googler', 'description': 'I am a professional googler and I will google for you', 'image_path': 'google.jpg'}
-        ],
-        'subscription': {
-            'perks': ['homework questions', 'google searches', 'tutoring sessions', 'code reviews'],
-            'free': {'cost': 0, 'quantities': [1,1,0,0]},
-            'pro': {'cost': 50, 'quantities': [5,5,1,0]},
-            'premium': {'cost': 100, 'quantities': ['unlimited','unlimited',4,1]}
-        }
+        'service_list': service_list,
+        'subscription': subscription,
+        'perk_list': perk_list
     }
     return render(request, 'app/profile.html', context)
 
@@ -122,25 +108,24 @@ def history(request):
     }
     return render(request, 'app/history.html', context)
 
-def services(request, service_list):
+def services(request):
+    service_list = Service.objects.filter(seller=request.user)
     context = {
         'service_list': service_list
     }
     return render(request, 'app/manage_services.html', context)
 
 def subscription(request):
+    try:
+        subscription = Subscription.objects.get(pk=request.user)
+    except Subscription.DoesNotExist:
+        subscription = None
+    service_list = Service.objects.filter(seller=request.user, approved=True, active=True)
+    perk_list = Perk.objects.filter(subscription=subscription)
     context = {
-        'service_list': [
-            {'name': 'Anime Sketches', 'description': 'I draw beautiful anime sketches for Algorand!', 'cost': 50, 'image_path': 'yes.jpg'},
-            {'name': 'Graphic DESIGN!', 'description': 'I will make beautiful graphic design for anything', 'cost': 75, 'image_path': 'design.jpg'},
-            {'name': 'Profession Googler', 'description': 'I am a professional googler and I will google for you', 'cost': 10, 'image_path': 'google.jpg'}
-        ],
-        'subscription': {
-            'perks': ['homework questions', 'google searches', 'tutoring sessions', 'code reviews'],
-            'free': {'cost': 0, 'quantities': [1,1,0,0]},
-            'pro': {'cost': 50, 'quantities': [5,5,1,0]},
-            'premium': {'cost': 100, 'quantities': ['unlimited','unlimited',4,1]}
-        }
+        'subscription': subscription,
+        'service_list': service_list,
+        'perk_list': perk_list
     }
     return render(request, 'app/manage_subscription.html', context)
     
