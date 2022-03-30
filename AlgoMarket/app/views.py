@@ -43,26 +43,23 @@ def search(request):
     # context['service_list'] = [x for x in context['service_list'] if (q in x['name'] or q in x['description'])]
     return render(request, 'app/search.html', context)
 
-def store(request):
-    context = {
-        'service': {
-            'name': 'Profession Googler',
-            'image_paths': ['search1.PNG', 'search2.PNG', 'search3.PNG', 'search4.PNG'],
-            'description': 'This is a simple description of my humble store, while it has nothing in the beginning I will let you know that in the near furture this will become the next Facebook of the century, mark my word it will come true. By then I will become a millionaire and laughing while sitting at my throne while you are at your petty little chair writing "code".',
-            'example_works': 'Foo bar, foo bar Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores dicta veritatis mollitia, voluptates odit similique adipisci rerum in aperiam fugit! Sunt veniam numquam at quisquam officia veritatis, temporibus dicta nemo?',
-            'email': 'nowhere@mozilla.org',
-            'cost': 69.42,
-            'subscription_costs': [0, 10, 20],
-            'rating': 4.6,
-            'rating_count': 46,
-            'review_count': 15,
-            'reviews': [
-                {'author': 'rickylu', 'date': '3 October, 2022', 'rating': 1, 'text': 'Send help, the googler ain\'t googling'},
-                {'author': 'daniewu', 'date': '2 October, 2022', 'rating': 5, 'text': 'I came for the service, but stayed for the comments.'},
-                {'author': 'robots5252', 'date': '1 October, 2022', 'rating': 5, 'text': 'Two weirdos above me.'}
-            ]
-        }
-    }
+def store(request, service):
+    # TODO make sure to change the reviews stuff to retrieve them and update values in the context accordingly
+    # TODO same with subscription costs
+    context = {'service':{'name':service.name, 
+        'image_paths':service.image_path,
+        'description':service.description, 
+        'email': service.seller.email,
+        'cost': service.price,
+        'subscription_costs': [0, 10, 20],
+        'rating': 4.6,
+        'rating_count': 46,
+        'review_count': 15,
+        'reviews': [
+            {'author': 'rickylu', 'date': '3 October, 2022', 'rating': 1, 'text': 'Send help, the googler ain\'t googling'},
+            {'author': 'daniewu', 'date': '2 October, 2022', 'rating': 5, 'text': 'I came for the service, but stayed for the comments.'},
+            {'author': 'robots5252', 'date': '1 October, 2022', 'rating': 5, 'text': 'Two weirdos above me.'}
+        ]}}
     return render(request, 'app/store.html', context)
 
 def profile(request):
@@ -95,12 +92,12 @@ def settings(request):
 def history(request):
     context = {
         'transactions': [
-            {'date': '2/27/2022', 'service': 'CSE 101 Tutoring', 'creator': 'KTMcdonnell', 'Price': 50},
-            {'date': '1/13/2022', 'service': 'Video Editing', 'creator': 'Rickster99', 'Price': 25},
-            {'date': '12/24/2021', 'service': 'Christmas Graphic Design', 'creator': 'SantaClaus1234', 'Price': 25},
-            {'date': '7/20/2021', 'service': 'Personal Website Design', 'creator': 'webdevpro1337', 'Price': 100},
-            {'date': '2/10/2021', 'service': 'Valentine\'s Song', 'creator': 'SongWriter369', 'Price': 75},
-            {'date': '2/9/2021', 'service': 'Valentine\'s Art', 'creator': 'HeartDrawings<3', 'Price': 15}
+            {'date': '2/27/2022', 'service': 'CSE 101 Tutoring', 'creator': 'KTMcdonnell', 'Price': 50, 'id': 1},
+            {'date': '1/13/2022', 'service': 'Video Editing', 'creator': 'Rickster99', 'Price': 25, 'id': 2},
+            {'date': '12/24/2021', 'service': 'Christmas Graphic Design', 'creator': 'SantaClaus1234', 'Price': 25, 'id': 3},
+            {'date': '7/20/2021', 'service': 'Personal Website Design', 'creator': 'webdevpro1337', 'Price': 100, 'id': 4},
+            {'date': '2/10/2021', 'service': 'Valentine\'s Song', 'creator': 'SongWriter369', 'Price': 75, 'id': 5},
+            {'date': '2/9/2021', 'service': 'Valentine\'s Art', 'creator': 'HeartDrawings<3', 'Price': 15, 'id': 6}
         ],
         'subscriptions': [
             {'creator': 'KTMcdonnell', 'tier': 'Premium', 'cost': 100, 'status': 'Active'},
@@ -140,3 +137,6 @@ def report(request):
         ],
     }
     return render(request, 'app/report.html', context)
+
+def confirmation(request, form):
+    return render(request, 'app/confirmation.html', {'form': form})

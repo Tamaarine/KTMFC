@@ -7,14 +7,13 @@ from django.template.loader import render_to_string
 from .models import User, Service
 from . import views
 from .errors import EmailNotVerified
-from .forms import UserLoginForm, UserRegisterForm, CreatorEssayForm
+from .forms import UserLoginForm, UserRegisterForm, CreatorEssayForm, ConfirmTransactionForm
 from .tokenGenerator import token_generator
 import json
 from . import utils
 
 
 def index(request):
-    # send_mail("kill yourself", "please kiss me", 'algomarket@algomarket.com', ['irebootplaygt@gmail.com'])
     return views.index(request)
 
 def login(request):
@@ -130,26 +129,15 @@ def search(request):
 
 def store(request, store_id):
     try:
+        print(store_id)
         service = Service.objects.get(pk=store_id)
-        context = {
-            'service': {
-            'name': service.name,
-            'description': service.description,
-            'example_works': 'Foo bar, foo bar Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores dicta veritatis mollitia, voluptates odit similique adipisci rerum in aperiam fugit! Sunt veniam numquam at quisquam officia veritatis, temporibus dicta nemo?',
-            'email': 'nowhere@mozilla.org',
-            'cost': 69.42,
-            'subscription_costs': [0, 10, 20],
-            'rating': 4.6,
-            'rating_count': 46,
-            'review_count': 15,
-            'reviews': [
-                {'author': 'rickylu', 'date': '3 October, 2022', 'rating': 1, 'text': 'Send help, the googler ain\'t googling'},
-                {'author': 'daniewu', 'date': '2 October, 2022', 'rating': 5, 'text': 'I came for the service, but stayed for the comments.'},
-                {'author': 'robots5252', 'date': '1 October, 2022', 'rating': 5, 'text': 'Two weirdos above me.'}
-            ]
-        }
-        }
-        
+        if service:
+            print("Found it")
+            print(service.id)
+            print(service.name)
+        else:
+            print("didn't find it")
+        return views.store(request, service)
     except:
         return HttpResponse("No such store exists")
     
@@ -273,3 +261,18 @@ def subscription(request):
       
 def report(request):
     return views.report(request)
+
+def confirmation(request):
+    if request.method == "POST":
+        form = ConfirmTransactionForm(request.POST)
+        
+        if form.is_valid():
+            # insert doing the actual saving in the DB here
+            # insert changing the transaction to complete here
+            print("WOOO SAVING")
+            print(form)
+            
+        return HttpResponseRedirect("/store/1") #TODO once transactions are done, number will be found based on that
+    elif request.method == "GET":
+        return views.confirmation(request, ConfirmTransactionForm())
+    return render(request, 'app/confirmation.html', {'form': form})

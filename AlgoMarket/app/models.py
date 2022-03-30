@@ -87,6 +87,7 @@ class Transaction(models.Model):
     price = models.IntegerField()
     startDate = models.TimeField()
     fulfillmentDate = models.TimeField()
+    confirmed = models.BooleanField(default=False)
 
 class Rating(models.Model):
     reviewer = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -2,6 +2,7 @@ from django import forms
 from django.forms import TextInput, EmailField, Textarea
 from app.models import User
 from django.contrib import messages
+from django.core.validators import MaxValueValidator, MinValueValidator
 from .errors import *
 
 class UserRegisterForm(forms.Form):
@@ -54,3 +55,11 @@ class UserLoginForm(forms.Form):
 class CreatorEssayForm(forms.Form):
     essay = forms.CharField(max_length=1000, 
                 widget=forms.Textarea(attrs={'placeholder': 'Share your work experience, projects, or area of expertise', 'class': 'form-control is-invalid', 'type': 'password'}))
+
+class ConfirmTransactionForm(forms.Form):
+    confirm = forms.BooleanField(label="Confirm")
+    rating = forms.IntegerField(label="Rating", required=False)
+    text = forms.CharField(max_length=300, required=False,
+                widget=forms.Textarea(attrs={'placeholder': 'Write your review here', 'class': 'form-control'}),
+                validators=[MaxValueValidator('5'), MinValueValidator('1')])
+
