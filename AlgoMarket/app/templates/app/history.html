@@ -15,6 +15,7 @@
             <th scope="col">Service</th>
             <th scope="col">Creator</th>
             <th scope="col">Price</th>
+            <th scope="col">Confirmation</th>
         </tr>
     </thead>
     <tbody>
@@ -24,6 +25,7 @@
             <td>{{ transaction.service }}</td>
             <td>{{ transaction.creator }}</td>
             <td>{{ transaction.cost }} ALGO</td>
+            <td><a href="/confirmation/1">Confirm Here</a></td>
         </tr>
         {% endfor %}
     </tbody>

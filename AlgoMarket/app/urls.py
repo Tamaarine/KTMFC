@@ -1,4 +1,5 @@
 from django.urls import path
+
 from . import requests
 
 urlpatterns = [
@@ -16,5 +17,6 @@ urlpatterns = [
     path('services', requests.services, name='services'),
     path('subscription', requests.subscription, name='subscription'),
     path('activate/<str:username>/<str:token>', requests.activate, name='activate'),
-    path('report', requests.report, name='report')
+    path('report', requests.report, name='report'),
+    path('confirmation/<int:transaction_id>', requests.confirmation, name='confirmation')
 ]

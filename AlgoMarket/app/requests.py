@@ -1,20 +1,20 @@
+import datetime
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from .models import User, Service, Subscription, Perk
+from .models import Transaction, User, Service, Subscription, Perk
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib import messages
 from django.template.loader import render_to_string
-from .models import User, Service
+from .models import User, Service, Rating
 from . import views
 from .errors import EmailNotVerified
-from .forms import UserLoginForm, UserRegisterForm, CreatorEssayForm
+from .forms import UserLoginForm, UserRegisterForm, CreatorEssayForm, ConfirmTransactionForm
 from .tokenGenerator import token_generator
 import json
 from . import utils
 
 
 def index(request):
-    # send_mail("kill yourself", "please kiss me", 'algomarket@algomarket.com', ['irebootplaygt@gmail.com'])
     return views.index(request)
 
 def login(request):
@@ -131,27 +131,7 @@ def search(request):
 def store(request, store_id):
     try:
         service = Service.objects.get(pk=store_id)
-        context = {
-            'service': {
-            'name': service.name,
-            'description': service.description,
-            'email': service.seller.email,
-            'cost': service.price,
-            }
-        }
-        try:
-            query_user = User.objects.get(username__contains=service.seller.username)
-            for sub in Subscription.objects.all():
-                if query_user.username == sub.seller.username:
-                    context['service']['subscription_costs'] = [0, sub.pro_price, sub.premium_price]
-                    break
-        except Exception as e:
-            # User don't have subscription just skip it
-            print(e)
-            pass
-        
-        return views.store(request, context)
-        
+        return views.store(request, service)
     except:
         return HttpResponse("No such store exists")
 
@@ -272,3 +252,30 @@ def subscription(request):
       
 def report(request):
     return views.report(request)
+
+def confirmation(request, transaction_id):
+    transaction = Transaction.objects.get(pk=transaction_id)
+    if transaction.buyer != request.user:
+        return HttpResponse("ONLY BUYERS CAN CONFIRM THEIR TRANSACTIONS!")
+    if request.method == "POST":
+        print("POSTING")
+        form = ConfirmTransactionForm(request.POST)
+        if form.is_valid():
+            # insert changing the transaction to complete here
+            if form.cleaned_data['confirm'] and not transaction.confirmed:
+                transaction.confirmed = form.cleaned_data['confirm']
+                transaction.fulfillmentDate = datetime.datetime.now()
+                transaction.save()
+
+            # insert adding the review to the DB here
+            service = transaction.product
+            reviewer = transaction.buyer
+            rating = Rating(reviewer=reviewer, product=service, description=form.cleaned_data['review'], rating=form.cleaned_data['rating'])
+            rating.save()
+            return HttpResponseRedirect("/store/" + str(service.id))
+        else:
+            return views.confirmation(request, transaction_id, ConfirmTransactionForm())
+    elif request.method == "GET":
+        print("GETTING")
+        return views.confirmation(request, transaction_id, ConfirmTransactionForm())
+    return views.confirmation(request, transaction_id, form)

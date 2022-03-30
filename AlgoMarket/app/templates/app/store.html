@@ -27,8 +27,6 @@
             </div>
             <h3 class="mt-4 link" id="description">Description</h3>
             <p>{{ service.description }}</p>
-            <h3 class="mt-4 link" id="examplework">Example Works</h3>
-            <p>{{ service.example_works }}</p>
             <h3 class="mt-4 link" id="contact">Seller Contact</h3>
             {% with "mailto:"|add:service.email as email %}
             <p>Any questions/inqueries for the seller <a href="{{ email }}">Send email to seller</a></p>
