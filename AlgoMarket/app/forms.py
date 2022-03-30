@@ -52,5 +52,5 @@ class UserLoginForm(forms.Form):
                 widget=forms.TextInput(attrs={'placeholder': 'Password', 'class': 'form-control', 'type': 'password'}))
                 
 class CreatorEssayForm(forms.Form):
-    essay = forms.CharField(max_length=300, 
+    essay = forms.CharField(max_length=1000, 
                 widget=forms.Textarea(attrs={'placeholder': 'Share your work experience, projects, or area of expertise', 'class': 'form-control is-invalid', 'type': 'password'}))
