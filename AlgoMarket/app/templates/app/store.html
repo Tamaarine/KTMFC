@@ -66,13 +66,7 @@
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid px-4">
                         <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; Algo-Market 2022 Swag (People still uses this
-                                term these day right?)</div>
-                                <div>
-                                    <a href="#">Privacy Policy</a>
-                                    &middot;
-                                    <a href="#">Terms &amp; Conditions</a>
-                                </div>
+                            <div class="text-muted">Copyright &copy; Algo-Market 2022</div>
                             </div>
                         </div>
                     </footer>
@@ -81,12 +75,13 @@
             <div class="col-5 col-sm-4">
                 <div class="card border-primary mb-3">
                     <div class="card-body">
-                        <h5 class="card-title">Googling Service</h5>
-                        <p class="card-text">I charge on a per hour googling session</p>
+                        <!-- <h5 class="card-title">Googling Service</h5>
+                        <p class="card-text">I charge on a per hour googling session</p> -->
                         <button class="btn btn-outline-success icon" data-toggle="modal"
-                        data-target="#exampleModal">Purchase for {{ service.cost }} Algorand for One Session</button>
+                        data-target="#exampleModal">Purchase for {{ service.cost }} Algorand</button>
                     </div>
                 </div>
+                {% if service.subscription_costs %}
                 <div class="card border-primary mb-2">
                     <div class="card-body">
                         <h5 class="card-title">Want to support the creator?</h5>
@@ -96,6 +91,7 @@
                         {% endfor %}
                     </div>
                 </div>
+                {% endif %}
                 <div class="menu sticky-top sticky-padding p-3 bg-light">
                     <div class="nav flex-column">
                         <a href="#description" class="nav-link pl-0">Item Description</a>

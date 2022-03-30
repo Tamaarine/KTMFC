@@ -135,26 +135,25 @@ def store(request, store_id):
             'service': {
             'name': service.name,
             'description': service.description,
-            'example_works': 'Foo bar, foo bar Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores dicta veritatis mollitia, voluptates odit similique adipisci rerum in aperiam fugit! Sunt veniam numquam at quisquam officia veritatis, temporibus dicta nemo?',
-            'email': 'nowhere@mozilla.org',
-            'cost': 69.42,
-            'subscription_costs': [0, 10, 20],
-            'rating': 4.6,
-            'rating_count': 46,
-            'review_count': 15,
-            'reviews': [
-                {'author': 'rickylu', 'date': '3 October, 2022', 'rating': 1, 'text': 'Send help, the googler ain\'t googling'},
-                {'author': 'daniewu', 'date': '2 October, 2022', 'rating': 5, 'text': 'I came for the service, but stayed for the comments.'},
-                {'author': 'robots5252', 'date': '1 October, 2022', 'rating': 5, 'text': 'Two weirdos above me.'}
-            ]
+            'email': service.seller.email,
+            'cost': service.price,
+            }
         }
-        }
+        try:
+            query_user = User.objects.get(username__contains=service.seller.username)
+            for sub in Subscription.objects.all():
+                if query_user.username == sub.seller.username:
+                    context['service']['subscription_costs'] = [0, sub.pro_price, sub.premium_price]
+                    break
+        except Exception as e:
+            # User don't have subscription just skip it
+            print(e)
+            pass
+        
+        return views.store(request, context)
         
     except:
         return HttpResponse("No such store exists")
-    
-    
-    return views.store(request)
 
 def profile(request):
     return views.profile(request)
