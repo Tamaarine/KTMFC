@@ -138,5 +138,6 @@ def report(request):
     }
     return render(request, 'app/report.html', context)
 
-def confirmation(request, form):
-    return render(request, 'app/confirmation.html', {'form': form})
+def confirmation(request, transaction_id, form):
+    context = {'transaction_id': transaction_id, 'form': form}
+    return render(request, 'app/confirmation.html', context)

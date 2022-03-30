@@ -18,5 +18,5 @@ urlpatterns = [
     path('subscription', requests.subscription, name='subscription'),
     path('activate/<str:username>/<str:token>', requests.activate, name='activate'),
     path('report', requests.report, name='report'),
-    path('confirmation', requests.confirmation, name='confirmation')
+    path('confirmation/<int:transaction_id>', requests.confirmation, name='confirmation')
 ]

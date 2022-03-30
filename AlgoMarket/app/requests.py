@@ -1,10 +1,11 @@
+import datetime
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from .models import User, Service, Subscription, Perk
+from .models import Transaction, User, Service, Subscription, Perk
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib import messages
 from django.template.loader import render_to_string
-from .models import User, Service
+from .models import User, Service, Rating
 from . import views
 from .errors import EmailNotVerified
 from .forms import UserLoginForm, UserRegisterForm, CreatorEssayForm, ConfirmTransactionForm
@@ -131,12 +132,6 @@ def store(request, store_id):
     try:
         print(store_id)
         service = Service.objects.get(pk=store_id)
-        if service:
-            print("Found it")
-            print(service.id)
-            print(service.name)
-        else:
-            print("didn't find it")
         return views.store(request, service)
     except:
         return HttpResponse("No such store exists")
@@ -262,17 +257,29 @@ def subscription(request):
 def report(request):
     return views.report(request)
 
-def confirmation(request):
+def confirmation(request, transaction_id):
+    transaction = Transaction.objects.get(pk=transaction_id)
+    if transaction.buyer != request.user:
+        return HttpResponse("ONLY BUYERS CAN CONFIRM THEIR TRANSACTIONS!")
     if request.method == "POST":
+        print("POSTING")
         form = ConfirmTransactionForm(request.POST)
-        
         if form.is_valid():
-            # insert doing the actual saving in the DB here
             # insert changing the transaction to complete here
-            print("WOOO SAVING")
-            print(form)
-            
-        return HttpResponseRedirect("/store/1") #TODO once transactions are done, number will be found based on that
+            if form.cleaned_data['confirm'] and not transaction.confirmed:
+                transaction.confirmed = form.cleaned_data['confirm']
+                transaction.fulfillmentDate = datetime.datetime.now()
+                transaction.save()
+
+            # insert adding the review to the DB here
+            service = transaction.product
+            reviewer = transaction.buyer
+            rating = Rating(reviewer=reviewer, product=service, description=form.cleaned_data['review'], rating=form.cleaned_data['rating'])
+            rating.save()
+            return HttpResponseRedirect("/store/" + str(service.id))
+        else:
+            return views.confirmation(request, transaction_id, ConfirmTransactionForm())
     elif request.method == "GET":
-        return views.confirmation(request, ConfirmTransactionForm())
-    return render(request, 'app/confirmation.html', {'form': form})
+        print("GETTING")
+        return views.confirmation(request, transaction_id, ConfirmTransactionForm())
+    return views.confirmation(request, transaction_id, form)

@@ -11,11 +11,11 @@
 {% endblock %}
 
 {% block card_body %}
-<form method="POST" action="/confirmation"> {% csrf_token %}
+<form method="POST" action=""> {% csrf_token %}
     <div class="form-check mb-3">
-        <input class="form-check-input" id="confirmed" type="checkbox"
-        value="" />
-        <label class="form-check-label" for="confirmed">Check Here to Confirm Receipt of Your Service</label>
+        {{ form.confirm.errors }}
+        {{ form.confirm }}
+        <label class="form-check-label" for="form.confirm.id_for_label">Check Here to Confirm Receipt of Your Service</label>
     </div>
     <div class="form-floating mb-3">
         <label for="{{ form.rating.id_for_label }}">Rating</label>
@@ -23,9 +23,9 @@
         {{ form.rating }}
     </div>
     <div class="form-floating mb-3">
-        <label for="{{ form.text.id_for_label }}">Review</label>
-        {{ form.text.errors }}
-        {{ form.text }}
+        <label for="{{ form.review.id_for_label }}">Review</label>
+        {{ form.review.errors }}
+        {{ form.review }}
     </div>
     <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
         <button class="btn btn-primary" type="submit">Submit</button>

@@ -58,8 +58,8 @@ class CreatorEssayForm(forms.Form):
 
 class ConfirmTransactionForm(forms.Form):
     confirm = forms.BooleanField(label="Confirm")
-    rating = forms.IntegerField(label="Rating", required=False)
-    text = forms.CharField(max_length=300, required=False,
-                widget=forms.Textarea(attrs={'placeholder': 'Write your review here', 'class': 'form-control'}),
-                validators=[MaxValueValidator('5'), MinValueValidator('1')])
+    rating = forms.IntegerField(label="Rating", required=False,
+                validators=[MaxValueValidator(5), MinValueValidator(1)])
+    review = forms.CharField(max_length=300, required=False,
+                widget=forms.Textarea(attrs={'placeholder': 'Write your review here', 'class': 'form-control'}))
 
