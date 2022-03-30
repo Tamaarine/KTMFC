@@ -11,9 +11,16 @@
         <img class="card-img-top " src="{% static 'app/assets/img/cover.jpg' %}" alt="Card image cap">
         {% endif %}
     </div>
+    <div class="p-1 ml-2 justify-content-left">
+        <i class="far fa-user-circle"></i>
+        <a class="text-bold" href="/profile/{{ service.seller.username }}">{{ service.seller.username }}</a>
+    </div>
     <div class="card-body">
         <h5 class="card-title">{{ service.name }}</h5>
         <p class="card-text">{{ service.description }}</p>
+        <div class="alert alert-success" role="alert">
+            Starting at {{ service.price }} Algorand
+          </div>
         <a href="{% url 'store' store_id=service.id%}" class="btn btn-primary">Store</a>
     </div>
 </div>
