@@ -44,7 +44,8 @@ def search(request):
     total_services = set(total_services)
     service_list = []
     for service in total_services:
-        service_list.append(service)
+        if service.approved and service.active:
+            service_list.append(service)
     context = {
         'service_list': service_list
     }
