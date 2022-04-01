@@ -136,9 +136,6 @@ def store(request, store_id):
     except:
         return HttpResponse("No such store exists")
     
-    
-    return views.store(request)
-
 def profile(request):
     return views.profile(request)
 
