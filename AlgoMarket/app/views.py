@@ -48,7 +48,8 @@ def store(request, service):
     # TODO same with subscription costs
     context = {'service':{'name':service.name, 
         'image_paths':service.image_path,
-        'description':service.description, 
+        'description':service.description,
+        'seller_username': service.seller.username,
         'email': service.seller.email,
         'cost': service.price,
         'subscription_costs': [0, 10, 20],
@@ -62,7 +63,7 @@ def store(request, service):
         ]}}
     return render(request, 'app/store.html', context)
 
-def profile(request):
+def profile(request, username):
     service_list = Service.objects.filter(seller=request.user, approved=True, active=True)
     try:
         subscription = Subscription.objects.get(pk=request.user, approved=True)
@@ -70,6 +71,7 @@ def profile(request):
         subscription = None
     perk_list = Perk.objects.filter(subscription=subscription)
     context = {
+        'user': User.objects.get(pk=username),
         'service_list': service_list,
         'subscription': subscription,
         'perk_list': perk_list

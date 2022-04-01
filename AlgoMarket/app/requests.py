@@ -130,14 +130,13 @@ def search(request):
 
 def store(request, store_id):
     try:
-        print(store_id)
         service = Service.objects.get(pk=store_id)
         return views.store(request, service)
     except:
         return HttpResponse("No such store exists")
     
-def profile(request):
-    return views.profile(request)
+def profile(request, username):
+    return views.profile(request, username)
 
 def settings(request):
     return views.settings(request)
