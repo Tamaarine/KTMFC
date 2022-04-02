@@ -113,7 +113,7 @@ def register_creator(request):
             # database for moderators to view
             form = CreatorEssayForm(request.POST)
             if form.is_valid():
-                request.user.essay = form.cleaned_data['essay']
+                request.user.biography = form.cleaned_data['essay']
                 request.user.save()
                 return render(request, 'app/thank_you.html')
             
