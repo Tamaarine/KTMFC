@@ -1,9 +1,8 @@
-from django import forms
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse
 from .models import User, Service, Subscription, Perk, Rating
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from itertools import chain
 
 def index(request):
     return render(request, 'app/index.html')
@@ -33,9 +32,18 @@ def search(request):
     if query is None:
         return render(request, 'app/index.html',)
         
-    services = Service.objects.filter(description__contains=request.GET.get('sch'))
+    services1 = Service.objects.filter(description__contains=query)
+    services2 = Service.objects.filter(name__contains=query)
+    query_user = User.objects.filter(username__contains=query)
+    services3 = []
+    for seller in query_user:
+        queried = Service.objects.filter(seller=seller)
+        for query in queried:
+            services3.append(query)
+    total_services = list(chain(services1, services2, services3))
+    total_services = set(total_services)
     service_list = []
-    for service in services:
+    for service in total_services:
         service_list.append(service)
     context = {
         'service_list': service_list

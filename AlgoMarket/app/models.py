@@ -41,7 +41,7 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     image_path = models.CharField(max_length=200, blank=True)
-    wallet_address = models.CharField(max_length=200)
+    wallet_address = models.CharField(max_length=200, default='placeholder')
     last_updated = models.TimeField(auto_now=True)
     creator = models.BooleanField(default=False)
     services_completed = models.IntegerField(default=0)

@@ -134,7 +134,7 @@ def store(request, store_id):
         return views.store(request, service)
     except:
         return HttpResponse("No such store exists")
-    
+
 def profile(request, username):
     return views.profile(request, username)
 
