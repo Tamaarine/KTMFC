@@ -71,7 +71,7 @@ def profile(request, username):
         subscription = None
     perk_list = Perk.objects.filter(subscription=subscription)
     context = {
-        'user': User.objects.get(pk=username),
+        'selected_user': User.objects.get(pk=username),
         'service_list': service_list,
         'subscription': subscription,
         'perk_list': perk_list
