@@ -45,21 +45,20 @@
                         {% endwith %}
                         {% endwith %}
                     </div>
-                    <div class="rating-text"> <span>{{ service.rating_count }} ratings & {{ service.review_count }} reviews</span> </div>
+                    <div class="rating-text"> <span>{{ service.review_count }} reviews</span> </div>
                 </div>
             </div>
             
             <h1>Reviews</h1>
             {% for review in service.reviews %}
             <div class="mt-1">
-                <h4>{{ review.author }}</h4>
-                <span>- {{ review.date }}</span>
+                <h4>{{ review.reviewer }}</h4>
                 {% with ''|center:review.rating as range %}
                 {% for _ in range %}
                 <i class="fas fa-star"></i>
                 {% endfor %}
                 {% endwith %}
-                <p>{{ review.text }}</p>
+                <p>{{ review.description }}</p>
             </div>
             {% endfor %}
             <div id="layoutError_footer">

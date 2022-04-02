@@ -2,7 +2,7 @@ from django import forms
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .models import User, Service, Subscription, Perk
+from .models import User, Service, Subscription, Perk, Rating
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 
 def index(request):
@@ -44,23 +44,45 @@ def search(request):
     return render(request, 'app/search.html', context)
 
 def store(request, service):
-    # TODO make sure to change the reviews stuff to retrieve them and update values in the context accordingly
-    # TODO same with subscription costs
+    try:
+        # get the subscription costs
+        subs = Subscription.objects.filter(seller=service.seller)
+        if len(subs) > 0:
+            sub_costs = [0, subs[0].pro_price, subs[0].premium_price]
+        else:
+            sub_costs = [0, 0, 0]
+        # get the rating information
+        ratings = Rating.objects.filter(product=service)
+        avg_rating = 0
+        if len(ratings) > 0:
+            for rating in ratings:
+                avg_rating += rating.rating
+            avg_rating /= len(ratings)
+    except:
+        return HttpResponse("Sorry, something failed. Please check back later")
+
+    print(service.name)
+    print(service.image_path)
+    print(service.description)
+    print(service.seller.username)
+    print(service.seller.email)
+    print(service.price)
+    print(sub_costs)
+    print(avg_rating)
+    print(len(ratings))
+    print(ratings)
+
     context = {'service':{'name':service.name, 
         'image_paths':service.image_path,
         'description':service.description,
         'seller_username': service.seller.username,
         'email': service.seller.email,
         'cost': service.price,
-        'subscription_costs': [0, 10, 20],
-        'rating': 4.6,
-        'rating_count': 46,
-        'review_count': 15,
-        'reviews': [
-            {'author': 'rickylu', 'date': '3 October, 2022', 'rating': 1, 'text': 'Send help, the googler ain\'t googling'},
-            {'author': 'daniewu', 'date': '2 October, 2022', 'rating': 5, 'text': 'I came for the service, but stayed for the comments.'},
-            {'author': 'robots5252', 'date': '1 October, 2022', 'rating': 5, 'text': 'Two weirdos above me.'}
-        ]}}
+        'subscription_costs': sub_costs,
+        'rating': avg_rating,
+        'review_count': len(ratings),
+        'reviews': ratings
+        }}
     return render(request, 'app/store.html', context)
 
 def profile(request, username):
