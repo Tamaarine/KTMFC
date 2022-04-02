@@ -78,18 +78,8 @@ def profile(request, username):
     }
     return render(request, 'app/profile.html', context)
 
-def settings(request):
-    context = {
-        'user': {
-            'creator': True,
-            'username': 'KTMcdonnell',
-            'image_path': 'ktm.jpg',
-            'first_name': 'Kevin',
-            'last_name': 'McDonnell',
-            'description': 'I am teaching professor in the Department of Computer Science at Stony Brook University, where I have worked since the summer of 2015. I teach a variety of 100-level and 200-level Computer Science courses.'
-        }
-    }
-    return render(request, 'app/settings.html', context)
+def settings(request, form):
+    return render(request, 'app/settings.html', {'form':form})
 
 def history(request):
     context = {

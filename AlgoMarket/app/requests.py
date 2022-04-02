@@ -8,7 +8,7 @@ from django.template.loader import render_to_string
 from .models import User, Service, Rating
 from . import views
 from .errors import EmailNotVerified
-from .forms import UserLoginForm, UserRegisterForm, CreatorEssayForm, ConfirmTransactionForm
+from .forms import UserLoginForm, UserRegisterForm, CreatorEssayForm, ConfirmTransactionForm, EditUserForm
 from .tokenGenerator import token_generator
 import json
 from . import utils
@@ -139,7 +139,26 @@ def profile(request, username):
     return views.profile(request, username)
 
 def settings(request):
-    return views.settings(request)
+    if request.method == "GET":
+        initial_input = {
+            'first_name': request.user.first_name,
+            'last_name': request.user.last_name,
+            'biography': request.user.biography
+        }
+        form = EditUserForm(initial=initial_input)
+        return views.settings(request, form)
+    
+    if request.method == "POST":
+        form = EditUserForm(request.POST)
+        if form.is_valid():
+            # save the changes to the form
+            user = request.user
+            user.first_name = form.cleaned_data['first_name']
+            user.last_name = form.cleaned_data['last_name']
+            user.biography = form.cleaned_data['biography']
+            user.save()
+
+        return HttpResponseRedirect("/profile/" + str(request.user.username))
 
 def history(request):
     return views.history(request)
