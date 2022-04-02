@@ -5,7 +5,7 @@ from .models import Transaction, User, Service, Subscription, Perk
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib import messages
 from django.template.loader import render_to_string
-from .models import User, Service, Rating
+from .models import User, Service, Rating, Report
 from . import views
 from .errors import EmailNotVerified
 from .forms import UserLoginForm, UserRegisterForm, CreatorEssayForm, ConfirmTransactionForm, EditUserForm
@@ -269,8 +269,32 @@ def subscription(request):
         # then respond with the page with updated subscription
         return views.subscription(request)
       
-def report(request):
-    return views.report(request)
+def report(request, username):
+
+    if request.method == "GET":
+        reported_user = User.objects.get(pk=username)
+        service_list = Service.objects.filter(seller=reported_user)
+        s = []
+        for service in service_list:
+            s.append(service.name)
+        return views.report(request, username, service_list)
+    
+    if request.method == "POST":
+        try:
+            form = request.POST
+            print("1")
+            seller = User.objects.get(pk=username)
+            print("2")
+            service = Service.objects.filter(seller=seller, name=form.get('service'))
+            print("3")
+            report = Report(reporter=request.user, service=service[0], description=form.get('description'))
+            print("4")
+            report.save()
+            print("5")
+        except:
+            return HttpResponse("Sorry, something failed. Please try again later.")
+
+        return HttpResponseRedirect("/profile/" + str(username))
 
 def confirmation(request, transaction_id):
     transaction = Transaction.objects.get(pk=transaction_id)

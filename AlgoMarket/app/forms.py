@@ -5,6 +5,7 @@ from app.models import User
 from django.contrib import messages
 from django.core.validators import MaxValueValidator, MinValueValidator
 from .errors import *
+from .models import Report
 
 class UserRegisterForm(forms.Form):
     username = forms.CharField(label='Username', max_length=150, 
@@ -68,4 +69,3 @@ class EditUserForm(forms.Form):
     first_name = forms.CharField(label="first", max_length=20, required=True, widget=forms.TextInput())
     last_name = forms.CharField(label="last", max_length=20, required=True, widget=forms.TextInput())
     biography = forms.CharField(label="biography", max_length=1000, required=True, widget=forms.Textarea(attrs={'class': 'form-control'}))    
-
