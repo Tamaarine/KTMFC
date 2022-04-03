@@ -55,12 +55,19 @@ def search(request):
 def store(request, service):
     # TODO make sure to change the reviews stuff to retrieve them and update values in the context accordingly
     # TODO same with subscription costs
+    try:
+        user = User.objects.get(username=service.seller.username)
+        subs = Subscription.objects.get(seller=user, approved=True)
+    except Exception as e:
+        print(e)
+        subs = None
+        
     context = {'service':{'name':service.name, 
         'image_paths':service.image_path,
         'description':service.description, 
         'email': service.seller.email,
         'cost': service.price,
-        'subscription_costs': [0, 10, 20],
+        'subscription_costs': subs,
         'rating': 4.6,
         'rating_count': 46,
         'review_count': 15,
@@ -69,6 +76,10 @@ def store(request, service):
             {'author': 'daniewu', 'date': '2 October, 2022', 'rating': 5, 'text': 'I came for the service, but stayed for the comments.'},
             {'author': 'robots5252', 'date': '1 October, 2022', 'rating': 5, 'text': 'Two weirdos above me.'}
         ]}}
+        
+    if subs is not None:
+        context['service']['subscription_costs'] = [0, subs.pro_price, subs.premium_price]
+        
     return render(request, 'app/store.html', context)
 
 def profile(request):
