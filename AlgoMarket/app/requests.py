@@ -66,15 +66,12 @@ def register(request):
                 })
                 
                 to_email = form.cleaned_data['email']
-                # status_code = utils.email(mail_subject, message, to_email)
+                status_code = utils.email(mail_subject, message, to_email)
                 
-                print(message)
-                messages.success(request, 'Please check your email for account verification')
-                
-                # if status_code == 200:
-                #     messages.success(request, 'Please check your email for account verification')
-                # else:
-                #     messages.error(request, "Server side error")
+                if status_code == 200:
+                    messages.success(request, 'Please check your email for account verification')
+                else:
+                    messages.error(request, "Server side error")
                 
                 return render(request, 'app/register.html', {'form': UserRegisterForm()})
             except Exception as e:
@@ -132,7 +129,8 @@ def store(request, store_id):
     try:
         service = Service.objects.get(pk=store_id)
         return views.store(request, service)
-    except:
+    except Exception as e:
+        print(e)
         return HttpResponse("No such store exists")
 
 def profile(request):

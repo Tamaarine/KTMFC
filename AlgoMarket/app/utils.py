@@ -1,10 +1,10 @@
-from . import requests
+import requests
 
 def email(mail_subject, message, to_email):
     ret = requests.post(
-        "https://api.mailgun.net/v3/sandbox49891cb350ed47018e9d4289ddff229a.mailgun.org/messages",
-        auth=("api", "26102838b5cf4e8fbcf16b5a93902635-90ac0eb7-3cf59ac2"),
-        data={"from": "Tamarine.me <autofeedback@tamarine.me>",
+        "https://api.mailgun.net/v3/mg.tomorine.codes/messages",
+		auth=("api", "key-c58ccd7ad317aedc36d768f389bebae6"),
+        data={"from": "AlgoMarket <AlgoMarket@tomorine.codes>",
             "to": [to_email],
             "subject": mail_subject,
             "text": message}
