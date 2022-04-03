@@ -1,0 +1,125 @@
+*
+{
+    font-family: 'Poppins', sans-serif;
+}
+.am-primary
+{
+    background-color: #05386B;
+}
+.am-secondary
+{
+    background-color: #85DCBA;
+}
+.am-text-secondary, .am-text-secondary:hover
+{
+    /* color: #5CDB95; */
+    color: #edf5e1;
+    text-decoration: none;
+}
+.am-transparent
+{
+    background-color: transparent;
+}
+
+body 
+{
+    padding-top: 70px;
+}
+
+body, html {
+    height: 100%;
+}
+
+.longer-search-bar
+{
+    width: 100%;
+}
+
+.sign-in-btn, .search-btn
+{
+    transition: all 0.5s ease 0s;
+}
+
+
+.sign-in-btn:hover, .search-btn:hover
+{
+    color: #edf5e173;
+}
+
+.dropdown-item:hover
+{
+    background-color: rgba(125, 125, 202, 0.452);
+}
+
+.sticky-padding
+{
+    top: 5em;
+}
+
+.card-img-top
+{
+    width: 100%;
+    height:13vw;
+    object-fit: cover;
+}
+
+.text-bold, .text-bold:hover
+{
+    color: black;
+}
+
+.ratings {
+    background-color: #fff;
+    padding: 30px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 10px 10px #E0E0E0
+}
+
+.product-rating {
+    font-size: 50px
+}
+
+.link::before { 
+    display: block; 
+    content: " "; 
+    margin-top: -67px; 
+    height: 67px; 
+    visibility: hidden; 
+  }
+
+/* The hero image */
+.hero-image {
+    /* Use "linear-gradient" to add a darken background effect to the image (photographer.jpg). This will make the text easier to read */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5)), url('../assets/img/background.png');
+
+    /* Set a specific height */
+    height: 100%;
+
+    /* Position and center the image to scale nicely on all screens */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+}
+
+/* Place text in the middle of the image */
+.hero-text {
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+}
+
+.carousel-item img {
+    object-fit: cover;
+    object-position: 0px 20px; 
+    height: 40vh;
+    overflow: hidden;
+}
+
+.icon:before {
+    font-family: "Font Awesome 5 Free"; font-weight: 900; content: "\f155";
+    margin-right: 0.3em;
+}
