@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from .models import User, Service, Subscription, Perk
+from .models import User, Service, Subscription, Perk, Transaction
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from itertools import chain
 
@@ -98,15 +98,14 @@ def settings(request):
     return render(request, 'app/settings.html', context)
 
 def history(request):
+    raw_transactions = Transaction.objects.filter(buyer=request.user)
+    transactions = [{'date': x.startDate, 'service': x.product.name, 'creator': x.product.seller, 'price': x.price, 'id': x.id} for x in raw_transactions]
+
+    raw_subscriptions = Subscription.objects.filter()
+
+
     context = {
-        'transactions': [
-            {'date': '2/27/2022', 'service': 'CSE 101 Tutoring', 'creator': 'KTMcdonnell', 'Price': 50, 'id': 1},
-            {'date': '1/13/2022', 'service': 'Video Editing', 'creator': 'Rickster99', 'Price': 25, 'id': 2},
-            {'date': '12/24/2021', 'service': 'Christmas Graphic Design', 'creator': 'SantaClaus1234', 'Price': 25, 'id': 3},
-            {'date': '7/20/2021', 'service': 'Personal Website Design', 'creator': 'webdevpro1337', 'Price': 100, 'id': 4},
-            {'date': '2/10/2021', 'service': 'Valentine\'s Song', 'creator': 'SongWriter369', 'Price': 75, 'id': 5},
-            {'date': '2/9/2021', 'service': 'Valentine\'s Art', 'creator': 'HeartDrawings<3', 'Price': 15, 'id': 6}
-        ],
+        'transactions': transactions,
         'subscriptions': [
             {'creator': 'KTMcdonnell', 'tier': 'Premium', 'cost': 100, 'status': 'Active'},
             {'creator': 'Rickster99', 'tier': 'Free', 'cost': 0, 'status': 'Active'},
