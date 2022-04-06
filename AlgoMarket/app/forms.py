@@ -64,14 +64,6 @@ class ConfirmTransactionForm(forms.Form):
                 widget=forms.Textarea(attrs={'placeholder': 'Write your review here', 'class': 'form-control'}))
 
 class CreateServiceForm(forms.ModelForm):
-    #name = forms.CharField(label="Name",
-    #            widget=forms.TextInput(attrs={'class': 'form-control'}))
-    #description = forms.CharField(label="Description", max_length=300,
-    #            widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}))
-    #price = forms.IntegerField(label="Price", validators=[MinValueValidator(1)],
-    #            widget=forms.TextInput(attrs={'class': 'form-control'}))
-    #image = forms.ImageField(label="Image", required=False)
-
     class Meta:
         model = Service
         fields = ('name', 'description', 'price', 'image')

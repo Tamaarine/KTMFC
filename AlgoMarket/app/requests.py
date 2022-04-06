@@ -153,14 +153,25 @@ def services(request):
         return views.services(request)
 
     if request.method == "POST":
-        # create a new Service object in the database
-        form = CreateServiceForm(request.POST, request.FILES)
-        print(form)
-        print("posting")
-        if form.is_valid():
-            service = form.save(commit=False)
-            service.seller = request.user
-            service.save()
+        if not request.POST['id']:
+            # create a new Service object in the database based on the form inputs
+            form = CreateServiceForm(request.POST, request.FILES)
+            if form.is_valid():
+                service = form.save(commit=False)
+                service.seller = request.user
+                service.save()
+        else:
+            # edit a Service in the database based on the form inputs
+            service = Service.objects.get(pk=request.POST['id'])
+            if service.seller != request.user:
+                return HttpResponse("YOU CANNOT ONLY EDIT SERVICES THAT ARE YOURS!")
+            form = CreateServiceForm(request.POST, request.FILES)
+            if form.is_valid():
+                form = CreateServiceForm(request.POST, request.FILES, instance=service)
+                service = form.save(commit=False)
+                service.approved = False
+                service.active = False
+                service.save()
         # then respond with the page with updated list
         return views.services(request)
 
@@ -170,18 +181,6 @@ def services(request):
         service = Service.objects.get(pk=data['id'])
         if service.seller != request.user:
             return HttpResponse("YOU CANNOT ONLY EDIT SERVICES THAT ARE YOURS!")
-        if data['action'] == "update-service":
-            # update the service in the database
-            print(data)
-            service.name = data['name']
-            service.description = data['description']
-            service.price = data['price']
-            service.approved = False
-            service.active = False
-            service.save()
-            messages.success(request, "Service update was successful." )
-            # then respond with a the new page to load
-            return views.services(request)
         if data['action'] == "toggle-active":
             # change the active status in the database
             service.active = not service.active
