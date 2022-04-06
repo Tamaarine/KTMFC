@@ -39,16 +39,17 @@ class CustomUserManager(BaseUserManager):
 class User(AbstractUser):
     email = models.CharField(max_length=200, unique=True)
     username = models.CharField(max_length=200, primary_key=True, unique=True)
+    first_name = models.CharField(max_length=20)
+    last_name = models.CharField(max_length=20)
     image_path = models.CharField(max_length=200, blank=True)
     wallet_address = models.CharField(max_length=200, default='placeholder')
     last_updated = models.TimeField(auto_now=True)
     creator = models.BooleanField(default=False)
     services_completed = models.IntegerField(default=0)
     subscriber_count = models.IntegerField(default=0)
-    biography = models.CharField(max_length=200, default='It is quite empty here')
+    biography = models.CharField(max_length=1000)
     is_superuser = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    essay = models.CharField(max_length=1000)
     
     objects = CustomUserManager()
     
@@ -102,4 +103,4 @@ class Rating(models.Model):
 class Report(models.Model):
     reporter = models.ForeignKey(User, on_delete=models.CASCADE)
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=1000)

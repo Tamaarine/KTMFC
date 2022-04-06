@@ -5,10 +5,10 @@ from .models import Transaction, User, Service, Subscription, Perk
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib import messages
 from django.template.loader import render_to_string
-from .models import User, Service, Rating
+from .models import User, Service, Rating, Report
 from . import views
 from .errors import EmailNotVerified
-from .forms import UserLoginForm, UserRegisterForm, CreatorEssayForm, ConfirmTransactionForm, CreateServiceForm
+from .forms import UserLoginForm, UserRegisterForm, CreatorEssayForm, ConfirmTransactionForm, EditUserForm, CreateServiceForm
 from .tokenGenerator import token_generator
 import json
 from . import utils
@@ -113,7 +113,7 @@ def register_creator(request):
             # database for moderators to view
             form = CreatorEssayForm(request.POST)
             if form.is_valid():
-                request.user.essay = form.cleaned_data['essay']
+                request.user.biography = form.cleaned_data['essay']
                 request.user.save()
                 return render(request, 'app/thank_you.html')
             
@@ -135,11 +135,30 @@ def store(request, store_id):
     except:
         return HttpResponse("No such store exists")
 
-def profile(request):
-    return views.profile(request)
+def profile(request, username):
+    return views.profile(request, username)
 
 def settings(request):
-    return views.settings(request)
+    if request.method == "GET":
+        initial_input = {
+            'first_name': request.user.first_name,
+            'last_name': request.user.last_name,
+            'biography': request.user.biography
+        }
+        form = EditUserForm(initial=initial_input)
+        return views.settings(request, form)
+    
+    if request.method == "POST":
+        form = EditUserForm(request.POST)
+        if form.is_valid():
+            # save the changes to the form
+            user = request.user
+            user.first_name = form.cleaned_data['first_name']
+            user.last_name = form.cleaned_data['last_name']
+            user.biography = form.cleaned_data['biography']
+            user.save()
+
+        return HttpResponseRedirect("/profile/" + str(request.user.username))
 
 def history(request):
     return views.history(request)
@@ -246,8 +265,32 @@ def subscription(request):
         # then respond with the page with updated subscription
         return views.subscription(request)
       
-def report(request):
-    return views.report(request)
+def report(request, username):
+
+    if request.method == "GET":
+        reported_user = User.objects.get(pk=username)
+        service_list = Service.objects.filter(seller=reported_user)
+        s = []
+        for service in service_list:
+            s.append(service.name)
+        return views.report(request, username, service_list)
+    
+    if request.method == "POST":
+        try:
+            form = request.POST
+            print("1")
+            seller = User.objects.get(pk=username)
+            print("2")
+            service = Service.objects.filter(seller=seller, name=form.get('service'))
+            print("3")
+            report = Report(reporter=request.user, service=service[0], description=form.get('description'))
+            print("4")
+            report.save()
+            print("5")
+        except:
+            return HttpResponse("Sorry, something failed. Please try again later.")
+
+        return HttpResponseRedirect("/profile/" + str(username))
 
 def confirmation(request, transaction_id):
     transaction = Transaction.objects.get(pk=transaction_id)
