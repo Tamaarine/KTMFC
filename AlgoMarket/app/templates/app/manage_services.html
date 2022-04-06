@@ -29,7 +29,7 @@
                 <td id="service{{ service.id }}name" class="align-middle">{{ service.name }}</td>
                 <td id="service{{ service.id }}description" class="align-middle">{{ service.description }}</td>
                 <td id="service{{ service.id }}price" class="align-middle">{{ service.price }} ALGO</td>
-                <td class="align-middle">{{ service.image_path }}</td>
+                <td class="align-middle">{{ service.imagename }}</td>
                 {% if service.active %}
                 <td class="align-middle" style="color:limegreen">ACTIVE</td>
                 <td class="align-middle">
@@ -96,14 +96,15 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="newServiceModalLabel">Create New Service</h5>
             </div>
-            <form onsubmit="addService(event)">
+            <form method="POST" action="/services" enctype="multipart/form-data">
+                {% csrf_token %}
                 <div class="modal-body">
                     <div class="row mb-3">
                         <div class="col-md-4 d-flex align-items-center">
                             <label class="m-0" for="createName">Name:</label>
                         </div>
                         <div class="col-md-8">
-                            <input class="form-control" id="createName" type="text" name="name" required />
+                            {{ create_form.name }}
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -111,7 +112,7 @@
                             <label class="m-0" for="createDescription">Description:</label>
                         </div>
                         <div class="col-md-8">
-                            <textarea class="form-control" id="createDescription" rows="5" name="description" required></textarea>
+                            {{ create_form.description }}
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -119,7 +120,7 @@
                             <label class="m-0" for="createPrice">Price:</label>
                         </div>
                         <div class="col-md-5">
-                            <input class="form-control" id="createPrice" type="number" name="price" required />
+                            {{ create_form.price }}
                         </div>
                         <div class="col-md-3 d-flex align-items-center p-0">
                             <label class="m-0" for="createPrice">ALGO</label>
@@ -130,7 +131,7 @@
                             <label class="m-0" for="createImage">Image:</label>
                         </div>
                         <div class="col-md-8">
-                            <input class="form-control-file" id="createImage" type="file">
+                            {{ create_form.image }}
                         </div>
                     </div>
                 </div>

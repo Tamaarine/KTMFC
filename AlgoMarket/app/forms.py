@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import TextInput, EmailField, Textarea
-from app.models import User
+from app.models import User, Service
 from django.contrib import messages
 from django.core.validators import MaxValueValidator, MinValueValidator
 from .errors import *
@@ -63,3 +63,20 @@ class ConfirmTransactionForm(forms.Form):
     review = forms.CharField(max_length=300, required=False,
                 widget=forms.Textarea(attrs={'placeholder': 'Write your review here', 'class': 'form-control'}))
 
+class CreateServiceForm(forms.ModelForm):
+    #name = forms.CharField(label="Name",
+    #            widget=forms.TextInput(attrs={'class': 'form-control'}))
+    #description = forms.CharField(label="Description", max_length=300,
+    #            widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}))
+    #price = forms.IntegerField(label="Price", validators=[MinValueValidator(1)],
+    #            widget=forms.TextInput(attrs={'class': 'form-control'}))
+    #image = forms.ImageField(label="Image", required=False)
+
+    class Meta:
+        model = Service
+        fields = ('name', 'description', 'price', 'image')
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
+            'price': forms.TextInput(attrs={'class': 'form-control'})
+        }

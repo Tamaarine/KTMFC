@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.contrib.auth.hashers import make_password
 from . import errors
+import os
 
 # Create your models here.
 class CustomUserManager(BaseUserManager):
@@ -55,16 +56,19 @@ class User(AbstractUser):
 
 class Service(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=50)
     seller = models.ForeignKey(User, on_delete=models.CASCADE)
-    description = models.CharField(max_length=200)
-    price = models.IntegerField(default=1)
-    image_path = models.CharField(max_length=200, blank=True)
+    description = models.TextField(max_length=300)
+    price = models.IntegerField()
+    image = models.ImageField(upload_to='service_images/', null=True, blank=True)
     amount_available = models.IntegerField(default=-1)
     created = models.TimeField(auto_now_add=True)
     last_updated = models.TimeField(auto_now=True)
     approved = models.BooleanField(default=False)
     active = models.BooleanField(default=False)
+
+    def imagename(self):
+        return os.path.basename(self.image.name)
 
 class Subscription(models.Model):
     seller = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)

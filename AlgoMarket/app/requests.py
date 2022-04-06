@@ -8,7 +8,7 @@ from django.template.loader import render_to_string
 from .models import User, Service, Rating
 from . import views
 from .errors import EmailNotVerified
-from .forms import UserLoginForm, UserRegisterForm, CreatorEssayForm, ConfirmTransactionForm
+from .forms import UserLoginForm, UserRegisterForm, CreatorEssayForm, ConfirmTransactionForm, CreateServiceForm
 from .tokenGenerator import token_generator
 import json
 from . import utils
@@ -154,16 +154,13 @@ def services(request):
 
     if request.method == "POST":
         # create a new Service object in the database
-        data = json.loads(request.body)
-        service = Service(
-            name=data['name'],
-            seller=request.user,
-            description=data['description'],
-            price=data['price'],
-            amount_available=-1
-        )
-        service.save()
-        messages.success(request, "Service creation successful." )
+        form = CreateServiceForm(request.POST, request.FILES)
+        print(form)
+        print("posting")
+        if form.is_valid():
+            service = form.save(commit=False)
+            service.seller = request.user
+            service.save()
         # then respond with the page with updated list
         return views.services(request)
 
