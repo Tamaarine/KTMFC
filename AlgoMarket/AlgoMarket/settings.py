@@ -127,3 +127,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTHENTICATION_BACKENDS = ('app.UserAuthBackend.CustomBackend',)
 
 AUTH_USER_MODEL = 'app.User'
+
+CSRF_TRUSTED_ORIGINS = ['https://teamalgomarket.herokuapp.com/']
