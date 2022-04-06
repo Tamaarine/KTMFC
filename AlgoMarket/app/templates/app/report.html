@@ -1,46 +1,33 @@
-<!DOCTYPE html>
-<html>
+{% extends 'user_base.html' %}
+{% load static %}
 
-<head>
-    {% load static %}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="{% static 'app/css/styles.css' %}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-</head>
+{% block card_header %}
+<h3 class="text-center font-weight-light my-4">
+    <span style="position:relative; right:100px; top:2px;">
+        <img src="{% static 'app/assets/img/logo-white.svg' %}" width="44">
+    </span>
+    Report User: {{ username }}
+</h3>
+{% endblock %}
 
-<body class="am-primary">
-    <div class="row">
-        <div class="col-2"></div>
-        <div class="col-sm-8">
-            <div class="card p-4 am-secondary">
-                <h1 class="card-title">Reporting Creator: </h1>
-                <h5 class="card-subtitle mb-2 text-muted">Please fill out this report honestly, it will be used in an investigation against the creator you are reporting. Note that the report will be linked to your user account in the event we have further questions. </h5>
-                <form class="was-validated">
-                    <h2><span>Select The Service You Are Reporting</span></h2>
-                    <div class="form-group row">
-                        <div class="col-sm-10">
-                            <select name="service" id="service">
-                                {% for service in service_list %}
-                                    <option>{{service.name}}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                </form>
-                <h2><span>Describe Your Complaint</span></h2>
-                <form class="was-validated">
-                    <textarea class="form-control is-invalid" id="validationTextarea"
-                        placeholder="Describe the details of your complaint" rows="6"
-                        required></textarea>
-                </form>
-
-                <a href="{% url 'profile' %}" class="btn btn-primary mt-4">Submit</a>
-            </div>
-        </div>
-</body>
-</html>
+{% block card_body %}
+<form method="POST" action=""> {% csrf_token %}
+    <div class="form-check mb-3">
+        <label class="form-check-label" for="service_name">Service:</label>
+        <select id="service" name="service">
+            <!-- for loop to put the services in here -->
+            {% for service in service_list %}
+            <option value="{{service}}">{{service}}</option>
+            {% endfor %}
+    
+        </select>
+    </div>
+    <div class="form-floating mb-3">
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" maxlength="1000" rows="5" cols="35" required="True" placeholder="Write a description of the incident you are reporting here."></textarea>
+    </div>
+    <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </div>
+</form>
+{% endblock %}

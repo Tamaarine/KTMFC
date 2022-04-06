@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from .models import User, Service, Subscription, Perk, Transaction
+from .models import User, Service, Subscription, Perk, Rating, Transaction
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from itertools import chain
 
@@ -52,25 +52,48 @@ def search(request):
     return render(request, 'app/search.html', context)
 
 def store(request, service):
-    # TODO make sure to change the reviews stuff to retrieve them and update values in the context accordingly
-    # TODO same with subscription costs
+    try:
+        # get the subscription costs
+        subs = Subscription.objects.filter(seller=service.seller)
+        if len(subs) > 0:
+            sub_costs = [0, subs[0].pro_price, subs[0].premium_price]
+        else:
+            sub_costs = [0, 0, 0]
+        # get the rating information
+        ratings = Rating.objects.filter(product=service)
+        avg_rating = 0
+        if len(ratings) > 0:
+            for rating in ratings:
+                avg_rating += rating.rating
+            avg_rating /= len(ratings)
+    except:
+        return HttpResponse("Sorry, something failed. Please check back later")
+
+    print(service.name)
+    print(service.image_path)
+    print(service.description)
+    print(service.seller.username)
+    print(service.seller.email)
+    print(service.price)
+    print(sub_costs)
+    print(avg_rating)
+    print(len(ratings))
+    print(ratings)
+
     context = {'service':{'name':service.name, 
         'image_paths':service.image_path,
-        'description':service.description, 
+        'description':service.description,
+        'seller_username': service.seller.username,
         'email': service.seller.email,
         'cost': service.price,
-        'subscription_costs': [0, 10, 20],
-        'rating': 4.6,
-        'rating_count': 46,
-        'review_count': 15,
-        'reviews': [
-            {'author': 'rickylu', 'date': '3 October, 2022', 'rating': 1, 'text': 'Send help, the googler ain\'t googling'},
-            {'author': 'daniewu', 'date': '2 October, 2022', 'rating': 5, 'text': 'I came for the service, but stayed for the comments.'},
-            {'author': 'robots5252', 'date': '1 October, 2022', 'rating': 5, 'text': 'Two weirdos above me.'}
-        ]}}
+        'subscription_costs': sub_costs,
+        'rating': avg_rating,
+        'review_count': len(ratings),
+        'reviews': ratings
+        }}
     return render(request, 'app/store.html', context)
 
-def profile(request):
+def profile(request, username):
     service_list = Service.objects.filter(seller=request.user, approved=True, active=True)
     try:
         subscription = Subscription.objects.get(pk=request.user, approved=True)
@@ -78,24 +101,15 @@ def profile(request):
         subscription = None
     perk_list = Perk.objects.filter(subscription=subscription)
     context = {
+        'selected_user': User.objects.get(pk=username),
         'service_list': service_list,
         'subscription': subscription,
         'perk_list': perk_list
     }
     return render(request, 'app/profile.html', context)
 
-def settings(request):
-    context = {
-        'user': {
-            'creator': True,
-            'username': 'KTMcdonnell',
-            'image_path': 'ktm.jpg',
-            'first_name': 'Kevin',
-            'last_name': 'McDonnell',
-            'description': 'I am teaching professor in the Department of Computer Science at Stony Brook University, where I have worked since the summer of 2015. I teach a variety of 100-level and 200-level Computer Science courses.'
-        }
-    }
-    return render(request, 'app/settings.html', context)
+def settings(request, form):
+    return render(request, 'app/settings.html', {'form':form})
 
 def history(request):
     raw_transactions = Transaction.objects.filter(buyer=request.user)
@@ -135,13 +149,13 @@ def subscription(request):
     }
     return render(request, 'app/manage_subscription.html', context)
     
-def report(request):
+def report(request, username, service_list):
+    s_list = []
+    for service in service_list:
+        s_list.append(service.name)
     context = {
-        'service_list': [
-            {'name': 'Anime Sketches', 'description': 'I draw beautiful anime sketches for Algorand!', 'cost': 50, 'image_path': 'yes.jpg'},
-            {'name': 'Graphic DESIGN!', 'description': 'I will make beautiful graphic design for anything', 'cost': 75, 'image_path': 'design.jpg'},
-            {'name': 'Profession Googler', 'description': 'I am a professional googler and I will google for you', 'cost': 10, 'image_path': 'google.jpg'}
-        ],
+        'username': username,
+        'service_list': s_list
     }
     return render(request, 'app/report.html', context)
 
