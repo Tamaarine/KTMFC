@@ -142,9 +142,10 @@ def settings(request):
     if request.method == "GET":
         initial_input = {
             'first_name': request.user.first_name,
-            'last_name': request.user.last_name,
-            'biography': request.user.biography
+            'last_name': request.user.last_name
         }
+        if request.user.creator:
+            initial_input['biography'] = request.user.biography
         form = EditUserForm(initial=initial_input)
         return views.settings(request, form)
     
@@ -155,7 +156,8 @@ def settings(request):
             user = request.user
             user.first_name = form.cleaned_data['first_name']
             user.last_name = form.cleaned_data['last_name']
-            user.biography = form.cleaned_data['biography']
+            if request.user.creator:
+                user.biography = form.cleaned_data['biography']
             user.save()
 
         return HttpResponseRedirect("/profile/" + str(request.user.username))

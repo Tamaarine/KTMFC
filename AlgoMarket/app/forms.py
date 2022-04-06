@@ -68,7 +68,7 @@ class ConfirmTransactionForm(forms.Form):
 class EditUserForm(forms.Form):
     first_name = forms.CharField(label="first", max_length=20, required=True, widget=forms.TextInput())
     last_name = forms.CharField(label="last", max_length=20, required=True, widget=forms.TextInput())
-    biography = forms.CharField(label="biography", max_length=1000, required=True, widget=forms.Textarea(attrs={'class': 'form-control'}))    
+    biography = forms.CharField(label="biography", max_length=1000, required=False, widget=forms.Textarea(attrs={'class': 'form-control'}))    
 
 class CreateServiceForm(forms.ModelForm):
     class Meta:

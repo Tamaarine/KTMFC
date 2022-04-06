@@ -21,11 +21,13 @@
                         {{ form.last_name.errors }}
                         {{ form.last_name }}
                     </div>
+                    {% if user.creator %}
                     <div class="form-floating mb-3">
                         <label for="{{ form.biography.id_for_label }}">Biography:</label>
                         {{ form.biography.errors }}
                         {{ form.biography }}
                     </div>
+                    {% endif %}
                     <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
                         <button class="btn btn-primary" type="submit">Save and Return to Profile</button>
                     </div>
