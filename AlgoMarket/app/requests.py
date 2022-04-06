@@ -150,15 +150,10 @@ def settings(request):
         return views.settings(request, form)
     
     if request.method == "POST":
-        form = EditUserForm(request.POST)
+        form = EditUserForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             # save the changes to the form
-            user = request.user
-            user.first_name = form.cleaned_data['first_name']
-            user.last_name = form.cleaned_data['last_name']
-            if request.user.creator:
-                user.biography = form.cleaned_data['biography']
-            user.save()
+            form.save()
 
         return HttpResponseRedirect("/profile/" + str(request.user.username))
 
@@ -174,7 +169,7 @@ def services(request):
         return views.services(request)
 
     if request.method == "POST":
-        if not request.POST['id']:
+        if not request.POST.get('id', None):
             # create a new Service object in the database based on the form inputs
             form = CreateServiceForm(request.POST, request.FILES)
             if form.is_valid():
@@ -186,9 +181,8 @@ def services(request):
             service = Service.objects.get(pk=request.POST['id'])
             if service.seller != request.user:
                 return HttpResponse("YOU CANNOT ONLY EDIT SERVICES THAT ARE YOURS!")
-            form = CreateServiceForm(request.POST, request.FILES)
+            form = CreateServiceForm(request.POST, request.FILES, instance=service)
             if form.is_valid():
-                form = CreateServiceForm(request.POST, request.FILES, instance=service)
                 service = form.save(commit=False)
                 service.approved = False
                 service.active = False

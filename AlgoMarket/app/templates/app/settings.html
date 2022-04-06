@@ -8,40 +8,43 @@
     <div class="col-sm-6">
         <h1>Profile Settings</h1>
         <hr style="border-color: #DDD; width: 100%">
-        <div class="row">
-            <div class="col-sm-8">
-                <form method="POST" action=""> {% csrf_token %}
-                    <div class="form-check mb-3">
-                        <label for="form.first_name.id_for_label">First Name:</label>
-                        {{ form.first_name.errors }}
-                        {{ form.first_name }}
+            <form method="POST" action="/settings" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div class="form-floating mb-3">
+                            <label for="form.first_name.id_for_label">First Name:</label>
+                            {{ form.first_name.errors }}
+                            {{ form.first_name }}
+                        </div>
+                        <div class="form-floating mb-3">
+                            <label for="{{ form.last_name.id_for_label }}">Last Name:</label>
+                            {{ form.last_name.errors }}
+                            {{ form.last_name }}
+                        </div>
+                        {% if user.creator %}
+                        <div class="form-floating mb-3">
+                            <label for="{{ form.biography.id_for_label }}">Biography:</label>
+                            {{ form.biography.errors }}
+                            {{ form.biography }}
+                        </div>
+                        {% endif %}
+                        <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                            <button class="btn btn-primary" type="submit">Save and Return to Profile</button>
+                        </div>
                     </div>
-                    <div class="form-floating mb-3">
-                        <label for="{{ form.last_name.id_for_label }}">Last Name:</label>
-                        {{ form.last_name.errors }}
-                        {{ form.last_name }}
+                    <div class="col-sm-4">
+                        <div class="d-flex flex-column align-items-center text-center">
+                            {% if user.image %}
+                            <img class="rounded-circle mb-3" width="200px" src="{{ user.image.url }}">
+                            {% else %}
+                            <img class="rounded-circle mb-3" width="200px" src="{% static 'app/assets/img/user.png' %}">
+                            {% endif %}
+                            {{ form.image }}
+                        </div>
                     </div>
-                    {% if user.creator %}
-                    <div class="form-floating mb-3">
-                        <label for="{{ form.biography.id_for_label }}">Biography:</label>
-                        {{ form.biography.errors }}
-                        {{ form.biography }}
-                    </div>
-                    {% endif %}
-                    <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                        <button class="btn btn-primary" type="submit">Save and Return to Profile</button>
-                    </div>
-                </form>
-            </div>
-            <div class="col-sm-4">
-                <div class="d-flex flex-column align-items-center text-center">
-                    {% with "app/assets/img/"|add:user.image_path as image_path %}
-                    <img class="rounded-circle mb-3" width="200px" src="{% static image_path %}">
-                    {% endwith %}
-                    <button type="button" class="btn btn-light">Change Picture</button>
                 </div>
-            </div>
-        </div>
+            </form>
         <h1 class="mt-5">Account Settings</h1>
         <hr style="border-color: #DDD; width: 100%">
         <div class="row mb-3">
