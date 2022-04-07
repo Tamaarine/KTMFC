@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from .models import User, Service, Subscription, Perk
+from .models import User, Service, Subscription, Perk, Rating, Transaction
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from itertools import chain
 
@@ -53,36 +53,48 @@ def search(request):
     return render(request, 'app/search.html', context)
 
 def store(request, service):
-    # TODO make sure to change the reviews stuff to retrieve them and update values in the context accordingly
-    # TODO same with subscription costs
     try:
-        user = User.objects.get(username=service.seller.username)
-        subs = Subscription.objects.get(seller=user, approved=True)
-    except Exception as e:
-        print(e)
-        subs = None
-        
+        # get the subscription costs
+        subs = Subscription.objects.filter(seller=service.seller)
+        if len(subs) > 0:
+            sub_costs = [0, subs[0].pro_price, subs[0].premium_price]
+        else:
+            sub_costs = [0, 0, 0]
+        # get the rating information
+        ratings = Rating.objects.filter(product=service)
+        avg_rating = 0
+        if len(ratings) > 0:
+            for rating in ratings:
+                avg_rating += rating.rating
+            avg_rating /= len(ratings)
+    except:
+        return HttpResponse("Sorry, something failed. Please check back later")
+
+    print(service.name)
+    print(service.image_path)
+    print(service.description)
+    print(service.seller.username)
+    print(service.seller.email)
+    print(service.price)
+    print(sub_costs)
+    print(avg_rating)
+    print(len(ratings))
+    print(ratings)
+
     context = {'service':{'name':service.name, 
         'image_paths':service.image_path,
-        'description':service.description, 
+        'description':service.description,
+        'seller_username': service.seller.username,
         'email': service.seller.email,
         'cost': service.price,
-        'subscription_costs': subs,
-        'rating': 4.6,
-        'rating_count': 46,
-        'review_count': 15,
-        'reviews': [
-            {'author': 'rickylu', 'date': '3 October, 2022', 'rating': 1, 'text': 'Send help, the googler ain\'t googling'},
-            {'author': 'daniewu', 'date': '2 October, 2022', 'rating': 5, 'text': 'I came for the service, but stayed for the comments.'},
-            {'author': 'robots5252', 'date': '1 October, 2022', 'rating': 5, 'text': 'Two weirdos above me.'}
-        ]}}
-        
-    if subs is not None:
-        context['service']['subscription_costs'] = [0, subs.pro_price, subs.premium_price]
-        
+        'subscription_costs': sub_costs,
+        'rating': avg_rating,
+        'review_count': len(ratings),
+        'reviews': ratings
+        }}
     return render(request, 'app/store.html', context)
 
-def profile(request):
+def profile(request, username):
     service_list = Service.objects.filter(seller=request.user, approved=True, active=True)
     try:
         subscription = Subscription.objects.get(pk=request.user, approved=True)
@@ -90,35 +102,25 @@ def profile(request):
         subscription = None
     perk_list = Perk.objects.filter(subscription=subscription)
     context = {
+        'selected_user': User.objects.get(pk=username),
         'service_list': service_list,
         'subscription': subscription,
         'perk_list': perk_list
     }
     return render(request, 'app/profile.html', context)
 
-def settings(request):
-    context = {
-        'user': {
-            'creator': True,
-            'username': 'KTMcdonnell',
-            'image_path': 'ktm.jpg',
-            'first_name': 'Kevin',
-            'last_name': 'McDonnell',
-            'description': 'I am teaching professor in the Department of Computer Science at Stony Brook University, where I have worked since the summer of 2015. I teach a variety of 100-level and 200-level Computer Science courses.'
-        }
-    }
-    return render(request, 'app/settings.html', context)
+def settings(request, form):
+    return render(request, 'app/settings.html', {'form':form})
 
 def history(request):
+    raw_transactions = Transaction.objects.filter(buyer=request.user)
+    transactions = [{'date': x.startDate, 'service': x.product.name, 'creator': x.product.seller, 'price': x.price, 'id': x.id} for x in raw_transactions]
+
+    raw_subscriptions = Subscription.objects.filter()
+
+
     context = {
-        'transactions': [
-            {'date': '2/27/2022', 'service': 'CSE 101 Tutoring', 'creator': 'KTMcdonnell', 'Price': 50, 'id': 1},
-            {'date': '1/13/2022', 'service': 'Video Editing', 'creator': 'Rickster99', 'Price': 25, 'id': 2},
-            {'date': '12/24/2021', 'service': 'Christmas Graphic Design', 'creator': 'SantaClaus1234', 'Price': 25, 'id': 3},
-            {'date': '7/20/2021', 'service': 'Personal Website Design', 'creator': 'webdevpro1337', 'Price': 100, 'id': 4},
-            {'date': '2/10/2021', 'service': 'Valentine\'s Song', 'creator': 'SongWriter369', 'Price': 75, 'id': 5},
-            {'date': '2/9/2021', 'service': 'Valentine\'s Art', 'creator': 'HeartDrawings<3', 'Price': 15, 'id': 6}
-        ],
+        'transactions': transactions,
         'subscriptions': [
             {'creator': 'KTMcdonnell', 'tier': 'Premium', 'cost': 100, 'status': 'Active'},
             {'creator': 'Rickster99', 'tier': 'Free', 'cost': 0, 'status': 'Active'},
@@ -148,13 +150,13 @@ def subscription(request):
     }
     return render(request, 'app/manage_subscription.html', context)
     
-def report(request):
+def report(request, username, service_list):
+    s_list = []
+    for service in service_list:
+        s_list.append(service.name)
     context = {
-        'service_list': [
-            {'name': 'Anime Sketches', 'description': 'I draw beautiful anime sketches for Algorand!', 'cost': 50, 'image_path': 'yes.jpg'},
-            {'name': 'Graphic DESIGN!', 'description': 'I will make beautiful graphic design for anything', 'cost': 75, 'image_path': 'design.jpg'},
-            {'name': 'Profession Googler', 'description': 'I am a professional googler and I will google for you', 'cost': 10, 'image_path': 'google.jpg'}
-        ],
+        'username': username,
+        'service_list': s_list
     }
     return render(request, 'app/report.html', context)
 

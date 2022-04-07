@@ -10,41 +10,24 @@
         <hr style="border-color: #DDD; width: 100%">
         <div class="row">
             <div class="col-sm-8">
-                <form>
-                    <div class="row mb-3">
-                        <div class="col-md-3 d-flex align-items-center">
-                            <label class="m-0" for="inputFirstName">First name:</label>
-                        </div>
-                        <div class="col-md-9">
-                            <input class="form-control" id="inputFirstName" type="text" value="{{ user.first_name }}" />
-                        </div>
+                <form method="POST" action=""> {% csrf_token %}
+                    <div class="form-check mb-3">
+                        <label for="form.first_name.id_for_label">First Name:</label>
+                        {{ form.first_name.errors }}
+                        {{ form.first_name }}
                     </div>
-                    <div class="row mb-3">
-                        <div class="col-md-3 d-flex align-items-center">
-                            <label class="m-0" for="inputLastName">Last name:</label>
-                        </div>
-                        <div class="col-md-9">
-                            <input class="form-control" id="inputLastName" type="text" value="{{ user.last_name }}" />
-                        </div>
+                    <div class="form-floating mb-3">
+                        <label for="{{ form.last_name.id_for_label }}">Last Name:</label>
+                        {{ form.last_name.errors }}
+                        {{ form.last_name }}
                     </div>
-                    <div class="row mb-3">
-                        <div class="col-md-3 d-flex align-items-center">
-                            <label class="m-0" for="inputUsername">Username:</label>
-                        </div>
-                        <div class="col-md-9">
-                            <input class="form-control" id="inputUsername" type="text" value="{{ user.username }}" />
-                        </div>
+                    <div class="form-floating mb-3">
+                        <label for="{{ form.biography.id_for_label }}">Biography:</label>
+                        {{ form.biography.errors }}
+                        {{ form.biography }}
                     </div>
-                    <div class="row mb-3">
-                        <div class="col-md-3 d-flex align-items-center">
-                            <label for="inputDescription">Description:</label>
-                        </div>
-                        <div class="col-md-9">
-                            <textarea class="form-control" id="inputDescription" rows="5">{{ user.description }}</textarea>
-                        </div>
-                    </div>
-                    <div class="mt-4 mb-0">
-                        <a class="btn btn-primary btn-block" href="{% url 'profile' %}">&#x0003C;&#x0003C; Save and Return to Profile</a>
+                    <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                        <button class="btn btn-primary" type="submit">Save and Return to Profile</button>
                     </div>
                 </form>
             </div>
