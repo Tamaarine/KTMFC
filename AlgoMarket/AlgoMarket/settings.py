@@ -81,6 +81,10 @@ DATABASES = {
     }
 }
 
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES['default'].update(db_from_env)
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -128,4 +132,4 @@ AUTHENTICATION_BACKENDS = ('app.UserAuthBackend.CustomBackend',)
 
 AUTH_USER_MODEL = 'app.User'
 
-CSRF_TRUSTED_ORIGINS = ['https://teamalgomarket.herokuapp.com/']
+CSRF_TRUSTED_ORIGINS = ['https://teamalgomarket.herokuapp.com']

@@ -1,1 +1,2 @@
 web: python AlgoMarket/manage.py runserver 0.0.0.0:$PORT
+python AlgoMarket/manage.py migrate
