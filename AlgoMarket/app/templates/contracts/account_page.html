@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="p-2">
+    <h1>Account page</h1>
+    <p>User: {{ account.user.username }}</p>
+    <p>Address: {{ account.address }}</p>
+    <p>Created: {{ account.created }}</p>
+    <p>Balance: {{ account.balance }} microAlgos</p>
+    <br>
+
+    <h2>Transactions</h2>
+    <table style="width: 100%">
+        <tr>
+            <th>ID</th>
+            <th>Round/Type</th>
+            <th>Sender/Receiver</th>
+            <th>Amount</th>
+            <th>Note</th>
+        </tr>
+        {% for transaction in account.transactions %}
+        <tr>
+            <td rowspan="2">{{ transaction.id }}</td>
+            <td>{{ transaction.round }}</td>
+            <td>{{ transaction.sender }}</td>
+            <td rowspan="2">{{ transaction.amount }}</td>
+            <td rowspan="2">{{ transaction.note }}</td>
+        </tr>
+        <tr>
+            <td>{{ transaction.type }}</td>
+            <td>{{ transaction.receiver }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

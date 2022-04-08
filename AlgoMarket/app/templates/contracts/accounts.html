@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+<h1 class="text-center">Accounts list</h1>
+{% if accounts %}
+<ul>
+{% for account in accounts %}
+  <li><a href="{% url 'account_page' account.address %}">{{ account.address }}</a> : {{ account.balance }} microAlgos</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>There are no standalone accounts.</p>
+{% endif %}
+{% endblock %}
