@@ -129,4 +129,4 @@ AUTHENTICATION_BACKENDS = ('app.UserAuthBackend.CustomBackend',)
 
 AUTH_USER_MODEL = 'app.User'
 
-CSRF_TRUSTED_ORIGINS = ['https://teamalgomarket.herokuapp.com']
+CSRF_TRUSTED_ORIGINS = ['https://teamalgomarket.tomorines.codes', 'http://teamalgomarket.tomorines.codes']
