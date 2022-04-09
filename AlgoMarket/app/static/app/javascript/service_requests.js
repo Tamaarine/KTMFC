@@ -17,6 +17,7 @@ function getCookie(name) {
 //function to sent POST request for creating a new service
 function addService(event) {
     event.preventDefault();
+    console.log(event.target.elements.image.value)
     const data = {
         'name': event.target.elements.name.value,
         'description': event.target.elements.description.value,
