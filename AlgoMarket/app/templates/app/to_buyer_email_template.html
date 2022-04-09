@@ -1,0 +1,22 @@
+{% autoescape off %}
+Hello {{ username }}, this is Algo-Market!
+
+The seller has been contacted about your purchase. Please wait for their response!
+
+This is the detail of your purchase:
+Service Link: http://127.0.0.1:8000{% url 'store'  store_id=store_num %}
+Service Link: http://teamalgomarket.tomorine.codes{% url 'store'  store_id=store_num %}
+
+Service name: {{ service_name }}
+
+Service description: {{ service_description }}
+
+Service price: {{ service_price }}
+
+Their contact email is: {{ seller_email }}
+
+Thank you!
+
+Team Algo-Market
+
+{% endautoescape %}
