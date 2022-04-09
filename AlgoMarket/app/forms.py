@@ -1,4 +1,3 @@
-from turtle import width
 from django import forms
 from django.forms import TextInput, EmailField, Textarea
 from app.models import User, Service
