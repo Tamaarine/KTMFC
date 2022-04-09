@@ -90,6 +90,11 @@ class Transaction(models.Model):
     fulfillmentDate = models.TimeField(blank=True, null=True)
     confirmed = models.BooleanField(default=False)
 
+class ActiveSubscription(models.Model):
+    subscription = models.ForeignKey(Subscription, on_delete=models.CASCADE)
+    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE)
+    expireDate = models.TimeField()
+
 class Rating(models.Model):
     reviewer = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Service, on_delete=models.CASCADE)

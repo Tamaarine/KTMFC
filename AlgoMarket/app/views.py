@@ -1,6 +1,7 @@
+from datetime import datetime
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from .models import User, Service, Subscription, Perk, Rating, Transaction
+from .models import User, Service, Subscription, Perk, Rating, Transaction, ActiveSubscription
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from itertools import chain
 
@@ -115,16 +116,19 @@ def history(request):
     raw_transactions = Transaction.objects.filter(buyer=request.user)
     transactions = [{'date': x.startDate, 'service': x.product.name, 'creator': x.product.seller, 'price': x.price, 'id': x.id} for x in raw_transactions]
 
-    raw_subscriptions = Subscription.objects.filter()
-
+    raw_subscriptions = ActiveSubscription.objects.filter(transaction__buyer=request.user)
+    def find_tier(x, cost):
+        if cost >= x.pro_price: return 'Pro'
+        if cost >= x.premium_price: return 'Premium'
+        return 'Free'
+    def active(time):
+        if time < datetime.now().time(): return 'Inactive'
+        else: return 'Active'
+    subscriptions = [{'creator': x.subscription.seller, 'tier': find_tier(x.subscription, x.transaction.price), 'cost': x.transaction.price, 'status': active(x.expireDate)} for x in raw_subscriptions]
 
     context = {
         'transactions': transactions,
-        'subscriptions': [
-            {'creator': 'KTMcdonnell', 'tier': 'Premium', 'cost': 100, 'status': 'Active'},
-            {'creator': 'Rickster99', 'tier': 'Free', 'cost': 0, 'status': 'Active'},
-            {'creator': 'WhaleLover42', 'tier': 'Pro', 'cost': 10, 'status': 'Inactive'}
-        ]
+        'subscriptions': subscriptions
     }
     return render(request, 'app/history.html', context)
 
