@@ -116,7 +116,7 @@
                 You shall be receiving details about the purchase soon!
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal">Confirm</button>
+                <a href="{% url 'purchase' request.user.username service.id%}">Confirm</a>
             </div>
         </div>
     </div>

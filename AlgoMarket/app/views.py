@@ -89,7 +89,8 @@ def store(request, service):
         'subscription_costs': sub_costs,
         'rating': avg_rating,
         'review_count': len(ratings),
-        'reviews': ratings
+        'reviews': ratings,
+        'id': service.id
         }}
     return render(request, 'app/store.html', context)
 
