@@ -70,19 +70,9 @@ def store(request, service):
     except:
         return HttpResponse("Sorry, something failed. Please check back later")
 
-    print(service.name)
-    print(service.image_path)
-    print(service.description)
-    print(service.seller.username)
-    print(service.seller.email)
-    print(service.price)
-    print(sub_costs)
-    print(avg_rating)
-    print(len(ratings))
-    print(ratings)
-
+    
     context = {'service':{'name':service.name, 
-        'image_paths':service.image_path,
+        # 'image_paths':service.image_path,
         'description':service.description,
         'seller_username': service.seller.username,
         'email': service.seller.email,
