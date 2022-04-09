@@ -3,10 +3,8 @@
 {% if service %}
 <div class="card">
     <div class="bg-image hover-overlay ripple" data-mdb-ripple-color="light">
-        {% if service.image_path %}
-        {% with "app/assets/img/"|add:service.image_path as image_path %}
-        <img class="card-img-top " src="{% static image_path %}" alt="Card image cap">
-        {% endwith %}
+        {% if service.image %}
+        <img class="card-img-top " src="{{ service.image.url }}" alt="Card image cap">
         {% else %}
         <img class="card-img-top " src="{% static 'app/assets/img/cover.jpg' %}" alt="Card image cap">
         {% endif %}

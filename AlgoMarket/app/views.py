@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from .models import User, Service, Subscription, Perk, Rating, Transaction
+from .forms import CreateServiceForm
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from itertools import chain
 
@@ -131,7 +132,8 @@ def history(request):
 def services(request):
     service_list = Service.objects.filter(seller=request.user)
     context = {
-        'service_list': service_list
+        'service_list': service_list,
+        'create_form': CreateServiceForm()
     }
     return render(request, 'app/manage_services.html', context)
 

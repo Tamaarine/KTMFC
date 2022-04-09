@@ -8,7 +8,7 @@ from django.template.loader import render_to_string
 from .models import User, Service, Rating, Report
 from . import views
 from .errors import EmailNotVerified
-from .forms import UserLoginForm, UserRegisterForm, CreatorEssayForm, ConfirmTransactionForm, EditUserForm
+from .forms import UserLoginForm, UserRegisterForm, CreatorEssayForm, ConfirmTransactionForm, EditUserForm, CreateServiceForm
 from .tokenGenerator import token_generator
 import json
 from . import utils
@@ -142,21 +142,18 @@ def settings(request):
     if request.method == "GET":
         initial_input = {
             'first_name': request.user.first_name,
-            'last_name': request.user.last_name,
-            'biography': request.user.biography
+            'last_name': request.user.last_name
         }
+        if request.user.creator:
+            initial_input['biography'] = request.user.biography
         form = EditUserForm(initial=initial_input)
         return views.settings(request, form)
     
     if request.method == "POST":
-        form = EditUserForm(request.POST)
+        form = EditUserForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             # save the changes to the form
-            user = request.user
-            user.first_name = form.cleaned_data['first_name']
-            user.last_name = form.cleaned_data['last_name']
-            user.biography = form.cleaned_data['biography']
-            user.save()
+            form.save()
 
         return HttpResponseRedirect("/profile/" + str(request.user.username))
 
@@ -172,17 +169,24 @@ def services(request):
         return views.services(request)
 
     if request.method == "POST":
-        # create a new Service object in the database
-        data = json.loads(request.body)
-        service = Service(
-            name=data['name'],
-            seller=request.user,
-            description=data['description'],
-            price=data['price'],
-            amount_available=-1
-        )
-        service.save()
-        messages.success(request, "Service creation successful." )
+        if not request.POST.get('id', None):
+            # create a new Service object in the database based on the form inputs
+            form = CreateServiceForm(request.POST, request.FILES)
+            if form.is_valid():
+                service = form.save(commit=False)
+                service.seller = request.user
+                service.save()
+        else:
+            # edit a Service in the database based on the form inputs
+            service = Service.objects.get(pk=request.POST['id'])
+            if service.seller != request.user:
+                return HttpResponse("YOU CANNOT ONLY EDIT SERVICES THAT ARE YOURS!")
+            form = CreateServiceForm(request.POST, request.FILES, instance=service)
+            if form.is_valid():
+                service = form.save(commit=False)
+                service.approved = False
+                service.active = False
+                service.save()
         # then respond with the page with updated list
         return views.services(request)
 
@@ -192,18 +196,6 @@ def services(request):
         service = Service.objects.get(pk=data['id'])
         if service.seller != request.user:
             return HttpResponse("YOU CANNOT ONLY EDIT SERVICES THAT ARE YOURS!")
-        if data['action'] == "update-service":
-            # update the service in the database
-            print(data)
-            service.name = data['name']
-            service.description = data['description']
-            service.price = data['price']
-            service.approved = False
-            service.active = False
-            service.save()
-            messages.success(request, "Service update was successful." )
-            # then respond with a the new page to load
-            return views.services(request)
         if data['action'] == "toggle-active":
             # change the active status in the database
             service.active = not service.active
