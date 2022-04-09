@@ -7,10 +7,8 @@
     <div class="{% if selected_user.creator %}col-sm-1{% endif %}"></div>
     <div class="col-sm-3">
         <div class="d-flex flex-column align-items-center text-center border p-4">
-            {% if selected_user.image_path %}
-            {% with "app/assets/img/"|add:selected_user.image_path as image_path %}
-            <img class="rounded-circle mb-3" width="200px" src="{% static image_path %}">
-            {% endwith %}
+            {% if selected_user.image %}
+            <img class="rounded-circle mb-3" width="200px" src="{{ selected_user.image.url }}">
             {% else %}
             <img class="rounded-circle mb-3" width="200px" src="{% static 'app/assets/img/user.png' %}">
             {% endif %}
@@ -41,9 +39,11 @@
                 {% endif %}
             </dl>
             <hr style="border-color: #DDD; width: 100%">
+            {% if selected_user.creator %}
             <p class="card-text text-left w-100"><b>Biography</b></p>
             <p class="card-text text-left">{{ selected_user.biography }}</p>
             <hr style="border-color: #DDD; width: 100%">
+            {% endif %}
             <a href="{% url 'report' username=selected_user.username%}" class="btn btn-danger btn-block">Report {% if selected_user.creator %}Creator{% else %}User{% endif %}</a>
         </div>
 
