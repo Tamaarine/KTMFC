@@ -1,6 +1,7 @@
 {% autoescape off %}
 Hello {{ username }} this is Algo-Market!
 Please click on the link in order to verify your account!
+https://teamalgomarket.tomorine.codes{% url 'activate' username=username token=token %}
 http://localhost:8000{% url 'activate' username=username token=token %}
 
 You will have to login using your credentials after you have verified your email.

@@ -1,7 +1,6 @@
-from turtle import width
 from django import forms
 from django.forms import TextInput, EmailField, Textarea
-from app.models import User
+from app.models import User, Service
 from django.contrib import messages
 from django.core.validators import MaxValueValidator, MinValueValidator
 from .errors import *
@@ -65,7 +64,25 @@ class ConfirmTransactionForm(forms.Form):
     review = forms.CharField(max_length=300, required=False,
                 widget=forms.Textarea(attrs={'placeholder': 'Write your review here', 'class': 'form-control'}))
 
-class EditUserForm(forms.Form):
-    first_name = forms.CharField(label="first", max_length=20, required=True, widget=forms.TextInput())
-    last_name = forms.CharField(label="last", max_length=20, required=True, widget=forms.TextInput())
-    biography = forms.CharField(label="biography", max_length=1000, required=True, widget=forms.Textarea(attrs={'class': 'form-control'}))    
+class EditUserForm(forms.ModelForm):
+    #first_name = forms.CharField(label="first", max_length=20, required=True, widget=forms.TextInput())
+    #last_name = forms.CharField(label="last", max_length=20, required=True, widget=forms.TextInput())
+    #biography = forms.CharField(label="biography", max_length=1000, required=False, widget=forms.Textarea(attrs={'class': 'form-control'}))    
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'biography', 'image')
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'biography': forms.Textarea(attrs={'class': 'form-control', 'rows': 5})
+        }
+
+class CreateServiceForm(forms.ModelForm):
+    class Meta:
+        model = Service
+        fields = ('name', 'description', 'price', 'image')
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
+            'price': forms.TextInput(attrs={'class': 'form-control'})
+        }
