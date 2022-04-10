@@ -21,10 +21,10 @@
     <tbody>
         {% for transaction in transactions %}
         <tr>
-            <th scope="row">{{ transaction.date }}</th>
-            <td>{{ transaction.service }}</td>
-            <td>{{ transaction.creator }}</td>
-            <td>{{ transaction.cost }} ALGO</td>
+            <th scope="row">{{ transaction.startDate }}</th>
+            <td>{{ transaction.product.name }}</td>
+            <td>{{ transaction.product.seller.username }}</td>
+            <td>{{ transaction.price }} ALGO</td>
             <td><a href="/confirmation/1">Confirm Here</a></td>
         </tr>
         {% endfor %}
@@ -40,16 +40,14 @@
             <th scope="col">Creator</th>
             <th scope="col">Level</th>
             <th scope="col">Cost/mo</th>
-            <th scope="col">Status</th>
         </tr>
     </thead>
     <tbody>
         {% for subscription in subscriptions %}
         <tr>
-            <td>{{ subscription.creator }}</td>
+            <td>{{ subscription.subscription.seller.username }}</td>
             <td>{{ subscription.tier }}</td>
-            <td>{{ subscription.cost }} ALGO</td>
-            <td>{{ subscription.status }}</td>
+            <td>{{ subscription.price }} ALGO</td>
         </tr>
         {% endfor %}
     </tbody>
