@@ -1,7 +1,7 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
 
-from app.models import Service, User
+from app.models import Service, Transaction, User, Perk, Subscription
 from contracts.helpers import INITIAL_FUNDS, add_standalone_account, add_transaction, cli_passphrase_for_account, initial_funds_sender
 from contracts.models import Account
 
@@ -62,7 +62,7 @@ def purchase(request, sender, store_id):
         'store_num': store_id
     })
     to_email = service.seller.email
-    utils.email(mail_subject, message, to_email)
+    utils.email(mail_subject, to_email, message=message)
     
     mail_subject = "AlgoMarket - Service Purchase Confirmation!"
     message = render_to_string('app/to_buyer_email_template.html', {
@@ -74,6 +74,55 @@ def purchase(request, sender, store_id):
         'store_num': store_id
     })
     to_email = request.user.email
-    utils.email(mail_subject, message, to_email)
+    utils.email(mail_subject, to_email, message=message)
+
+    
+    transaction = Transaction(product=service, buyer=sender_user, price=store.price)
+    transaction.save()
     
     return redirect("accounts", request.user.username)
+    
+def pledge(request, sender, store_id, choice):
+    sender_user = get_object_or_404(User, username=sender)
+    sender_account = Account.accounts_from_user(sender_user)
+    if sender_account:
+        sender_account = sender_account[0]
+    else:
+        raise Http404("No accounts found.")
+    store = get_object_or_404(Service, id=store_id)
+    store_account = Account.accounts_from_user(store.seller)
+    
+    subs = get_object_or_404(Subscription, seller=store.seller) # Subscription costs
+    sub_cost = [0, subs.pro_price, subs.premium_price]
+    perk = get_object_or_404(Perk, service=store)
+        
+    if store_account:
+        store_account = store_account[0]
+    else:
+        raise Http404("Seller does not have account setup.")
+    error_field, error_description = add_transaction(sender_account.address, store_account.address, sender_account.passphrase, sub_cost[choice]*10000, f"store {store.id}")
+        
+    if error_field != "":
+        raise Http404(error_description)
+    
+    names = ["Free", "Pro Tier", "Premium Tier"]
+    tier_name = names[choice]
+        
+    # Sent email about the subscription purchase
+    mail_subject = "AlgoMarket - Subscription Confirmation!"
+    html_msg = render_to_string('app/subscription_purchase_email_template.html', context={
+        'total_paid': sub_cost[choice]*10000,
+        'seller': store.seller.username,
+        'buyer': sender_user.username,
+        'subscription_tier': tier_name,
+        'seller_email': store.seller.email
+    })
+    to_email = sender_user.email
+    utils.email(mail_subject, to_email, html=html_msg)
+    
+    transaction = Transaction(product=subs, buyer=sender_user, price=sub_cost[choice], tier=tier_name)
+    transaction.save()
+    
+    return redirect("accounts", request.user.username)
+    
+    

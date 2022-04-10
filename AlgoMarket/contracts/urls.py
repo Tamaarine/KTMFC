@@ -7,4 +7,5 @@ urlpatterns = [
     path('account/<str:address>', views.account_page, name="account_page"),
     path('accounts/<str:username>', views.accounts, name="accounts"),
     path('purchase/<str:sender>/<int:store_id>', views.purchase, name="purchase"),
+    path('pledge/<str:sender>/<int:store_id>/<int:choice>', views.pledge, name='pledge')
 ]
