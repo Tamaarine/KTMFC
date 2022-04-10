@@ -59,7 +59,7 @@ def store(request, service):
         if len(subs) > 0:
             sub_costs = [0, subs[0].pro_price, subs[0].premium_price]
         else:
-            sub_costs = [0, 0, 0]
+            sub_costs = None
         # get the rating information
         ratings = Rating.objects.filter(product=service)
         avg_rating = 0
@@ -67,10 +67,19 @@ def store(request, service):
             for rating in ratings:
                 avg_rating += rating.rating
             avg_rating /= len(ratings)
-    except:
+        # get the perk information
+        perk = Perk.objects.filter(service=service)
+        perk_amount = []
+        if len(perk) > 0:
+            perk = perk[0]
+            perk_amount = [perk.free_amount, perk.pro_amount, perk.premium_amount]
+        else:
+            # User did not make any perk amount for this particualr service
+            sub_costs = None
+    except Exception as e:
+        print(e)
         return HttpResponse("Sorry, something failed. Please check back later")
 
-    
     context = {'service':{'name':service.name, 
         # 'image_paths':service.image_path,
         'description':service.description,
@@ -78,6 +87,7 @@ def store(request, service):
         'email': service.seller.email,
         'cost': service.price,
         'subscription_costs': sub_costs,
+        'perk_amount': perk_amount,
         'rating': avg_rating,
         'review_count': len(ratings),
         'reviews': ratings,
@@ -104,19 +114,12 @@ def settings(request, form):
     return render(request, 'app/settings.html', {'form':form})
 
 def history(request):
-    raw_transactions = Transaction.objects.filter(buyer=request.user)
-    transactions = [{'date': x.startDate, 'service': x.product.name, 'creator': x.product.seller, 'price': x.price, 'id': x.id} for x in raw_transactions]
-
-    raw_subscriptions = Subscription.objects.filter()
-
-
+    all_transactions = Transaction.objects.filter(buyer=request.user)
+    transactions = [trans for trans in all_transactions if trans.product]
+    subscriptions = [trans for trans in all_transactions if trans.subscription]
     context = {
         'transactions': transactions,
-        'subscriptions': [
-            {'creator': 'KTMcdonnell', 'tier': 'Premium', 'cost': 100, 'status': 'Active'},
-            {'creator': 'Rickster99', 'tier': 'Free', 'cost': 0, 'status': 'Active'},
-            {'creator': 'WhaleLover42', 'tier': 'Pro', 'cost': 10, 'status': 'Inactive'}
-        ]
+        'subscriptions': subscriptions
     }
     return render(request, 'app/history.html', context)
 
