@@ -37,7 +37,14 @@ def login(request):
                 else:
                     messages.error(request, "Username/Password not valid")
             except EmailNotVerified:
-                messages.error(request, "Account email is not verified")
+                messages.error(request, "Account email is not verified, email verification resent.")
+                user = User.objects.get(username=inUsername)
+                mail_subject = "Please activate your account"
+                html_msg = render_to_string('app/email_template.html', {
+                    'username': user.username,
+                    'token': token_generator.make_token(user)
+                })
+                utils.email(mail_subject, user.email, html=html_msg)
     elif request.method == "GET":
         return views.login(request, UserLoginForm())
     return render(request, 'app/login.html', {'form': form})
@@ -60,13 +67,13 @@ def register(request):
                 user = form.save(request)
                 
                 mail_subject = "Please activate your account"
-                message = render_to_string('app/email_template.html', {
+                html_msg = render_to_string('app/email_template.html', {
                     'username': user.username,
                     'token': token_generator.make_token(user)
                 })
                 
                 to_email = form.cleaned_data['email']
-                status_code = utils.email(mail_subject, message, to_email)
+                status_code = utils.email(mail_subject, to_email, html=html_msg)
                 
                 if status_code == 200:
                     messages.success(request, 'Please check your email for account verification')
@@ -129,7 +136,8 @@ def store(request, store_id):
     try:
         service = Service.objects.get(pk=store_id)
         return views.store(request, service)
-    except:
+    except Exception as e:
+        print(e)
         return HttpResponse("No such store exists")
 
 def profile(request, username):

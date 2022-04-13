@@ -1,0 +1,36 @@
+{% extends 'email_base.html' %}
+{% load static %}
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <h1 class="text-primary">
+            Hello {{ seller }}, this is Algo-Market!
+        </h1>
+    <div>
+    <div class="row">
+        <p class="col-12">
+            Customer {{ buyer }}, has just recently purchased your service please proceed to
+            contact them via email to discuss the purchase and services. Here is their detail purchase: <br>
+        <p>
+    </div> 
+    <div class="row">
+        <a class="btn btn-primary" href="http://127.0.0.1:8000{% url 'store'  store_id=store_num %}">Service Link (Localhost)</a>
+    </div> 
+    <div class="row pt-2" >
+        <a class="btn btn-primary" href="http://teamalgomarket.tomorine.codes{% url 'store'  store_id=store_num %}">Service Link</a>
+    </div> 
+        Service name: {{ service_name }} <br>
+
+        Service description: {{ service_description }} <br>
+
+        Service price: {{ service_price }} <br>
+
+        Their contact email is: {{ buyer_email }} <br>
+
+        Thank you! <br>
+
+        Team Algo-Market <br>
+</div>
+
+{% endblock %}

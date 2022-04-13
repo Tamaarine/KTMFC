@@ -1,13 +1,35 @@
-{% autoescape off %}
-Hello {{ username }} this is Algo-Market!
-Please click on the link in order to verify your account!
-https://teamalgomarket.tomorine.codes{% url 'activate' username=username token=token %}
-http://localhost:8000{% url 'activate' username=username token=token %}
+{% extends 'email_base.html' %}
+{% load static %}
 
-You will have to login using your credentials after you have verified your email.
+{% block body %}
+<div class="container">
+    <div class="row">
+        <h1 class="p-2">Hello Welcome to AlgoMarket!</h1>
+    </div>
+    <div class="row">
+        <p>Before you begin using our service here is some important things to note</p>
+        
+        <table class="table">
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>After you register your account, if you wish to become a creator you must apply to become one by clicking the Become a Creator button on the main page. There you will be required to submit a form to describe the type of services you will be proving on our platform. It will be manually reviewed by our admin before you are able to have access to creator only pages. </td>
+              </tr>
+              <tr>
+                  <th scope="row">2</th>
+                <td>After you register your account, if you wish to purchase services/subscriptions you must create a wallet in your Settings page. You can access your Settings page by clicking on your username on the top right corner and click on Settings. If you scroll down from there you will see Account tab, if you click See Accounts you should see nothing. In order to create an Algorand wallet press "Create Account". After a while you will be able to see the account that is created. By default everybody starts with 1000 Algorand in our private network</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Lastly, if you understand everything listed above, please click on the button below to verify your account :). <br> Happy Algoing</td>
+              </tr>
+            </tbody>
+        </table>
+        
+    </div>
+    <div class="row">
+        <a href="http://teamalgomarket.tomorine.codes{% url 'activate' username=username token=token %}" class="btn btn-primary col-12">Verify Account</a>
+    </div>
+</div>
 
-Thank you!
-
-Team Algo-Market
-
-{% endautoescape %}
+{% endblock %}

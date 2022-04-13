@@ -1,0 +1,16 @@
+{% extends 'email_base.html' %}
+{% load static %}
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <h1 class="text-primary">Thank you for your subscription purchase! {{ buyer }}</h1>    
+    </div>
+    <div class="row">
+        <h3>You Paid ${{ total_paid }} to {{ seller }} for a monthly subscription</h1>
+        <h3>Your subscription tier is {{ subscription_tier }}</h2>
+        <h3>Please contact the seller via their email regarding your subscription: {{ seller_email }}</h2>
+    </div>
+</div>
+
+{% endblock %}

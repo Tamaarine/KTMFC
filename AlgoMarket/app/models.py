@@ -86,11 +86,12 @@ class Perk(models.Model):
     premium_amount = models.IntegerField(default=0)
     
 class Transaction(models.Model):
-    id = models.IntegerField(primary_key=True)
-    product = models.ForeignKey(Service, on_delete=models.CASCADE)    
-    buyer = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Service, on_delete=models.DO_NOTHING, blank=True, null=True)    
+    subscription = models.ForeignKey(Subscription, on_delete=models.DO_NOTHING, blank=True, null=True)
+    tier = models.CharField(max_length=200, default="Placeholder")
+    buyer = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     price = models.IntegerField()
-    startDate = models.TimeField()
+    startDate = models.TimeField(auto_now_add=True)
     fulfillmentDate = models.TimeField(blank=True, null=True)
     confirmed = models.BooleanField(default=False)
 
