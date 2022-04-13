@@ -1,23 +1,36 @@
-{% autoescape off %}
-Hello {{ seller }}, this is Algo-Market!
+{% extends 'email_base.html' %}
+{% load static %}
+{% block body %}
 
-Customer {{ buyer }}, has just recently purchased your service please proceed to
-contact them via email to discuss the purchase and services.
+<div class="container">
+    <div class="row">
+        <h1 class="text-primary">
+            Hello {{ seller }}, this is Algo-Market!
+        </h1>
+    <div>
+    <div class="row">
+        <p class="col-12">
+            Customer {{ buyer }}, has just recently purchased your service please proceed to
+            contact them via email to discuss the purchase and services. Here is their detail purchase: <br>
+        <p>
+    </div> 
+    <div class="row">
+        <a class="btn btn-primary" href="http://127.0.0.1:8000{% url 'store'  store_id=store_num %}">Service Link (Localhost)</a>
+    </div> 
+    <div class="row pt-2" >
+        <a class="btn btn-primary" href="http://teamalgomarket.tomorine.codes{% url 'store'  store_id=store_num %}">Service Link</a>
+    </div> 
+        Service name: {{ service_name }} <br>
 
-Here is the detail of their purchase:
-Service Link: http://127.0.0.1:8000{% url 'store'  store_id=store_num %}
-Service Link: http://teamalgomarket.tomorine.codes{% url 'store'  store_id=store_num %}
+        Service description: {{ service_description }} <br>
 
-Service name: {{ service_name }}
+        Service price: {{ service_price }} <br>
 
-Service description: {{ service_description }}
+        Their contact email is: {{ buyer_email }} <br>
 
-Service price: {{ service_price }}
+        Thank you! <br>
 
-Their contact email is: {{ buyer_email }}
+        Team Algo-Market <br>
+</div>
 
-Thank you!
-
-Team Algo-Market
-
-{% endautoescape %}
+{% endblock %}
