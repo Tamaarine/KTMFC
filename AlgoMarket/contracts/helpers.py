@@ -11,7 +11,7 @@ from algosdk.future.transaction import AssetConfigTxn, PaymentTxn
 from algosdk.v2client import algod, indexer
 from algosdk.wallet import Wallet
 
-INITIAL_FUNDS = 1000000000  # in microAlgos
+INITIAL_FUNDS = 100_000_000  # in microAlgos
 
 
 ## SANDBOX
@@ -34,7 +34,8 @@ def _sandbox_executable():
     sandbox_dir = os.environ.get("SANDBOX_DIR") or str(
         Path(__file__).resolve().parent.parent.parent / "sandbox"
     )
-    return sandbox_dir + "/sandbox"
+    # return sandbox_dir + "/sandbox"
+    return '/home/tamarine/sandbox/sandbox'
 
 
 def cli_passphrase_for_account(address):

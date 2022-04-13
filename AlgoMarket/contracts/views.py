@@ -62,7 +62,7 @@ def purchase(request, sender, store_id):
         'store_num': store_id
     })
     to_email = service.seller.email
-    utils.email(mail_subject, to_email, message=message)
+    utils.email(mail_subject, to_email, html=message)
     
     mail_subject = "AlgoMarket - Service Purchase Confirmation!"
     message = render_to_string('app/to_buyer_email_template.html', {
@@ -74,7 +74,7 @@ def purchase(request, sender, store_id):
         'store_num': store_id
     })
     to_email = request.user.email
-    utils.email(mail_subject, to_email, message=message)
+    utils.email(mail_subject, to_email, html=message)
 
     
     transaction = Transaction(product=service, buyer=sender_user, price=store.price)
