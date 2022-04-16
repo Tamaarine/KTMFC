@@ -15,11 +15,11 @@ INITIAL_FUNDS = 100_000_000  # in microAlgos
 
 
 ## SANDBOX
-def _call_sandbox_command(*args):
+def _call_sandbox_command(*args, file=subprocess.PIPE):
     """Call and return sandbox command composed from provided arguments."""
     return subprocess.Popen(
         [_sandbox_executable(), *args],
-        stdout=subprocess.PIPE,
+        stdout=file,
         stderr=subprocess.PIPE,
     )
 
@@ -41,8 +41,13 @@ def _sandbox_executable():
 def cli_passphrase_for_account(address):
     """Return passphrase for provided address."""
     process = _call_sandbox_command("goal", "account", "export", "-a", address)
-    passphrase = ""
-    output = [line for line in io.TextIOWrapper(process.stdout)]
+    with open('output.txt', 'a') as f:
+        process = _call_sandbox_command("goal", "account", "export", "-a", address, file=f)
+        process.wait()
+        passphrase = ""
+    with open('output.txt', 'r') as f:
+        # output = [line for line in io.TextIOWrapper(process.stdout)]
+        output = [f.readlines()[-1]]
     for line in output:
         parts = line.split('"')
         if len(parts) > 1:
