@@ -12,11 +12,6 @@
 
 {% block card_body %}
 <form method="POST" action=""> {% csrf_token %}
-    <div class="form-check mb-3">
-        {{ form.confirm.errors }}
-        {{ form.confirm }}
-        <label class="form-check-label" for="form.confirm.id_for_label">Check Here to Confirm Receipt of Your Service</label>
-    </div>
     <div class="form-floating mb-3">
         <label for="{{ form.rating.id_for_label }}">Rating</label>
         {{ form.rating.errors }}

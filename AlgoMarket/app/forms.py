@@ -58,7 +58,6 @@ class CreatorEssayForm(forms.Form):
                 widget=forms.Textarea(attrs={'placeholder': 'Share your work experience, projects, or area of expertise', 'class': 'form-control is-invalid', 'type': 'password'}))
 
 class ConfirmTransactionForm(forms.Form):
-    confirm = forms.BooleanField(label="Confirm")
     rating = forms.IntegerField(label="Rating", required=False,
                 validators=[MaxValueValidator(5), MinValueValidator(1)])
     review = forms.CharField(max_length=300, required=False,

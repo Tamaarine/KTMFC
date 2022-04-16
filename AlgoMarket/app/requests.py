@@ -296,17 +296,10 @@ def report(request, username):
 def confirmation(request, transaction_id):
     transaction = Transaction.objects.get(pk=transaction_id)
     if transaction.buyer != request.user:
-        return HttpResponse("ONLY BUYERS CAN CONFIRM THEIR TRANSACTIONS!")
+        return HttpResponse("ONLY BUYERS CAN REVIEW THEIR TRANSACTIONS!")
     if request.method == "POST":
-        print("POSTING")
         form = ConfirmTransactionForm(request.POST)
         if form.is_valid():
-            # insert changing the transaction to complete here
-            if form.cleaned_data['confirm'] and not transaction.confirmed:
-                transaction.confirmed = form.cleaned_data['confirm']
-                transaction.fulfillmentDate = datetime.datetime.now()
-                transaction.save()
-
             # insert adding the review to the DB here
             service = transaction.product
             reviewer = transaction.buyer
