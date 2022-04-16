@@ -34,7 +34,7 @@
                         </div>
                     </div>
                     <div class="col-sm-4">
-                        <div class="d-flex flex-column align-items-center text-center">
+                        <div>
                             {% if user.image %}
                             <img class="rounded-circle mb-3" width="200px" src="{{ user.image.url }}">
                             {% else %}
@@ -53,14 +53,6 @@
             </div>
             <div class="col-md-10">
                 <a class="btn btn-primary" href="{% url 'password' %}">Change Password</a>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-md-2 d-flex align-items-center">
-                <p class="m-0">Crypto Wallet:</p>
-            </div>
-            <div class="col-md-10">
-                <button class="btn btn-primary" data-toggle="modal" data-target="#linkwallet">Link a Wallet</button>
             </div>
         </div>
         {% if user.creator %}
@@ -104,12 +96,6 @@
 <div class="modal fade" id="linkwallet" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="subscriptionConfirmLabel">Linking your Algorand Wallet</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
             <form class="m-3">
                 <div class="form-group">
                     <label for="exampleInputEmail1">Wallet Address</label>
