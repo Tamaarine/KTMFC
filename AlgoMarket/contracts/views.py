@@ -80,7 +80,7 @@ def purchase(request, sender, store_id):
     transaction = Transaction(product=service, buyer=sender_user, price=store.price)
     transaction.save()
     
-    return redirect("accounts", request.user.username)
+    return redirect("history")
     
 def pledge(request, sender, store_id, choice):
     sender_user = get_object_or_404(User, username=sender)
@@ -120,9 +120,9 @@ def pledge(request, sender, store_id, choice):
     to_email = sender_user.email
     utils.email(mail_subject, to_email, html=html_msg)
     
-    transaction = Transaction(product=subs, buyer=sender_user, price=sub_cost[choice], tier=tier_name)
+    transaction = Transaction(subscription=subs, buyer=sender_user, price=sub_cost[choice], tier=tier_name)
     transaction.save()
     
-    return redirect("accounts", request.user.username)
+    return redirect("history")
     
     
