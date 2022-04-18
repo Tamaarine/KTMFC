@@ -98,7 +98,7 @@ def activate(request, username, token):
     if user is not None and token_generator.check_token(user, token):
         user.is_active = True
         user.save()
-        return HttpResponse("Thank you for verifying your email!")
+        return render(request, 'app/activate_email.html')
     elif user.is_active:
         return HttpResponse("User is already activated!")
     else:
