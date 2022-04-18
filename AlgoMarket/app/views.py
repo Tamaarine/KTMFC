@@ -29,7 +29,6 @@ def password(request):
 
 def search(request):
     query = request.GET.get('sch')
-    
     if query is None:
         return render(request, 'app/index.html',)
         
