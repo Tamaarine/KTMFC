@@ -42,9 +42,11 @@
             {% if selected_user.creator %}
             <p class="card-text text-left w-100"><b>Biography</b></p>
             <p class="card-text text-left">{{ selected_user.biography }}</p>
-            <hr style="border-color: #DDD; width: 100%">
             {% endif %}
+            {% if user.username != selected_user.username %}
+            <hr style="border-color: #DDD; width: 100%">
             <a href="{% url 'report' username=selected_user.username%}" class="btn btn-danger btn-block">Report {% if selected_user.creator %}Creator{% else %}User{% endif %}</a>
+            {% endif %}
         </div>
 
     </div>
