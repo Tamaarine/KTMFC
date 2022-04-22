@@ -5,6 +5,16 @@
 <div class="container">
     <div class="row py-3">
         <div class="col" id="main">
+            {% for message in messages %}
+            <div class="container-fluid p-0">
+                <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="True">&times;</span>
+                    </button>
+                    {{ message }}
+                </div>
+            </div>
+            {% endfor %}
             <h1>{{ service.name }}</h1>
             <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
@@ -91,14 +101,14 @@
                     </div>
                 </div>
                 {% endif %}
-                <div class="menu sticky-top sticky-padding p-3 bg-light">
+                <!-- <div class="menu sticky-top sticky-padding p-3 bg-light">
                     <div class="nav flex-column">
                         <a href="#description" class="nav-link pl-0">Item Description</a>
                         <a href="#examplework" class="nav-link pl-0">Example Work</a>
                         <a href="#contact" class="nav-link pl-0">Contact Seller</a>
                         <a href="#reviews" class="nav-link pl-0">Review</a>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
