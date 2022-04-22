@@ -9,9 +9,14 @@ from app.utils import *
 import app.utils as utils
 from django.template.loader import render_to_string
 
+from django.contrib import messages
+
 # Create your views here.
 def create_account(request, username):
     user = get_object_or_404(User, username=username)
+    accounts = Account.objects.filter(user=user)
+    if len(accounts) >= 1:
+        return redirect('accounts', username)
     private_key, address = add_standalone_account()
     account = Account.objects.create(user=user, address=address, private_key=private_key)
 
@@ -24,8 +29,9 @@ def create_account(request, username):
 def accounts(request, username):
     user = get_object_or_404(User, username=username)
     accounts = Account.objects.filter(user=user)
-
-    return render(request, "contracts/accounts.html", context={"accounts": accounts})
+    if len(accounts) > 0:
+        balance = accounts[0].balance() / 10000
+    return render(request, "contracts/accounts.html", context={"accounts": accounts, 'balance': balance})
 
 def account_page(request, address):
     context = {"account": Account.instance_from_address(address)}
@@ -37,46 +43,30 @@ def purchase(request, sender, store_id):
     if sender_account:
         sender_account = sender_account[0]
     else:
-        raise Http404("No accounts found.")
+        messages.error(request, "This account has no account please set up an account first before purchasing!")
+        return redirect("profile", sender_user.username)
     store = get_object_or_404(Service, id=store_id)
     store_account = Account.accounts_from_user(store.seller)
     if store_account:
         store_account = store_account[0]
     else:
         raise Http404("Seller does not have account setup.")
+    
+    if sender_account.balance() < store.price * 10000:
+        messages.error(request, "You do not have enough Algos to buy this service!")
+        return redirect("store", store_id)
+    
     error_field, error_description = add_transaction(sender_account.address, store_account.address, sender_account.passphrase, store.price*10000, f"store {store.id}")
     if error_field != "":
-        raise Http404(error_description)
+        messages.error(request, "Indexer might have died.")
+        return redirect("profile", sender_user.username)
         
-    # Add email to notify the seller about the purchase
     service = Service.objects.get(pk=store_id)
+    # Email notifications
+    service_b_notification(request, service, store_id) # to buyer
+    service_s_notification(request, service, store_id) # to seller
     
-    mail_subject = "AlgoMarket - A Customer Has Purchase Your Service!"
-    message = render_to_string('app/to_seller_email_template.html', {
-        'seller': service.seller.username,
-        'buyer': request.user.username,
-        'buyer_email': request.user.email,
-        'service_name': service.name,
-        'service_description': service.description,
-        'service_price': service.price,
-        'store_num': store_id
-    })
-    to_email = service.seller.email
-    utils.email(mail_subject, to_email, html=message)
-    
-    mail_subject = "AlgoMarket - Service Purchase Confirmation!"
-    message = render_to_string('app/to_buyer_email_template.html', {
-        'username': request.user.username,
-        'seller_email': service.seller.email,
-        'service_name': service.name,
-        'service_description': service.description,
-        'service_price': service.price,
-        'store_num': store_id
-    })
-    to_email = request.user.email
-    utils.email(mail_subject, to_email, html=message)
-
-    
+    # Save transactions in buyer history
     transaction = Transaction(product=service, buyer=sender_user, price=store.price)
     transaction.save()
     
@@ -88,7 +78,8 @@ def pledge(request, sender, store_id, choice):
     if sender_account:
         sender_account = sender_account[0]
     else:
-        raise Http404("No accounts found.")
+        messages.error(request, "This account has no account please set up an account first before subscribing!")
+        return redirect("profile", sender_user.username)
     store = get_object_or_404(Service, id=store_id)
     store_account = Account.accounts_from_user(store.seller)
     
@@ -99,27 +90,25 @@ def pledge(request, sender, store_id, choice):
     if store_account:
         store_account = store_account[0]
     else:
-        raise Http404("Seller does not have account setup.")
+        messages.error(request, "The store owner does not have an account set up!")
+        return redirect("store", store_id)
+    
+    if sender_account.balance() < sub_cost[choice] * 10000:
+        messages.error(request, "You do not have enough Algos to buy this subscription!")
+        return redirect("store", store_id)
     error_field, error_description = add_transaction(sender_account.address, store_account.address, sender_account.passphrase, sub_cost[choice]*10000, f"store {store.id}")
         
     if error_field != "":
-        raise Http404(error_description)
+        messages.error(request, "Indexer might have died.")
+        return redirect("profile", sender_user.username)
     
     names = ["Free", "Pro Tier", "Premium Tier"]
     tier_name = names[choice]
         
-    # Sent email about the subscription purchase
-    mail_subject = "AlgoMarket - Subscription Confirmation!"
-    html_msg = render_to_string('app/subscription_purchase_email_template.html', context={
-        'total_paid': sub_cost[choice]*10000,
-        'seller': store.seller.username,
-        'buyer': sender_user.username,
-        'subscription_tier': tier_name,
-        'seller_email': store.seller.email
-    })
-    to_email = sender_user.email
-    utils.email(mail_subject, to_email, html=html_msg)
+    # Email notifications
+    subscription_b_notification(store, sender_user, sub_cost[choice], tier_name)
     
+    # Save transactions
     transaction = Transaction(subscription=subs, buyer=sender_user, price=sub_cost[choice], tier=tier_name)
     transaction.save()
     
