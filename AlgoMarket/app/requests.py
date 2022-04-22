@@ -1,11 +1,12 @@
 import datetime
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from .models import Transaction, User, Service, Subscription, Perk
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib import messages
 from django.template.loader import render_to_string
 from .models import User, Service, Rating, Report
+from contracts.models import Account
 from . import views
 from .errors import EmailNotVerified
 from .forms import UserLoginForm, UserRegisterForm, CreatorEssayForm, ConfirmTransactionForm, EditUserForm, CreateServiceForm
@@ -145,21 +146,26 @@ def profile(request, username):
 
 def settings(request):
     if request.method == "GET":
+        account_exist = False
+        user = User.objects.filter(username=request.user.username)[0]
+        accounts = Account.objects.filter(user=user)
+        
+        if len(accounts) >= 1:
+            account_exist = True
         initial_input = {
             'first_name': request.user.first_name,
-            'last_name': request.user.last_name
+            'last_name': request.user.last_name,
         }
         if request.user.creator:
             initial_input['biography'] = request.user.biography
         form = EditUserForm(initial=initial_input)
-        return views.settings(request, form)
+        return views.settings(request, form, account_exist=account_exist)
     
     if request.method == "POST":
         form = EditUserForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             # save the changes to the form
             form.save()
-
         return HttpResponseRedirect("/profile/" + str(request.user.username))
 
 def history(request):
@@ -193,7 +199,7 @@ def services(request):
                 service.active = False
                 service.save()
         # then respond with the page with updated list
-        return views.services(request)
+        return redirect('services')
 
     if request.method == "PUT":
         # find the appropriate Service object in the database
@@ -277,6 +283,8 @@ def report(request, username):
         return views.report(request, username, service_list)
     
     if request.method == "POST":
+        if request.user.username == username:
+            return views.profile(request, username)
         try:
             form = request.POST
             print("1")
