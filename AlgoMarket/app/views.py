@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render
 from .models import User, Service, Subscription, Perk, Rating, Transaction
 from .forms import CreateServiceForm
@@ -44,7 +44,8 @@ def search(request):
     total_services = set(total_services)
     service_list = []
     for service in total_services:
-        service_list.append(service)
+        if service.approved and service.active:
+            service_list.append(service)
     context = {
         'service_list': service_list
     }
@@ -95,7 +96,12 @@ def store(request, service):
     return render(request, 'app/store.html', context)
 
 def profile(request, username):
-    service_list = Service.objects.filter(seller=request.user, approved=True, active=True)
+    seller = User.objects.filter(username=username)
+    if seller:
+        seller = seller[0]
+    else:
+        raise Http404("No seller exists")
+    service_list = Service.objects.filter(seller=seller, approved=True, active=True)
     try:
         subscription = Subscription.objects.get(pk=request.user, approved=True)
     except Subscription.DoesNotExist:
@@ -109,8 +115,8 @@ def profile(request, username):
     }
     return render(request, 'app/profile.html', context)
 
-def settings(request, form):
-    return render(request, 'app/settings.html', {'form':form})
+def settings(request, form, account_exist=False):
+    return render(request, 'app/settings.html', {'form':form, 'account_exist': account_exist})
 
 def history(request):
     all_transactions = Transaction.objects.filter(buyer=request.user)

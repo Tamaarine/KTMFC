@@ -6,6 +6,16 @@
 <div class="row d-flex justify-content-center mx-5 my-5">
     <div class="{% if selected_user.creator %}col-sm-1{% endif %}"></div>
     <div class="col-sm-3">
+        {% for message in messages %}
+        <div class="container-fluid p-0">
+            <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="True">&times;</span>
+                </button>
+                {{ message }}
+            </div>
+        </div>
+        {% endfor %}
         <div class="d-flex flex-column align-items-center text-center border p-4">
             {% if selected_user.image %}
             <img class="rounded-circle mb-3" width="200px" src="{{ selected_user.image.url }}">

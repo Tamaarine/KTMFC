@@ -86,7 +86,9 @@
                 <p class="m-0">Account:</p>
             </div>
             <div class="col-md-10">
+                {% if not account_exist %}
                 <a class="btn btn-primary" href="{% url 'create_account' request.user.username %}">Create Account</a>
+                {% endif %}
                 <a class="btn btn-primary" href="{% url 'accounts' request.user.username %}">See Accounts</a>
             </div>
         </div>

@@ -6,7 +6,7 @@
 {% if accounts %}
 <ul>
 {% for account in accounts %}
-  <li><a href="{% url 'account_page' account.address %}">{{ account.address }}</a> : {{ account.balance }} microAlgos</li>
+  <li><a href="{% url 'account_page' account.address %}">{{ account.address }}</a> : {{ balance }} Algos</li>
 {% endfor %}
 </ul>
 {% else %}
