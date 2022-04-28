@@ -15,7 +15,7 @@
             <th scope="col">Service</th>
             <th scope="col">Creator</th>
             <th scope="col">Price</th>
-            <th scope="col">Confirmation</th>
+            <th scope="col">Review</th>
         </tr>
     </thead>
     <tbody>
@@ -25,7 +25,11 @@
             <td>{{ transaction.product.name }}</td>
             <td>{{ transaction.product.seller.username }}</td>
             <td>{{ transaction.price }} ALGO</td>
-            <td><a href="{% url 'confirmation' transaction_id=transaction.id%}">Confirm Here</a></td>
+            {% if transaction.confirmed %}
+            <td><a">Already reviewed</a></td>
+            {% else %}
+            <td><a href="{% url 'confirmation' transaction_id=transaction.id%}">Review Here</a></td>
+            {% endif %}
         </tr>
         {% endfor %}
     </tbody>

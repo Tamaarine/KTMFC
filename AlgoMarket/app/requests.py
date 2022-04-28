@@ -313,10 +313,11 @@ def confirmation(request, transaction_id):
             reviewer = transaction.buyer
             rating = Rating(reviewer=reviewer, product=service, description=form.cleaned_data['review'], rating=form.cleaned_data['rating'])
             rating.save()
+            transaction.confirmed = True
+            transaction.save()
             return HttpResponseRedirect("/store/" + str(service.id))
         else:
             return views.confirmation(request, transaction_id, ConfirmTransactionForm())
     elif request.method == "GET":
-        print("GETTING")
         return views.confirmation(request, transaction_id, ConfirmTransactionForm())
     return views.confirmation(request, transaction_id, form)
