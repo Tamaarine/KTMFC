@@ -304,7 +304,11 @@ def report(request, username):
 def confirmation(request, transaction_id):
     transaction = Transaction.objects.get(pk=transaction_id)
     if transaction.buyer != request.user:
-        return HttpResponse("ONLY BUYERS CAN REVIEW THEIR TRANSACTIONS!")
+        messages.error(request, "ONLY BUYERS CAN REVIEW THEIR TRANSACTIONS!")
+        return redirect('history')
+    if transaction.confirmed:
+        messages.error(request, "The transaction has already been reviewed")
+        return redirect('history')
     if request.method == "POST":
         form = ConfirmTransactionForm(request.POST)
         if form.is_valid():
