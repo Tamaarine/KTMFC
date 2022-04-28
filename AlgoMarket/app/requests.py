@@ -134,6 +134,9 @@ def search(request):
     return views.search(request)
 
 def store(request, store_id):
+    if not request.user.is_authenticated:
+        messages.error(request, "Please login to view the stores")
+        return redirect("login")
     try:
         service = Service.objects.get(pk=store_id)
         return views.store(request, service)
