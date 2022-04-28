@@ -321,6 +321,7 @@ def confirmation(request, transaction_id):
             transaction.save()
             return HttpResponseRedirect("/store/" + str(service.id))
         else:
+            messages.error(request, "Please enter in rating between 1 and 5")
             return views.confirmation(request, transaction_id, ConfirmTransactionForm())
     elif request.method == "GET":
         return views.confirmation(request, transaction_id, ConfirmTransactionForm())
