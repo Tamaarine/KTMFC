@@ -17,7 +17,7 @@ This project is hosted in a Virtual Machine. NGINX web server and WSGI is used t
 * Thank you stackoverflow for the countless answers that you have provided for our obscure questions.
 * Thank you Shuai for making this class an interesting and relevant course. 
 
-# <a name="team"></a>Acknowledgement
+# <a name="team"></a>Team Members
 1. Ricky Lu
 2. Sydney Walker
 3. Wei Wen Zhou
