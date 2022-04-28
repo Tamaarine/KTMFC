@@ -47,7 +47,7 @@ class User(AbstractUser):
     creator = models.BooleanField(default=False)
     services_completed = models.IntegerField(default=0)
     subscriber_count = models.IntegerField(default=0)
-    biography = models.CharField(max_length=1000)
+    biography = models.CharField(max_length=1000, blank=True)
     is_superuser = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     

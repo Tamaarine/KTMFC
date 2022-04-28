@@ -29,9 +29,11 @@ def create_account(request, username):
 def accounts(request, username):
     user = get_object_or_404(User, username=username)
     accounts = Account.objects.filter(user=user)
+    context = {}
     if len(accounts) > 0:
         balance = accounts[0].balance() / 10000
-    return render(request, "contracts/accounts.html", context={"accounts": accounts, 'balance': balance})
+        context = {"accounts": accounts, 'balance': balance}
+    return render(request, "contracts/accounts.html", context=context)
 
 def account_page(request, address):
     context = {"account": Account.instance_from_address(address)}
@@ -63,8 +65,8 @@ def purchase(request, sender, store_id):
         
     service = Service.objects.get(pk=store_id)
     # Email notifications
-    service_b_notification(request, service, store_id) # to buyer
-    service_s_notification(request, service, store_id) # to seller
+    service_buyer_notification(request, service, store_id) # to buyer
+    service_seller_notification(request, service, store_id) # to seller
     
     # Save transactions in buyer history
     transaction = Transaction(product=service, buyer=sender_user, price=store.price)

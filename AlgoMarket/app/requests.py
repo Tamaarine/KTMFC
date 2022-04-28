@@ -304,7 +304,11 @@ def report(request, username):
 def confirmation(request, transaction_id):
     transaction = Transaction.objects.get(pk=transaction_id)
     if transaction.buyer != request.user:
-        return HttpResponse("ONLY BUYERS CAN REVIEW THEIR TRANSACTIONS!")
+        messages.error(request, "ONLY BUYERS CAN REVIEW THEIR TRANSACTIONS!")
+        return redirect('history')
+    if transaction.confirmed:
+        messages.error(request, "The transaction has already been reviewed")
+        return redirect('history')
     if request.method == "POST":
         form = ConfirmTransactionForm(request.POST)
         if form.is_valid():
@@ -313,10 +317,12 @@ def confirmation(request, transaction_id):
             reviewer = transaction.buyer
             rating = Rating(reviewer=reviewer, product=service, description=form.cleaned_data['review'], rating=form.cleaned_data['rating'])
             rating.save()
+            transaction.confirmed = True
+            transaction.save()
             return HttpResponseRedirect("/store/" + str(service.id))
         else:
+            messages.error(request, "Please enter in rating between 1 and 5")
             return views.confirmation(request, transaction_id, ConfirmTransactionForm())
     elif request.method == "GET":
-        print("GETTING")
         return views.confirmation(request, transaction_id, ConfirmTransactionForm())
     return views.confirmation(request, transaction_id, form)

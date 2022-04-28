@@ -5,6 +5,16 @@
 {% block body %}
 
 {% center col-sm-8 my-5 %}
+{% for message in messages %}
+<div class="container-fluid p-0">
+<div class="alert {{ message.tags }} alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="True">&times;</span>
+    </button>
+    {{ message }}
+</div>
+</div>
+{% endfor %}
 <h1 class="flex-grow-1 m-0">Transaction History</h1>
 <hr style="border-color: #DDD; width: 100%">
 {% if transactions %}
@@ -15,7 +25,7 @@
             <th scope="col">Service</th>
             <th scope="col">Creator</th>
             <th scope="col">Price</th>
-            <th scope="col">Confirmation</th>
+            <th scope="col">Review</th>
         </tr>
     </thead>
     <tbody>
@@ -25,7 +35,11 @@
             <td>{{ transaction.product.name }}</td>
             <td>{{ transaction.product.seller.username }}</td>
             <td>{{ transaction.price }} ALGO</td>
-            <td><a href="{% url 'confirmation' transaction_id=transaction.id%}">Confirm Here</a></td>
+            {% if transaction.confirmed %}
+            <td><a">Already reviewed</a></td>
+            {% else %}
+            <td><a href="{% url 'confirmation' transaction_id=transaction.id%}">Review Here</a></td>
+            {% endif %}
         </tr>
         {% endfor %}
     </tbody>
