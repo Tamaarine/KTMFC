@@ -71,8 +71,10 @@ def purchase(request, sender, store_id):
     # Save transactions in buyer history
     transaction = Transaction(product=service, buyer=sender_user, price=store.price)
     transaction.save()
+
+    messages.success(request, "Service purchase successful, please check your history for transaction")
     
-    return redirect("history")
+    return redirect("store", store_id)
     
 def pledge(request, sender, store_id, choice):
     sender_user = get_object_or_404(User, username=sender)
@@ -113,7 +115,9 @@ def pledge(request, sender, store_id, choice):
     # Save transactions
     transaction = Transaction(subscription=subs, buyer=sender_user, price=sub_cost[choice], tier=tier_name)
     transaction.save()
+
+    messages.success(request, "Subscription purchase successful, please check your history for transaction")
     
-    return redirect("history")
+    return redirect("store", store_id)
     
     
