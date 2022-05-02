@@ -77,7 +77,6 @@ def store(request, service):
             # User did not make any perk amount for this particualr service
             sub_costs = None
     except Exception as e:
-        print(e)
         return HttpResponse("Sorry, something failed. Please check back later")
 
     context = {'service':{'name':service.name, 
