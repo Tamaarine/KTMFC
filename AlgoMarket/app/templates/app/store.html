@@ -45,7 +45,7 @@
             {% endwith %}
             <h3 class="mt-4 link" id="reviews">Reviews</h3>
             <div class="d-flex justify-content-left">
-                <div class="ratings"> <span class="product-rating">{{ service.rating }}</span><span>/5</span>
+                <div class="ratings"> <span class="product-rating">{{ service.rating |floatformat:2 }}</span><span>/5</span>
                     <div>
                         {% with service.rating|floatformat:0 as stars %}
                         {% with ''|center:stars as range %}
