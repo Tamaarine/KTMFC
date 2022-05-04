@@ -1,9 +1,10 @@
 from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import User, Service, Subscription, Perk, Rating, Transaction
 from .forms import CreateServiceForm
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from itertools import chain
+from django.contrib import messages
 
 def index(request):
     return render(request, 'app/index.html')
@@ -96,6 +97,10 @@ def store(request, service):
     return render(request, 'app/store.html', context)
 
 def profile(request, username):
+    if not request.user.is_authenticated:
+        messages.error(request, "Please login before visiting a profile")
+        return redirect("login")
+        
     seller = User.objects.filter(username=username)
     if seller:
         seller = seller[0]
