@@ -5,7 +5,7 @@ import os
 
 key = os.environ.get('MAILGUN')
 
-def email(mail_subject, to_email,message=None, html=None):
+def email(mail_subject, to_email, message=None, html=None):
     if message:
         ret = requests.post(
             "https://api.mailgun.net/v3/mg.tomorine.codes/messages",

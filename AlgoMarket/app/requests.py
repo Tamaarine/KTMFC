@@ -84,7 +84,6 @@ def register(request):
                 return render(request, 'app/register.html', {'form': UserRegisterForm()})
             except Exception as e:
                 # Error handled inside save don't need to do anything
-                print(e)
                 pass
     elif request.method == "GET":
         return views.register(request, UserRegisterForm())
@@ -107,10 +106,8 @@ def activate(request, username, token):
 
 def register_creator(request):
     if request.user.is_authenticated:
-        print("user is authenticated")
         if request.method == "GET":
             # Return the register creator page view
-            print("is a get")
             form = CreatorEssayForm()
             return render(request, 'app/register_creator.html', {'form':form})
         elif request.method == "POST":
@@ -141,7 +138,6 @@ def store(request, store_id):
         service = Service.objects.get(pk=store_id)
         return views.store(request, service)
     except Exception as e:
-        print(e)
         return HttpResponse("No such store exists")
 
 def profile(request, username):
@@ -290,15 +286,10 @@ def report(request, username):
             return views.profile(request, username)
         try:
             form = request.POST
-            print("1")
             seller = User.objects.get(pk=username)
-            print("2")
             service = Service.objects.filter(seller=seller, name=form.get('service'))
-            print("3")
             report = Report(reporter=request.user, service=service[0], description=form.get('description'))
-            print("4")
             report.save()
-            print("5")
         except:
             return HttpResponse("Sorry, something failed. Please try again later.")
 
