@@ -31,7 +31,11 @@ def accounts(request, username):
     accounts = Account.objects.filter(user=user)
     context = {}
     if len(accounts) > 0:
-        balance = accounts[0].balance() / 10000
+        balance = accounts[0].balance()
+        if balance == "Error":
+            messages.error(request, "Indexer down")
+            return redirect("profile", username)
+        balance /= 10000
         context = {"accounts": accounts, 'balance': balance}
     return render(request, "contracts/accounts.html", context=context)
 
@@ -52,7 +56,13 @@ def purchase(request, sender, store_id):
     if store_account:
         store_account = store_account[0]
     else:
-        raise Http404("Seller does not have account setup.")
+        messages.error(request, "The store owner does not have an Algorand account set up!")
+        return redirect("store", store_id)
+    
+    balance = sender_account.balance()
+    if balance == "Error":
+        messages.error(request, "Indexer down")
+        return redirect("profile", sender)
     
     if sender_account.balance() < store.price * 10000:
         messages.error(request, "You do not have enough Algos to buy this service!")
@@ -71,8 +81,10 @@ def purchase(request, sender, store_id):
     # Save transactions in buyer history
     transaction = Transaction(product=service, buyer=sender_user, price=store.price)
     transaction.save()
+
+    messages.success(request, "Service purchase successful, please check your history for transaction")
     
-    return redirect("history")
+    return redirect("store", store_id)
     
 def pledge(request, sender, store_id, choice):
     sender_user = get_object_or_404(User, username=sender)
@@ -92,8 +104,13 @@ def pledge(request, sender, store_id, choice):
     if store_account:
         store_account = store_account[0]
     else:
-        messages.error(request, "The store owner does not have an account set up!")
+        messages.error(request, "The store owner does not have an Algorand account set up!")
         return redirect("store", store_id)
+    
+    balance = sender_account.balance()
+    if balance == "Error":
+        messages.error(request, "Indexer down")
+        return redirect("profile", sender)
     
     if sender_account.balance() < sub_cost[choice] * 10000:
         messages.error(request, "You do not have enough Algos to buy this subscription!")
@@ -113,7 +130,9 @@ def pledge(request, sender, store_id, choice):
     # Save transactions
     transaction = Transaction(subscription=subs, buyer=sender_user, price=sub_cost[choice], tier=tier_name)
     transaction.save()
+
+    messages.success(request, "Subscription purchase successful, please check your history for transaction")
     
-    return redirect("history")
+    return redirect("store", store_id)
     
     

@@ -198,7 +198,10 @@ def add_wallet(name, password):
 ## RETRIEVING
 def account_balance(address):
     """Return funds balance of the account having provided address."""
-    account_info = _algod_client().account_info(address)
+    try:
+        account_info = _algod_client().account_info(address)
+    except Exception as e:
+        return "Error"
     return account_info.get("amount")
 
 
