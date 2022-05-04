@@ -67,7 +67,10 @@ class Service(models.Model):
     last_updated = models.TimeField(auto_now=True)
     approved = models.BooleanField(default=False)
     active = models.BooleanField(default=False)
-
+    
+    def __str__(self):
+        return self.name
+        
     def imagename(self):
         return os.path.basename(self.image.name)
 
@@ -76,6 +79,9 @@ class Subscription(models.Model):
     pro_price = models.IntegerField(default=0)
     premium_price = models.IntegerField(default=0)
     approved = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return f"{self.seller.username} Subscription"
 
 class Perk(models.Model):
     id = models.AutoField(primary_key=True)
@@ -100,6 +106,9 @@ class Rating(models.Model):
     product = models.ForeignKey(Service, on_delete=models.CASCADE)
     description = models.CharField(max_length=200)
     rating = models.IntegerField()
+    
+    def __str__(self):
+        return f"Rating for {self.product.seller.username} Product: {self.product.name}"
     
 class Report(models.Model):
     reporter = models.ForeignKey(User, on_delete=models.CASCADE)
