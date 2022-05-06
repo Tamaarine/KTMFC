@@ -21,6 +21,12 @@ The code for our main project can be found by navigating from the main branch in
 * `views.py`: handles putting the results of `requests.py` into the proper format to be passed into our HTML to generate the website
 * `models.py`: contains the structurs of our database models
 * `forms.py`: includes the Form objects used by our HTML classes to collect user input
+* `tokenGenerator.py`: contains code for generating the unique per user token for email verification
+* `errors.py`: contains the different kinds of errors that we will be throwing
+* `models.py`: contains the different models for our database
+The smart contract code is contained within the contracts folder.
+
+Our digital prototype is within the DigitalPrototype folder and is done purely via HTML.
 
 If you would like to see the HTML used to generate our website, go to the templates folder, then the app folder and you will find all of our HTML pages. 
 
