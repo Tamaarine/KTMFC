@@ -1,5 +1,7 @@
 #! /bin/bash
-killall gunicorn
+out=`pgrep -f AlgoMarket`
+
+kill -9 $out
 
 if [ ! -z ${1} ]; then
     if [ ${1} == "daemon" ];
