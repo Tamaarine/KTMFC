@@ -2,28 +2,78 @@ from email import message
 import requests
 from django.template.loader import render_to_string
 import os
+from dotenv import load_dotenv
 
-key = os.environ.get('MAILGUN')
+load_dotenv()
+
+public = os.getenv("PUBLIC")
+private = os.getenv('PRIVATE')
 
 def email(mail_subject, to_email, message=None, html=None):
     if message:
+        # ret = requests.post(
+        #     "https://api.mailgun.net/v3/mg.tomorine.codes/messages",
+        #     auth=("api", key),
+        #     data={"from": "AlgoMarket <AlgoMarket@tomorine.codes>",
+        #         "to": [to_email],
+        #         "subject": mail_subject,
+        #         "text": message}
+        # )
+        
         ret = requests.post(
-            "https://api.mailgun.net/v3/mg.tomorine.codes/messages",
-            auth=("api", key),
-            data={"from": "AlgoMarket <AlgoMarket@tomorine.codes>",
-                "to": [to_email],
-                "subject": mail_subject,
-                "text": message}
+            "https://api.mailjet.com/v3.1/send",
+            auth=(public, private),
+            json={
+                "Messages": [
+                    {
+                        "From": {
+                            "Email": "<AlgoMarket@tamarine.me>",
+                            "Name": "Teamalgomarket.tamarine.me"
+                        },
+                        "To": [
+                            {
+                                "Email": to_email
+                            }
+                        ],
+                        "Subject": mail_subject,
+                        "TextPart": message
+                    }
+                ]
+            }
         )
     elif html:
+        # ret = requests.post(
+        #     "https://api.mailgun.net/v3/mg.tomorine.codes/messages",
+        #     auth=("api", key),
+        #     data={"from": "AlgoMarket <AlgoMarket@tomorine.codes>",
+        #         "to": [to_email],
+        #         "subject": mail_subject,
+        #         "html": html}
+        # )
+        print(public, private)
+        
         ret = requests.post(
-            "https://api.mailgun.net/v3/mg.tomorine.codes/messages",
-            auth=("api", key),
-            data={"from": "AlgoMarket <AlgoMarket@tomorine.codes>",
-                "to": [to_email],
-                "subject": mail_subject,
-                "html": html}
-        )
+            "https://api.mailjet.com/v3.1/send",
+            auth=(public, private),
+            json={
+                "Messages": [
+                    {
+                        "From": {
+                            "Email": "<AlgoMarket@tamarine.me>",
+                            "Name": "Teamalgomarket.tamarine.me"
+                        },
+                        "To": [
+                            {
+                                "Email": to_email
+                            }
+                        ],
+                        "Subject": mail_subject,
+                        "HtmlPart": html
+                    }
+                ]
+            }
+        )   
+    print(ret.json())
     return ret.status_code
     
 def service_seller_notification(request, service, store_id):
